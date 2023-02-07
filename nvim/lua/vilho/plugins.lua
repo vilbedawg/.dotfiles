@@ -16,10 +16,9 @@ local packer_bootstrap = ensure_packer()
 vim.cmd([[
   augroup packer_user_config
     autocmd!
-    autocmd BufWritePost plugins-setup.lua source <afile> | PackerCompile
+    autocmd BufWritePost plugins.lua source <afile> | PackerSync
   augroup end
 ]])
-
 
 -- import packer safely
 local status, packer = pcall(require, "packer")
@@ -27,24 +26,35 @@ if not status then
   return
 end
 
-
 return packer.startup(function(use)
 
-    use { 'wbthomason/packer.nvim' }
+    use('wbthomason/packer.nvim')
 
     -- Gruvbox theme
-    use { 'ellisonleao/gruvbox.nvim' }
+    use('ellisonleao/gruvbox.nvim')
 
     -- tmux & split window navigation
-    use { 'christoomey/vim-tmux-navigator' }
+    use('christoomey/vim-tmux-navigator')
 
     -- maximizes and restores current window
-    use { 'szw/vim-maximizer' }
+    use('szw/vim-maximizer')
    
     -- essential plugins 
-    use { 'tpope/vim-surround' }
-    use { 'vim-scripts/ReplaceWithRegister' }
+    use('tpope/vim-surround')
+    use('vim-scripts/ReplaceWithRegister') 
     
+    -- commenting with gc
+    use('numToStr/Comment.nvim')
+
+    -- file explorer
+    use {
+        'nvim-tree/nvim-tree.lua',
+        requires = {
+            'nvim-tree/nvim-web-devicons', 
+        },
+        tag = 'nightly' 
+    }
+
     -- Automatically set up your configuration after cloning packer.nvim
     if packer_bootstrap then
         require('packer').sync()

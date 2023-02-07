@@ -29,5 +29,4 @@ set.clipboard:append("unnamedplus")
 set.splitright = true
 set.splitbelow = true
 
-set.iskeyword:append("-")
-
+set.iskeyword:append("-") -- consider string-string as whole word
