@@ -4,8 +4,8 @@ vim.keymap.set("i", "jk", "<ESC>", { desc = "Change to normal mode" })
 vim.keymap.set("i", "kj", "<ESC>", { desc = "Change to normal mode" })
 
 vim.keymap.set(
-    "n",
-    "<leader>sx",
-    require("telescope.builtin").resume,
-    { noremap = true, silent = true, desc = "Resume" }
+	"n",
+	"<leader>sx",
+	require("telescope.builtin").resume,
+	{ noremap = true, silent = true, desc = "Resume" }
 )
