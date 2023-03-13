@@ -29,6 +29,11 @@ return {
   },
   { "folke/neodev.nvim" }, -- Neovim setup for init.lua and plugin development 
   { "folke/lsp-colors.nvim" }, -- LSP colors
+
+  { "tpope/vim-repeat" },
+  { "tpope/vim-surround" },
+  { "tpope/vim-unimpaired" },
+
 }
 
 

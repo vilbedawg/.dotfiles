@@ -7,6 +7,22 @@ keymap("", "<Space>", "<Nop>", opts)
 vim.g.mapleader = " "
 vim.g.maplocalleader= " "
 
+-- Splits
+keymap("n", "<leader>sv", "<C-w>v", opts)         --  split window vertically
+keymap("n", "<leader>sh", "<C-w>s", opts)         --  split window horizontally
+keymap("n", "<leader>se", "<C-w>=", opts)         --  make split windows equal width & height
+keymap("n", "<leader>sx", ":close<CR>", opts)     --  close current split window
+keymap("n", "<leader>to", ":tabnew<CR>", opts)    --  open new tab
+keymap("n", "<leader>tx", ":tabclose<CR>", opts)  --  close current tab
+keymap("n", "<leader>tn", ":tabn<CR>", opts)      --  go to next tab
+keymap("n", "<leader>tp", ":tabp<CR>", opts)      --  go to previous tab
+
+--  clear search highlights
+keymap("n", "<leader>nh", ":nohl<CR>", opts)
+
+--  delete single character without copying to register 
+keymap("n", "x", '"_x', opts)
+
 -- better up/down
 keymap("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 keymap("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -57,3 +73,10 @@ keymap("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", opts)   -- find string
 keymap("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", opts) -- find string under cursor in current working directory
 keymap("n", "<leader>fb", "<cmd>Telescope buffers<cr>", opts)     -- list open buffers in current neovim instance
 keymap("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", opts)   -- list available help tags
+
+-- restore the session for the current directory
+keymap("n", "<leader>qs", [[<cmd>lua require("persistence").load()<cr>]], {})
+-- restore the last session
+keymap("n", "<leader>ql", [[<cmd>lua require("persistence").load({ last = true })<cr>]], {})
+-- stop Persistence => session won't be saved on exit
+keymap("n", "<leader>qd", [[<cmd>lua require("persistence").stop()<cr>]], {})

@@ -1,6 +1,6 @@
  require "vilho.options"
  require "vilho.keymaps"
- 
+
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
