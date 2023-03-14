@@ -11,6 +11,7 @@ return {
     config = function()
       local actions = require("telescope.actions")
       local telescope = require("telescope")
+      local trouble = require("trouble.providers.telescope")
 
       telescope.setup({
         extensions = {
@@ -49,7 +50,6 @@ return {
               ["<CR>"] = actions.select_default,
               ["<C-x>"] = actions.select_horizontal,
               ["<C-v>"] = actions.select_vertical,
-              ["<C-t>"] = actions.select_tab,
 
               ["<C-u>"] = actions.preview_scrolling_up,
               ["<C-d>"] = actions.preview_scrolling_down,
@@ -63,6 +63,7 @@ return {
               ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
               ["<C-l>"] = actions.complete_tag,
               ["<C-_>"] = actions.which_key, -- keys from pressing <C-/>
+              ["<C-t>"] = trouble.open_with_trouble,
             },
 
             n = {
@@ -70,7 +71,6 @@ return {
               ["<CR>"] = actions.select_default,
               ["<C-x>"] = actions.select_horizontal,
               ["<C-v>"] = actions.select_vertical,
-              ["<C-t>"] = actions.select_tab,
 
               ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
               ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
@@ -93,6 +93,7 @@ return {
 
               ["<PageUp>"] = actions.results_scrolling_up,
               ["<PageDown>"] = actions.results_scrolling_down,
+              ["<C-t>"] = trouble.open_with_trouble,
 
               ["?"] = actions.which_key,
             },
@@ -103,7 +104,7 @@ return {
         },
       })
 
-    vim.keymap.set("n", "<leader>fm", require("telescope").extensions.media_files.media_files, {})
+    vim.keymap.set("n", "<leader>fm", require("telescope").extensions.media_files.media_files, { desc = "find files" })
 
     telescope.load_extension("file_browser")
     telescope.load_extension("media_files")
