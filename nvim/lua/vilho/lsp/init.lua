@@ -30,12 +30,11 @@ local on_attach = function(client, bufnr)
     vim.cmd.vsplit()
     vim.lsp.buf.definition()
   end, opts)
-  vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+  vim.keymap.set("n", "K", vim.lsp.buf.hover)
   vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
   vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, opts)
-  vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help)
+  vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
   vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
-  vim.keymap.set("n", "<leader>lq", vim.diagnostic.setqflist, opts)
 
   vim.keymap.set("n", "]W", function()
     vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
@@ -51,11 +50,6 @@ local on_attach = function(client, bufnr)
 
   vim.keymap.set("n", "[w", function()
     vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARNING })
-  end)
-
-
-  vim.keymap.set("n", "<leader>d", function()
-    vim.diagnostic.setqflist({})
   end)
 
 end

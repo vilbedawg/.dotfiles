@@ -1,24 +1,22 @@
-local opts = { noremap = true, silent = true }
-
 -- Shorten function name
 local keymap = vim.api.nvim_set_keymap
+local opts = { noremap = true, silent = true }
 
 keymap("", "<Space>", "<Nop>", opts)
 vim.g.mapleader = " "
 vim.g.maplocalleader= " "
 
 -- Splits
-keymap("n", "<leader>sv", "<C-w>v", opts)         --  split window vertically
-keymap("n", "<leader>sh", "<C-w>s", opts)         --  split window horizontally
-keymap("n", "<leader>se", "<C-w>=", opts)         --  make split windows equal width & height
-keymap("n", "<leader>sx", ":close<CR>", opts)     --  close current split window
-keymap("n", "<leader>to", ":tabnew<CR>", opts)    --  open new tab
-keymap("n", "<leader>tx", ":tabclose<CR>", opts)  --  close current tab
-keymap("n", "<leader>tn", ":tabn<CR>", opts)      --  go to next tab
-keymap("n", "<leader>tp", ":tabp<CR>", opts)      --  go to previous tab
+keymap("n", "<leader>wv", "<C-w>v", { desc = "Split Vertically"} )
+keymap("n", "<leader>wh", "<C-w>s", { desc = "Split Horizontally"} )
+keymap("n", "<leader>we", "<C-w>=", { desc = "Set Windows Equal Width & Height"} )
+keymap("n", "<leader>wx", ":close<CR>", { desc = "Close Split"} )
+keymap("n", "<leader>to", ":tabnew<CR>", { desc = "New Tab"} )
+keymap("n", "<leader>tx", ":tabclose<CR>", { desc = "Close Tab"} )
+keymap("n", "<leader>tn", ":tabn<CR>", { desc = "Next Tab"} )
+keymap("n", "<leader>tp", ":tabp<CR>", { desc = "Previous Tab"} )
 
---  clear search highlights
-keymap("n", "<leader>nh", ":nohl<CR>", opts)
+keymap("n", "<leader>nh", ":nohl<CR>", { desc = "Clear Highlights"} )
 
 --  delete single character without copying to register 
 keymap("n", "x", '"_x', opts)
@@ -40,8 +38,11 @@ keymap("n", "<C-Left>", ":vertical resize -2<CR>", opts)
 keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 
 -- Navigate buffers
-keymap("n", "<S-l>", ":bnext<CR>", opts)
-keymap("n", "<S-h>", ":bprevious<CR>", opts)
+keymap("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", opts)
+keymap("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", opts)
+keymap("n", "<leader>bd", ":bd<CR>", { desc = "Close Buffer" })
+keymap("n", "<leader>bD", ":bd!<CR>", { desc = "Close Buffer (force)" })
+
 
 -- Move Lines
 keymap("n", "<A-j>", "<cmd>m .+1<cr>==", opts)
@@ -53,7 +54,7 @@ keymap("v", "<A-k>", ":m '<-2<cr>gv=gv", opts)
 keymap("x", "<A-j>", ":m '>+1<CR>gv-gv", opts)
 keymap("x", "<A-k>", ":m '<-2<CR>gv-gv", opts)
 
--- Press jk fast to exit insert mode 
+-- Press jk fast to exit insert mode
 keymap("i", "jk", "<ESC>", opts)
 keymap("i", "kj", "<ESC>", opts)
 
@@ -65,18 +66,18 @@ keymap("v", ">", ">gv", opts)
 keymap("v", "p", '"_dP', opts)
 
 -- nvim-tree
-keymap("n", "<leader>e", ":NvimTreeToggle<CR>", opts)
+keymap("n", "<leader>e", ":NvimTreeToggle<CR>", { noremap = true, silent = true, desc = "File Tree"})
 
 -- Telescope
-keymap("n", "<leader>ff", "<cmd>Telescope find_files<cr>", opts)  -- find files within current working directory, respects .gitignore
-keymap("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", opts)   -- find string in current working directory as you type
-keymap("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", opts) -- find string under cursor in current working directory
-keymap("n", "<leader>fb", "<cmd>Telescope buffers<cr>", opts)     -- list open buffers in current neovim instance
-keymap("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", opts)   -- list available help tags
+keymap("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find Files"} )
+keymap("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Grep"} )
+keymap("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Grep String"} )
+keymap("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Telescope Buffers"} )
+keymap("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Telescope Help Tags"} )
 
 -- restore the session for the current directory
-keymap("n", "<leader>qs", [[<cmd>lua require("persistence").load()<cr>]], {})
+keymap("n", "<leader>qs", [[<cmd>lua require("persistence").load()<cr>]], { desc = "Restore Current Session"})
 -- restore the last session
-keymap("n", "<leader>ql", [[<cmd>lua require("persistence").load({ last = true })<cr>]], {})
+keymap("n", "<leader>ql", [[<cmd>lua require("persistence").load({ last = true })<cr>]], { desc = "Restore Last Session"})
 -- stop Persistence => session won't be saved on exit
-keymap("n", "<leader>qd", [[<cmd>lua require("persistence").stop()<cr>]], {})
+keymap("n", "<leader>qd", [[<cmd>lua require("persistence").stop()<cr>]], { desc = "Stop Persistence From Saving"})
