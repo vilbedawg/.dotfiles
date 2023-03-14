@@ -27,6 +27,7 @@ return {
       "hrsh7th/cmp-nvim-lsp-signature-help" , -- Display functions signatures
     }
   },
+
   { "folke/neodev.nvim" }, -- Neovim setup for init.lua and plugin development 
   { "folke/lsp-colors.nvim" }, -- LSP colors
 
@@ -34,6 +35,22 @@ return {
   { "tpope/vim-surround" },
   { "tpope/vim-unimpaired" },
 
+  -- Better commenting
+  {
+    "numToStr/Comment.nvim",
+    config = function()
+      require("Comment").setup({})
+    end,
+  },
+
+  -- Bufferline
+  {
+    "akinsho/bufferline.nvim",
+    requires = "nvim-tree/nvim-web-devicons",
+    config = function()
+      require("bufferline").setup({})
+    end
+  }
 }
 
 
