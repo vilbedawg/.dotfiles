@@ -69,11 +69,31 @@ keymap("v", "p", '"_dP', opts)
 keymap("n", "<leader>e", ":NvimTreeToggle<CR>", { noremap = true, silent = true, desc = "File Tree"})
 
 -- Telescope
+keymap("n", "<leader>:", "<cmd>Telescope command_history<cr>", { desc = "Command History" } )
+keymap("n", "<leader>,", "<cmd>Telescope buffers show_all_buffers=true<cr>", { desc = "Switch Buffer" })
+
+-- Find
 keymap("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find Files"} )
 keymap("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Grep"} )
-keymap("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Grep String"} )
-keymap("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Telescope Buffers"} )
-keymap("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Telescope Help Tags"} )
+keymap("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Grep Word"} )
+keymap("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Buffers"} )
+keymap("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Help Pages"} )
+keymap("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Recent"} )
+
+-- git
+keymap("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "commits" })
+keymap("n", "<leader>gs", "<cmd>Telescope git_status<CR>", { desc = "status" })
+
+-- -- search
+keymap("n", "<leader>sa", "<cmd>Telescope autocommands<cr>", { desc = "Auto Commands" } )
+keymap("n", "<leader>sb", "<cmd>Telescope current_buffer_fuzzy_find<cr>", { desc = "Buffer"  })
+keymap("n", "<leader>sd", "<cmd>Telescope diagnostics<cr>", { desc = "Diagnostics"  })
+keymap("n", "<leader>sH", "<cmd>Telescope highlights<cr>", { desc = "Search Highlight Groups"  })
+keymap("n", "<leader>sk", "<cmd>Telescope keymaps<cr>", { desc = "Key Maps"  })
+keymap("n", "<leader>sM", "<cmd>Telescope man_pages<cr>", { desc = "Man Pages"  })
+keymap("n", "<leader>sm", "<cmd>Telescope marks<cr>", { desc = "Jump to Mark"  })
+keymap("n", "<leader>so", "<cmd>Telescope vim_options<cr>", { desc = "Options"  })
+keymap("n", "<leader>sR", "<cmd>Telescope resume<cr>", { desc = "Resume"  })
 
 -- restore the session for the current directory
 keymap("n", "<leader>qs", [[<cmd>lua require("persistence").load()<cr>]], { desc = "Restore Current Session"})

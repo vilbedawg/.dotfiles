@@ -6,7 +6,7 @@ return {
     },
     event = "VeryLazy",
     config = function()
-      require("nvim-tree").setup({
+    require("nvim-tree").setup({
         auto_reload_on_write = true,
         disable_netrw = false,
         hijack_cursor = false,
@@ -42,6 +42,9 @@ return {
             custom_only = false,
             list = {
               -- user mappings go here
+              { key = "l", action = "edit" },
+              { key = "h", action = "close_node" },
+              { key = "H", action = "collapse_all" },
             },
           },
           float = {

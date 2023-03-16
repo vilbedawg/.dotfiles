@@ -50,7 +50,7 @@ return {
     config = function()
       require("bufferline").setup({})
     end
-  }
+  },
 }
 
 

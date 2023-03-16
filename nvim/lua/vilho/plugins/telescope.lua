@@ -67,7 +67,8 @@ return {
             },
 
             n = {
-              ["<esc>"] = actions.close,
+              ["q"] = actions.close,
+              ["esc"] = actions.close,
               ["<CR>"] = actions.select_default,
               ["<C-x>"] = actions.select_horizontal,
               ["<C-v>"] = actions.select_vertical,
