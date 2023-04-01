@@ -6,6 +6,7 @@ return {
   { "onsails/lspkind-nvim" }, -- VScode-like pictograms
   { "nvim-lua/plenary.nvim" }, -- Useful lua functions used by lots of plugins
   { "lukas-reineke/lsp-format.nvim" }, -- A wrapper around Neovims native LSP formatting
+  { "jose-elias-alvarez/null-ls.nvim" }, -- For formatters and linters
 
   -- Snippets
   {
@@ -18,7 +19,8 @@ return {
     },
   },
 
-  { "hrsh7th/nvim-cmp", -- A completion engine
+  { 
+    "hrsh7th/nvim-cmp", -- A completion engine
     dependencies = {
       "hrsh7th/cmp-nvim-lsp", -- cmp-source for neovim's built-in language client
       "hrsh7th/cmp-buffer", -- cmp-source for buffer words

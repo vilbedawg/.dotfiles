@@ -7,7 +7,7 @@ return {
   config = function ()
     require("nvim-treesitter.configs").setup({
       ensure_installed = { "javascript", "typescript", "vue", "lua", "css", "bash", "json", "typescript",
-        "dockerfile", "html", "python", "scss", "markdown", "tsx", "cpp", "make", "cmake", "c", "yaml" },
+        "dockerfile", "html", "python", "scss", "markdown", "tsx", "cpp", "make", "cmake", "c", "yaml", "c_sharp" },
       sync_install = false,
       ignore_install = {""},
       highlight = {
