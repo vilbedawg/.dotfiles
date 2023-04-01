@@ -1,8 +1,9 @@
 local cmp_nvim_lsp_status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 local mason_status_ok, mason = pcall(require, "mason")
 local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
+local mason_null_ls_ok, mason_null_ls = pcall(require, "mason-null-ls")
 
-if not (mason_status_ok and mason_lspconfig_ok and cmp_nvim_lsp_status_ok) then
+if not (mason_status_ok and mason_lspconfig_ok and cmp_nvim_lsp_status_ok and mason_null_ls_ok) then
   print("Mason, Mason LSP Config or Completion not installed!")
   return
 end
@@ -152,6 +153,16 @@ require "vilho.lsp.null-ls"
 mason_lspconfig.setup({
   ensure_installed = servers,
   automatic_installation = true
+})
+
+mason_null_ls.setup({
+  ensure_installed = {
+    "prettier",
+    "stylua",
+    "eslint_d",
+    "cs",
+    "c cpp",
+  }
 })
 
 for _, s in pairs(servers) do
