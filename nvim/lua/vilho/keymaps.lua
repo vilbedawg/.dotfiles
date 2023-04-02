@@ -81,8 +81,8 @@ keymap("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Help Pages"}
 keymap("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Recent"} )
 
 -- git
-keymap("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "commits" })
-keymap("n", "<leader>gs", "<cmd>Telescope git_status<CR>", { desc = "status" })
+keymap("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "Commits" })
+keymap("n", "<leader>gs", "<cmd>Telescope git_status<CR>", { desc = "Status" })
 
 -- -- search
 keymap("n", "<leader>sa", "<cmd>Telescope autocommands<cr>", { desc = "Auto Commands" } )
