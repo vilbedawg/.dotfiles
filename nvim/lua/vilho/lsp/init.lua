@@ -26,18 +26,28 @@ local on_attach = function(client, bufnr)
 	client.server_capabilities.documentFormattingProvider = true
 
 	-- Keymaps
+	-- Check for the existence of Trouble plugin
+	if vim.fn.exists(":TroubleToggle") then
+		-- If it exists, use Trouble's keymap
+		vim.keymap.set("n", "gd", "<cmd>TroubleToggle lsp_definitions<cr>", opts) -- Go to definition
+		vim.keymap.set("n", "gi", "<cmd>TroubleToggle lsp_implementations<cr>", opts) -- Go to implementation
+		vim.keymap.set("n", "gt", "<cmd>TroubleToggle lsp_type_definitions<cr>", opts) -- Go to type definition
+		vim.keymap.set("n", "gr", "<cmd>TroubleToggle lsp_references<cr>", opts) -- Find references
+	else
+		-- Otherwise, use the default LSP keymap
+		vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts) -- Go to definition
+		vim.keymap.set("n", "gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts) -- Go to type definition
+		vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts) -- Go to implementation
+		vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts) -- Find references
+	end
 
-	vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts) -- Go to definition
-	vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts) -- Go to type definition
-	vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts) -- Go to implementation
-	vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts) -- Find references
 	vim.keymap.set("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts) -- Rename symbol
 	vim.keymap.set("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts) -- Code actions
 	vim.keymap.set("n", "<leader>k", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts) -- Signature help
 	vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts) -- Show hover information
 	vim.keymap.set("n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts) -- Go to next diagnostic
 	vim.keymap.set("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts) -- Go to previous diagnostic
-	vim.keymap.set("n", "<leader>q", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts) -- Show diagnostic information
+	-- vim.keymap.set("n", "<leader>l", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts) -- Show diagnostic information
 
 	-- Omnisharps provided tokens dont conform to the LSP semantic tokens specification, therefore Neovim cannot support it. This fixes the issue.
 	if client.name == "omnisharp" then
