@@ -2,76 +2,66 @@ return {
 	"lewis6991/gitsigns.nvim",
 	dependencies = { "nvim-lua/plenary.nvim" },
 	config = function()
-		local gitsigns = require("gitsigns")
-		gitsigns.setup({
+		require("gitsigns").setup({
 			signs = {
-				add = {
-					hl = "GitSignsAdd",
-					numhl = "GitSignsAddNr",
-					linehl = "GitSignsAddLn",
-				},
-				change = {
-					hl = "GitSignsChange",
-					numhl = "GitSignsChangeNr",
-					linehl = "GitSignsChangeLn",
-				},
-				delete = {
-					hl = "GitSignsDelete",
-					numhl = "GitSignsDeleteNr",
-					linehl = "GitSignsDeleteLn",
-				},
-				topdelete = {
-					hl = "GitSignsDelete",
-					numhl = "GitSignsDeleteNr",
-					linehl = "GitSignsDeleteLn",
-				},
-				changedelete = {
-					hl = "GitSignsChange",
-					numhl = "GitSignsChangeNr",
-					linehl = "GitSignsChangeLn",
-				},
+				add = { text = "+" },
+				change = { text = "│" },
+				delete = { text = "_" },
+				topdelete = { text = "‾" },
+				changedelete = { text = "~" },
+				untracked = { text = "┆" },
 			},
-			signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
-			numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
-			linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
-			word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
-			keymaps = {}, -- Turn off default keymaps
-			watch_gitdir = { interval = 1000, follow_files = true },
-			attach_to_untracked = true,
-			current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
-			current_line_blame_opts = {
-				virt_text = true,
-				virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
-				delay = 1000,
-				ignore_whitespace = false,
-			},
-			current_line_blame_formatter_opts = { relative_time = false },
-			sign_priority = 6,
-			update_debounce = 100,
-			status_formatter = nil, -- Use default
-			max_file_length = 40000,
-			preview_config = {
-				-- Options passed to nvim_open_win
-				border = "single",
-				style = "minimal",
-				relative = "cursor",
-				row = 0,
-				col = 1,
-			},
-			yadm = { enable = false },
-		})
+			current_line_blame = false,
+			on_attach = function(bufnr)
+				local gs = package.loaded.gitsigns
 
-		-- Gitsigns w/ hunks and blames.
-		vim.keymap.set("n", "<leader>ga", gitsigns.stage_hunk, { desc = "Stage Hunk" })
-		vim.keymap.set("n", "<leader>gb", gitsigns.blame_line, { desc = "Blame Line" })
-		vim.keymap.set("n", "<leader>gp", gitsigns.prev_hunk, { desc = "Previous Hunk" })
-		vim.keymap.set("n", "[g", gitsigns.prev_hunk, { desc = "Previous Hunk" })
-		vim.keymap.set("n", "<leader>gn", gitsigns.next_hunk, { desc = "Next Hunk" })
-		vim.keymap.set("n", "]g", gitsigns.next_hunk, { desc = "Next Hunk" })
-		vim.keymap.set("n", "<leader>gr", gitsigns.reset_hunk, { desc = "Reset Hunk" })
-		vim.keymap.set("n", "<leader>gd", gitsigns.preview_hunk, { desc = "Preview Hunk" })
-		vim.keymap.set("n", "<leader>gq", function()
-			gitsigns.setqflist("all")
-		end, { desc = "Changes Location List" })
+				local function map(mode, l, r, opts)
+					opts = opts or {}
+					opts.buffer = bufnr
+					vim.keymap.set(mode, l, r, opts)
+				end
+
+				-- Navigation
+				map("n", "]c", function()
+					if vim.wo.diff then
+						return "]c"
+					end
+					vim.schedule(function()
+						gs.next_hunk()
+					end)
+					return "<Ignore>"
+				end, { expr = true, desc = "Next hunk" })
+
+				map("n", "[c", function()
+					if vim.wo.diff then
+						return "[c"
+					end
+					vim.schedule(function()
+						gs.prev_hunk()
+					end)
+					return "<Ignore>"
+				end, { expr = true, desc = "Previous hunk" })
+
+				-- Actions
+				map({ "n", "v" }, "<leader>hs", ":Gitsigns stage_hunk<CR>", { desc = "Stage hunk" })
+				map({ "n", "v" }, "<leader>hr", ":Gitsigns reset_hunk<CR>", { desc = "Reset hunk" })
+				map("n", "<leader>hS", gs.stage_buffer, { desc = "Stage buffer" })
+				map("n", "<leader>hu", gs.undo_stage_hunk, { desc = "Unstage hunk" })
+				map("n", "<leader>hR", gs.reset_buffer, { desc = "Reset buffer" })
+				map("n", "<leader>hp", gs.preview_hunk, { desc = "Preview hunk" })
+				map("n", "<leader>hb", function()
+					gs.blame_line({ full = true })
+				end, { desc = "Blame line" })
+				map("n", "<leader>tb", gs.toggle_current_line_blame, { desc = "Toggle current line blame" })
+				map("n", "<leader>hd", gs.diffthis, { desc = "Diffview" })
+				map("n", "<leader>td", gs.toggle_deleted, { desc = "Toggle deleted" })
+
+				-- Text object
+				map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk text object" })
+				map("n", "<leader>hq", function()
+					gs.setqflist("all")
+				end, { desc = "Changes location list" })
+			end,
+		})
 	end,
 }
