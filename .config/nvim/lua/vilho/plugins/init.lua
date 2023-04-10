@@ -56,4 +56,6 @@ return {
 			require("bufferline").setup({})
 		end,
 	},
+
+	{ "christoomey/vim-tmux-navigator" }, -- For tmux window navigation
 }
