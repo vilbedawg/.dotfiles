@@ -25,6 +25,7 @@ return {
 			["g"] = { name = "+goto" },
 			["<leader>ca"] = { desc = "See code action" },
 			["gd"] = { desc = "Go to definition" },
+			["gD"] = { desc = "Go to declaration" },
 			["gt"] = { desc = "Go to type definition" },
 			["gi"] = { desc = "Go to Implementation" },
 			["gr"] = { desc = "Find references" },

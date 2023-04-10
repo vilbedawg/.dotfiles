@@ -29,17 +29,16 @@ local on_attach = function(client, bufnr)
 	-- Check for the existence of Trouble plugin
 	if vim.fn.exists(":TroubleToggle") then
 		-- If it exists, use Trouble's keymap
-		vim.keymap.set("n", "gd", "<cmd>TroubleToggle lsp_definitions<cr>", opts) -- Go to definition
-		vim.keymap.set("n", "gi", "<cmd>TroubleToggle lsp_implementations<cr>", opts) -- Go to implementation
-		vim.keymap.set("n", "gt", "<cmd>TroubleToggle lsp_type_definitions<cr>", opts) -- Go to type definition
 		vim.keymap.set("n", "gr", "<cmd>TroubleToggle lsp_references<cr>", opts) -- Find references
 	else
 		-- Otherwise, use the default LSP keymap
-		vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts) -- Go to definition
-		vim.keymap.set("n", "gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts) -- Go to type definition
-		vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts) -- Go to implementation
 		vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts) -- Find references
 	end
+
+	vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts) -- Go to definition
+	vim.keymap.set("n", "gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts) -- Go to type definition
+	vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts) -- Go to implementation
+	vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts) -- Go to declaration
 
 	vim.keymap.set("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts) -- Rename symbol
 	vim.keymap.set("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts) -- Code actions
