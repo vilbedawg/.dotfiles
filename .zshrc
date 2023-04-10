@@ -110,6 +110,7 @@ alias vi="nvim"
 alias vim="nvim"
 alias view="nvim -R"
 alias vimdiff="nvim -d"
+alias dotfiles='/usr/local/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -121,3 +122,5 @@ export NVM_DIR="$HOME/.nvm"
 
 export DOTNET_ROOT=$HOME/dotnet
 export PATH=$PATH:$HOME/dotnet
+
+
