@@ -2,9 +2,10 @@ local cmp_nvim_lsp_status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 local mason_status_ok, mason = pcall(require, "mason")
 local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
 local mason_null_ls_ok, mason_null_ls = pcall(require, "mason-null-ls")
+local navic_status_ok, navic = pcall(require, "nvim-navic")
 
-if not (mason_status_ok and mason_lspconfig_ok and cmp_nvim_lsp_status_ok and mason_null_ls_ok) then
-	print("Mason, Mason LSP Config or Completion not installed!")
+if not (mason_status_ok and mason_lspconfig_ok and cmp_nvim_lsp_status_ok and mason_null_ls_ok and navic_status_ok) then
+	print("Mason, Mason LSP Config, Completion or Navic not installed!")
 	return
 end
 
@@ -36,17 +37,24 @@ local on_attach = function(client, bufnr)
 	end
 
 	vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts) -- Go to definition
+	vim.keymap.set("n", "gw", function()
+		vim.cmd.vsplit()
+		vim.lsp.buf.definition()
+	end, opts)
 	vim.keymap.set("n", "gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts) -- Go to type definition
 	vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts) -- Go to implementation
 	vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts) -- Go to declaration
-
 	vim.keymap.set("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts) -- Rename symbol
 	vim.keymap.set("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts) -- Code actions
 	vim.keymap.set("n", "<leader>k", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts) -- Signature help
 	vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts) -- Show hover information
 	vim.keymap.set("n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts) -- Go to next diagnostic
 	vim.keymap.set("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts) -- Go to previous diagnostic
-	-- vim.keymap.set("n", "<leader>l", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts) -- Show diagnostic information
+	vim.keymap.set("n", "<leader>l", "<cmd>lua vim.diagnostic.open_float()<CR>", opts) -- Show diagnostic information
+
+	if client.server_capabilities.documentSymbolProvider then
+		navic.attach(client, bufnr)
+	end
 
 	-- Omnisharps provided tokens dont conform to the LSP semantic tokens specification, therefore Neovim cannot support it. This fixes the issue.
 	if client.name == "omnisharp" then
@@ -139,10 +147,11 @@ local servers = {
 	"pyright",
 	"omnisharp",
 }
--- Setup Mason + LSPs + CMP + Null-ls
+-- Setup Mason + LSPs + CMP + Null-ls + Navic
 require("vilho.lsp.cmp")
 require("vilho.lsp.lsp-colors")
 require("vilho.lsp.null-ls")
+require("vilho.lsp.navic")
 
 mason_lspconfig.setup({
 	ensure_installed = servers,

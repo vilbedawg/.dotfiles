@@ -58,4 +58,9 @@ return {
 	},
 
 	{ "christoomey/vim-tmux-navigator" }, -- For tmux window navigation
+
+	{
+		"SmiteshP/nvim-navic",
+		dependencies = { "neovim/nvim-lspconfig" },
+	},
 }

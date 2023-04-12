@@ -24,7 +24,9 @@ return {
 			-- LSP + git
 			["g"] = { name = "+goto" },
 			["<leader>ca"] = { desc = "See code action" },
+			["<leader>l"] = { desc = "See line diagnostics" },
 			["gd"] = { desc = "Go to definition" },
+			["gw"] = { desc = "Go to definition in new window" },
 			["gD"] = { desc = "Go to declaration" },
 			["gt"] = { desc = "Go to type definition" },
 			["gi"] = { desc = "Go to Implementation" },
