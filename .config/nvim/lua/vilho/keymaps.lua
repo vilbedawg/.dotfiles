@@ -4,21 +4,20 @@ local opts = { noremap = true, silent = true }
 
 keymap("", "<Space>", "<Nop>", opts)
 vim.g.mapleader = " "
-vim.g.maplocalleader= " "
+vim.g.maplocalleader = " "
 
 -- Splits
-keymap("n", "<leader>wv", "<C-w>v", { desc = "Split Vertically"} )
-keymap("n", "<leader>wh", "<C-w>s", { desc = "Split Horizontally"} )
-keymap("n", "<leader>we", "<C-w>=", { desc = "Set Windows Equal Width & Height"} )
-keymap("n", "<leader>wx", ":close<CR>", { desc = "Close Split"} )
-keymap("n", "<leader>to", ":tabnew<CR>", { desc = "New Tab"} )
-keymap("n", "<leader>tx", ":tabclose<CR>", { desc = "Close Tab"} )
-keymap("n", "<leader>tn", ":tabn<CR>", { desc = "Next Tab"} )
-keymap("n", "<leader>tp", ":tabp<CR>", { desc = "Previous Tab"} )
+keymap("n", "<leader>wv", "<C-w>v", { desc = "Split vertically" })
+keymap("n", "<leader>wh", "<C-w>s", { desc = "Split horizontally" })
+keymap("n", "<leader>we", "<C-w>=", { desc = "Set windows equal width & height" })
+keymap("n", "<leader>wx", ":close<CR>", { desc = "Close split" })
+keymap("n", "<leader>to", ":tabnew<CR>", { desc = "New tab" })
+keymap("n", "<leader>tx", ":tabclose<CR>", { desc = "Close tab" })
+keymap("n", "<leader>tn", ":tabn<CR>", { desc = "Next tab" })
+keymap("n", "<leader>tp", ":tabp<CR>", { desc = "Previous tab" })
+keymap("n", "<leader>nh", ":nohl<CR>", { desc = "Clear highlights" })
 
-keymap("n", "<leader>nh", ":nohl<CR>", { desc = "Clear Highlights"} )
-
---  delete single character without copying to register 
+-- delete single character without copying to register
 keymap("n", "x", '"_x', opts)
 
 -- better up/down
@@ -40,9 +39,8 @@ keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 -- Navigate buffers
 keymap("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", opts)
 keymap("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", opts)
-keymap("n", "<leader>bd", ":bd<CR>", { desc = "Close Buffer" })
-keymap("n", "<leader>bD", ":bd!<CR>", { desc = "Close Buffer (force)" })
-
+keymap("n", "<leader>bd", ":bd<CR>", { desc = "Close buffer" })
+keymap("n", "<leader>bD", ":bd!<CR>", { desc = "Close buffer (force)" })
 
 -- Move Lines
 keymap("n", "<A-j>", "<cmd>m .+1<cr>==", opts)
@@ -66,38 +64,48 @@ keymap("v", ">", ">gv", opts)
 keymap("v", "p", '"_dP', opts)
 
 -- nvim-tree
-keymap("n", "<leader>e", ":NvimTreeToggle<CR>", { noremap = true, silent = true, desc = "File Tree"})
+keymap("n", "<leader>e", ":NvimTreeToggle<CR>", { noremap = true, silent = true, desc = "File tree" })
 
 -- Telescope
-keymap("n", "<leader>:", "<cmd>Telescope command_history<cr>", { desc = "Command History" } )
-keymap("n", "<leader>,", "<cmd>Telescope buffers show_all_buffers=true<cr>", { desc = "Switch Buffer" })
+keymap("n", "<leader>:", "<cmd>Telescope command_history<cr>", { desc = "Command history" })
+keymap("n", "<leader>,", "<cmd>Telescope buffers show_all_buffers=true<cr>", { desc = "Switch buffer" })
 
 -- Find
-keymap("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find Files"} )
-keymap("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Grep"} )
-keymap("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Grep Word"} )
-keymap("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Buffers"} )
-keymap("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Help Pages"} )
-keymap("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Recent"} )
+keymap("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find files" })
+keymap("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Grep" })
+keymap("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Grep word" })
+keymap("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Buffers" })
+keymap("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "Help pages" })
+keymap("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Recent" })
 
 -- git
 keymap("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "Commits" })
 keymap("n", "<leader>gs", "<cmd>Telescope git_status<CR>", { desc = "Status" })
 
--- -- search
-keymap("n", "<leader>sa", "<cmd>Telescope autocommands<cr>", { desc = "Auto Commands" } )
-keymap("n", "<leader>sb", "<cmd>Telescope current_buffer_fuzzy_find<cr>", { desc = "Buffer"  })
-keymap("n", "<leader>sd", "<cmd>Telescope diagnostics<cr>", { desc = "Diagnostics"  })
-keymap("n", "<leader>sH", "<cmd>Telescope highlights<cr>", { desc = "Search Highlight Groups"  })
-keymap("n", "<leader>sk", "<cmd>Telescope keymaps<cr>", { desc = "Key Maps"  })
-keymap("n", "<leader>sM", "<cmd>Telescope man_pages<cr>", { desc = "Man Pages"  })
-keymap("n", "<leader>sm", "<cmd>Telescope marks<cr>", { desc = "Jump to Mark"  })
-keymap("n", "<leader>so", "<cmd>Telescope vim_options<cr>", { desc = "Options"  })
-keymap("n", "<leader>sR", "<cmd>Telescope resume<cr>", { desc = "Resume"  })
+-- search
+keymap("n", "<leader>sa", "<cmd>Telescope autocommands<cr>", { desc = "Auto commands" })
+keymap("n", "<leader>sb", "<cmd>Telescope current_buffer_fuzzy_find<cr>", { desc = "Buffer" })
+keymap("n", "<leader>sd", "<cmd>Telescope diagnostics<cr>", { desc = "Diagnostics" })
+keymap("n", "<leader>sH", "<cmd>Telescope highlights<cr>", { desc = "Search highlight groups" })
+keymap("n", "<leader>sk", "<cmd>Telescope keymaps<cr>", { desc = "Key maps" })
+keymap("n", "<leader>sM", "<cmd>Telescope man_pages<cr>", { desc = "Man pages" })
+keymap("n", "<leader>sm", "<cmd>Telescope marks<cr>", { desc = "Jump to mark" })
+keymap("n", "<leader>so", "<cmd>Telescope vim_options<cr>", { desc = "Options" })
+keymap("n", "<leader>sR", "<cmd>Telescope resume<cr>", { desc = "Resume" })
 
 -- restore the session for the current directory
-keymap("n", "<leader>qs", [[<cmd>lua require("persistence").load()<cr>]], { desc = "Restore Current Session"})
+keymap("n", "<leader>qs", [[<cmd>lua require("persistence").load()<cr>]], { desc = "Restore current session" })
+
 -- restore the last session
-keymap("n", "<leader>ql", [[<cmd>lua require("persistence").load({ last = true })<cr>]], { desc = "Restore Last Session"})
+keymap(
+  "n",
+  "<leader>ql",
+  [[<cmd>lua require("persistence").load({ last = true })<cr>]],
+  { desc = "Restore last session" }
+)
 -- stop Persistence => session won't be saved on exit
-keymap("n", "<leader>qd", [[<cmd>lua require("persistence").stop()<cr>]], { desc = "Stop Persistence From Saving"})
+keymap("n", "<leader>qd", [[<cmd>lua require("persistence").stop()<cr>]], { desc = "Stop persistence from saving" })
+
+keymap("n", "<leader>F", ":Format<cr>", { desc = "Format", noremap = true })
+
+keymap("n", "<leader>sw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word"})

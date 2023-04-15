@@ -36,6 +36,7 @@ return {
 			["K"] = { desc = "Show hover information" },
 			["<leader>[d"] = { desc = "Go to previous diagnostic" },
 			["<leader>]d"] = { desc = "Go to next diagnostic" },
+			["<leader>r"] = { desc = "Rename all occurences" },
 		})
 	end,
 }
