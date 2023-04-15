@@ -20,7 +20,7 @@ return {
 			options = {
 				component_separators = { right = "" },
 				section_separators = { left = "", right = "" },
-				theme = "gruvbox",
+				theme = "auto",
 			},
 			sections = {
 				lualine_a = { get_git_head },

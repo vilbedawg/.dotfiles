@@ -1,7 +1,7 @@
 window:
   padding:
-    x: 10
-    y: 10
+    x: 6
+    y: 6
   class:
     instance: Alacritty
     general: Alacritty
@@ -28,7 +28,7 @@ font:
 draw_bold_text_with_bright_colors: false
 
 import:
-  - ~/.dotfiles/.config/alacritty/themes/gruvbox-dark.yml
+  - ~/.dotfiles/.config/alacritty/themes/gruvbox-material.yml
 
 selection:
   save_to_clipboard: false
