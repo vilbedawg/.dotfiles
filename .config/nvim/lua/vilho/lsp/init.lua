@@ -36,7 +36,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)      -- Go to type definition
   vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)       -- Go to implementation
   vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)          -- Go to declaration
-  vim.keymap.set("n", "<leader>r", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)       -- Rename symbol
+  vim.keymap.set("n", "<leader>r", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)        -- Rename symbol
   vim.keymap.set("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)  -- Code actions
   vim.keymap.set("n", "<leader>k", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts) -- Signature help
   vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)                 -- Show hover information
@@ -130,6 +130,21 @@ local on_attach = function(client, bufnr)
       range = true,
     }
   end
+
+  vim.api.nvim_create_autocmd("CursorHold", {
+    buffer = bufnr,
+    callback = function()
+      local options = {
+        focusable = false,
+        close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+        border = "rounded",
+        source = "always",
+        prefix = " ",
+        scope = "cursor",
+      }
+      vim.diagnostic.open_float(nil, options)
+    end,
+  })
 end
 -- used to enable autocompletion
 local capabilities = cmp_nvim_lsp.default_capabilities()
@@ -180,6 +195,7 @@ vim.diagnostic.config({
   virtual_text = true,
   severity_sort = true,
   update_in_insert = false,
+  signs = true,
   float = {
     header = "",
     source = "always",
@@ -194,3 +210,8 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon })
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
+--
+-- Change border of documentation hover window, See https://github.com/neovim/neovim/pull/13998.
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+  border = "rounded",
+})
