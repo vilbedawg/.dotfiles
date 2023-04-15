@@ -65,6 +65,13 @@ cmp.setup({
 			"s",
 		}),
 	},
+	matching = {
+		disallow_fuzzy_matching = true,
+		disallow_fullfuzzy_matching = true,
+		disallow_partial_fuzzy_matching = true,
+		disallow_partial_matching = true,
+		disallow_prefix_unmatching = false,
+	},
 	sources = cmp.config.sources({
 		{ name = "nvim_lsp" },
 		{ name = "buffer" },

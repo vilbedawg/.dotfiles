@@ -12,10 +12,9 @@ local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 null_ls.setup({
 	sources = {
-		formatting.prettier.with({ extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote" } }),
+		formatting.prettier.with({ extra_args = { "--semi", "--single-quote", "--jsx-single-quote" } }),
 		formatting.stylua,
 		diagnostics.eslint_d,
-		null_ls.builtins.completion.spell,
 	},
 	-- configure format on save
 	on_attach = function(current_client, bufnr)
