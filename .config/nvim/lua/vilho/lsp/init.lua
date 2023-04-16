@@ -114,7 +114,7 @@ local on_attach = function(client, bufnr)
   -- Floating terminal
   vim.keymap.set({ "n", "t" }, "<A-d>", "<cmd>Lspsaga term_toggle<CR>", { desc = "Floating term toggle"})
 
-  vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format(, {})' ]])
+  vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format()' ]])
 
   if client.server_capabilities.documentSymbolProvider then
     navic.attach(client, bufnr)
