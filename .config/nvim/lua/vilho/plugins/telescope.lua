@@ -11,7 +11,6 @@ return {
     config = function()
       local actions = require("telescope.actions")
       local telescope = require("telescope")
-      local trouble = require("trouble.providers.telescope")
 
       telescope.setup({
         extensions = {
@@ -63,7 +62,6 @@ return {
               ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
               ["<C-l>"] = actions.complete_tag,
               ["<C-_>"] = actions.which_key, -- keys from pressing <C-/>
-              ["<C-t>"] = trouble.open_with_trouble,
             },
 
             n = {
@@ -94,8 +92,6 @@ return {
 
               ["<PageUp>"] = actions.results_scrolling_up,
               ["<PageDown>"] = actions.results_scrolling_down,
-              ["<C-t>"] = trouble.open_with_trouble,
-
               ["?"] = actions.which_key,
             },
           },
@@ -105,7 +101,7 @@ return {
         },
       })
 
-    vim.keymap.set("n", "<leader>fm", require("telescope").extensions.media_files.media_files, { desc = "find files" })
+    vim.keymap.set("n", "<leader>fm", require("telescope").extensions.media_files.media_files, { desc = "find media files" })
 
     telescope.load_extension("file_browser")
     telescope.load_extension("media_files")

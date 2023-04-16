@@ -26,24 +26,95 @@ local on_attach = function(client, bufnr)
   -- This will set up formatting for the attached LSPs
   client.server_capabilities.documentFormattingProvider = true
 
-  -- Keymaps
-  vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts) -- Find references
-  vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts) -- Go to definition
-  vim.keymap.set("n", "gw", function()
-    vim.cmd.vsplit()
-    vim.lsp.buf.definition()
-  end, opts)
-  vim.keymap.set("n", "gt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)      -- Go to type definition
-  vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)       -- Go to implementation
-  vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)          -- Go to declaration
-  vim.keymap.set("n", "<leader>r", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)        -- Rename symbol
-  vim.keymap.set("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)  -- Code actions
-  vim.keymap.set("n", "<leader>k", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts) -- Signature help
-  vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)                 -- Show hover information
-  vim.keymap.set("n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)     -- Go to next diagnostic
-  vim.keymap.set("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)     -- Go to previous diagnostic
-  vim.keymap.set("n", "<leader>l", "<cmd>lua vim.diagnostic.open_float()<CR>", opts) -- Show diagnostic information
-  vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format()' ]])
+  -- LSP finder - Find the symbol's definition
+  -- If there is no definition, it will instead be hidden
+  -- When you use an action in finder like "open vsplit",
+  -- you can use <C-t> to jump back
+  vim.keymap.set("n", "gh", "<cmd>Lspsaga lsp_finder<CR>", { desc = "Symbol definition"})
+
+  -- Code action
+  vim.keymap.set({ "n", "v" }, "<leader>ca", "<cmd>Lspsaga code_action<CR>", { desc = "Code action"})
+
+  -- Rename all occurrences of the hovered word for the entire file
+  vim.keymap.set("n", "gr", "<cmd>Lspsaga rename<CR>", { desc = "Rename occurences (file)"})
+
+  -- Rename all occurrences of the hovered word for the selected files
+  vim.keymap.set("n", "gr", "<cmd>Lspsaga rename ++project<CR>", { desc = "Rename occurences (project)"})
+
+  -- Peek definition
+  -- You can edit the file containing the definition in the floating window
+  -- It also supports open/vsplit/etc operations, do refer to "definition_action_keys"
+  -- It also supports tagstack
+  -- Use <C-t> to jump back
+  vim.keymap.set("n", "gp", "<cmd>Lspsaga peek_definition<CR>", { desc = "Peek definition"})
+
+  -- Go to definition
+  vim.keymap.set("n", "gd", "<cmd>Lspsaga goto_definition<CR>", { desc = "Go to definition"})
+
+  -- Peek type definition
+  -- You can edit the file containing the type definition in the floating window
+  -- It also supports open/vsplit/etc operations, do refer to "definition_action_keys"
+  -- It also supports tagstack
+  -- Use <C-t> to jump back
+  vim.keymap.set("n", "gt", "<cmd>Lspsaga peek_type_definition<CR>", { desc = "Peek type definition"})
+
+  -- Go to type definition
+  vim.keymap.set("n", "gt", "<cmd>Lspsaga goto_type_definition<CR>", { desc = "Go to type definition"})
+
+  -- Show line diagnostics
+  -- You can pass argument ++unfocus to
+  -- unfocus the show_line_diagnostics floating window
+  vim.keymap.set("n", "<leader>xl", "<cmd>Lspsaga show_line_diagnostics<CR>", { desc = "Show line diagnostics"})
+
+  -- Show buffer diagnostics
+  vim.keymap.set("n", "<leader>xb", "<cmd>Lspsaga show_buf_diagnostics<CR>", { desc = "Show buffer diagnostics"})
+
+  -- Show workspace diagnostics
+  vim.keymap.set("n", "<leader>xw", "<cmd>Lspsaga show_workspace_diagnostics<CR>", { desc = "Show workspace diagnostics"})
+
+  -- Show cursor diagnostics
+  vim.keymap.set("n", "<leader>xc", "<cmd>Lspsaga show_cursor_diagnostics<CR>", { desc = "Show cursor diagnostics"})
+
+  -- Diagnostic jump
+  -- You can use <C-o> to jump back to your previous location
+  vim.keymap.set("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>", { desc = "Next diagnostic"})
+  vim.keymap.set("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>", { desc = "Previous next diagnostic"})
+
+  -- Diagnostic jump with filters such as only jumping to an error
+  vim.keymap.set("n", "[E", function()
+    require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
+  end, { desc = "Previous error" })
+
+  vim.keymap.set("n", "]E", function()
+    require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
+  end, { desc = "Next error" })
+
+  -- Toggle outline
+  vim.keymap.set("n", "<leader>o", "<cmd>Lspsaga outline<CR>", { desc = "Toggle outline"})
+
+  -- Hover Doc
+  -- If there is no hover doc,
+  -- there will be a notification stating that
+  -- there is no information available.
+  -- To disable it just use ":Lspsaga hover_doc ++quiet"
+  -- Pressing the key twice will enter the hover window
+  vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", { desc = "Hover doc"})
+
+  -- If you want to keep the hover window in the top right hand corner,
+  -- you can pass the ++keep argument
+  -- Note that if you use hover with ++keep, pressing this key again will
+  -- close the hover window. If you want to jump to the hover window
+  -- you should use the wincmd command "<C-w>w"
+  vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc ++keep<CR>", { desc = "Hover doc (top right)"})
+
+  -- Call hierarchy
+  vim.keymap.set("n", "<Leader>ci", "<cmd>Lspsaga incoming_calls<CR>", { desc = "Incoming calls"})
+  vim.keymap.set("n", "<Leader>co", "<cmd>Lspsaga outgoing_calls<CR>", { desc = "Outgoing calls"})
+
+  -- Floating terminal
+  vim.keymap.set({ "n", "t" }, "<A-d>", "<cmd>Lspsaga term_toggle<CR>", { desc = "Floating term toggle"})
+
+  vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format(, {})' ]])
 
   if client.server_capabilities.documentSymbolProvider then
     navic.attach(client, bufnr)
@@ -130,21 +201,6 @@ local on_attach = function(client, bufnr)
       range = true,
     }
   end
-
-  vim.api.nvim_create_autocmd("CursorHold", {
-    buffer = bufnr,
-    callback = function()
-      local options = {
-        focusable = false,
-        close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-        border = "rounded",
-        source = "always",
-        prefix = " ",
-        scope = "cursor",
-      }
-      vim.diagnostic.open_float(nil, options)
-    end,
-  })
 end
 -- used to enable autocompletion
 local capabilities = cmp_nvim_lsp.default_capabilities()
@@ -210,8 +266,3 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon })
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
---
--- Change border of documentation hover window, See https://github.com/neovim/neovim/pull/13998.
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-  border = "rounded",
-})

@@ -20,23 +20,7 @@ return {
 			["<leader>s"] = { name = "+search" },
 			["<leader>w"] = { name = "+windows" },
 			["<leader>b"] = { name = "+buffers" },
-
-			-- LSP + git
 			["g"] = { name = "+goto" },
-			["<leader>ca"] = { desc = "See code action" },
-			["<leader>l"] = { desc = "See line diagnostics" },
-			["gd"] = { desc = "Go to definition" },
-			["gw"] = { desc = "Go to definition in new window" },
-			["gD"] = { desc = "Go to declaration" },
-			["gt"] = { desc = "Go to type definition" },
-			["gi"] = { desc = "Go to Implementation" },
-			["gr"] = { desc = "Find references" },
-			["<leader>n"] = { desc = "Rename symbol" },
-			["<leader>k"] = { desc = "Signature help" },
-			["K"] = { desc = "Show hover information" },
-			["<leader>[d"] = { desc = "Go to previous diagnostic" },
-			["<leader>]d"] = { desc = "Go to next diagnostic" },
-			["<leader>r"] = { desc = "Rename all occurences" },
 		})
 	end,
 }

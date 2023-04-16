@@ -63,4 +63,12 @@ return {
 		"SmiteshP/nvim-navic",
 		dependencies = { "neovim/nvim-lspconfig" },
 	},
+  {
+    "glepnir/lspsaga.nvim",
+    event = "LspAttach",
+    config = function()
+      require("lspsaga").setup({})
+    end,
+    dependencies = { "nvim-tree/nvim-web-devicons", "nvim-treesitter/nvim-treesitter" }
+  }
 }
