@@ -39,7 +39,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "gr", "<cmd>Lspsaga rename<CR>", { desc = "Rename occurences (file)" })
 
   -- Rename all occurrences of the hovered word for the selected files
-  vim.keymap.set("n", "gr", "<cmd>Lspsaga rename ++project<CR>", { desc = "Rename occurences (project)" })
+  vim.keymap.set("n", "gR", "<cmd>Lspsaga rename ++project<CR>", { desc = "Rename occurences (project)" })
 
   -- Peek definition
   -- You can edit the file containing the definition in the floating window

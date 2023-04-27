@@ -11,6 +11,9 @@ scrolling:
   history: 10000
   multiplier: 3
 
+env:
+  TERM: xterm-256color
+
 font:
   normal:
     family: RobotoMono Nerd Font Mono
@@ -28,7 +31,7 @@ font:
 draw_bold_text_with_bright_colors: false
 
 import:
-  - ~/.dotfiles/.config/alacritty/themes/gruvbox-material.yml
+  - ~/.dotfiles/.config/alacritty/themes/kanagawa.yml
 
 selection:
   save_to_clipboard: false
