@@ -30,7 +30,7 @@ local on_attach = function(client, bufnr)
   -- If there is no definition, it will instead be hidden
   -- When you use an action in finder like "open vsplit",
   -- you can use <C-t> to jump back
-  vim.keymap.set("n", "gh", "<cmd>Lspsaga lsp_finder<CR>", { desc = "Symbol definition" })
+  vim.keymap.set("n", "gh", "<cmd>Lspsaga finder<CR>", { desc = "Symbol definition" })
 
   -- Code action
   vim.keymap.set({ "n", "v" }, "<leader>ca", "<cmd>Lspsaga code_action<CR>", { desc = "Code action" })
