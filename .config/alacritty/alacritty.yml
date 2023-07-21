@@ -16,16 +16,16 @@ env:
 
 font:
   normal:
-    family: RobotoMono Nerd Font Mono
+    family: Iosevka Nerd Font Mono
     style: Medium
   bold:
-    family: RobotoMono Nerd Font Mono
+    family: Iosevka Nerd Font Mono
     style: Bold
   italic:
-    family: RobotoMono Nerd Font Mono
+    family: Iosevka Nerd Font Mono
     style: Italic
   bold_italic:
-    family: RobotoMono Nerd Font Mono
+    family: Iosevka Nerd Font Mono
     style: Bold Italic
   size: 12
 draw_bold_text_with_bright_colors: false
