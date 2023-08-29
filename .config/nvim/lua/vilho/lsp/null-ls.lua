@@ -5,14 +5,13 @@ if not null_ls_ok then
 end
 
 local formatting = null_ls.builtins.formatting
-local diagnostics = null_ls.builtins.diagnostics
 
 null_ls.setup({
   sources = {
+    formatting.prettierd,
     formatting.stylua,
-    diagnostics.eslint,
-    formatting.prettier.with({
-      extra_args = { "--semi", "--single-quote", "--jsx-single-quote" },
-    }),
+    formatting.eslint_d,
+    null_ls.builtins.code_actions.refactoring,
+    null_ls.builtins.completion.spell,
   },
 })
