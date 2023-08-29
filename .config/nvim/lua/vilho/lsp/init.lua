@@ -1,91 +1,66 @@
-local cmp_nvim_lsp_status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-local mason_status_ok, mason = pcall(require, "mason")
-local mason_lspconfig_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
-local mason_null_ls_ok, mason_null_ls = pcall(require, "mason-null-ls")
-local navic_status_ok, navic = pcall(require, "nvim-navic")
-
-if not (mason_status_ok and mason_lspconfig_ok and cmp_nvim_lsp_status_ok and mason_null_ls_ok and navic_status_ok) then
-  print("Mason, Mason LSP Config, Completion or Navic not installed!")
-  return
+-- Check if required plugins are installed
+local function check_plugin(plugin_name)
+  local ok, _ = pcall(require, plugin_name)
+  return ok
 end
+
+local required_plugins = {
+  "cmp_nvim_lsp",
+  "mason",
+  "mason-lspconfig",
+  "mason-null-ls",
+  "nvim-navic",
+}
+
+for _, plugin in ipairs(required_plugins) do
+  if not check_plugin(plugin) then
+    print(plugin .. " not installed!")
+    return
+  end
+end
+
+-- Plugin setup
+local cmp_nvim_lsp = require("cmp_nvim_lsp")
+local mason = require("mason")
+local mason_lspconfig = require("mason-lspconfig")
+local mason_null_ls = require("mason-null-ls")
+local navic = require("nvim-navic")
 
 mason.setup()
 
+-- LSP configuration
 local on_attach = function(client, bufnr)
-  local opts = { noremap = true, silent = true, buffer = bufnr }
-
   local function buf_set_option(...)
     vim.api.nvim_buf_set_option(bufnr, ...)
   end
 
   buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-
   -- Debounce by 300ms by default
   client.config.flags.debounce_text_changes = 300
-
   -- This will set up formatting for the attached LSPs
   client.server_capabilities.documentFormattingProvider = true
 
-  -- LSP finder - Find the symbol's definition
-  -- If there is no definition, it will instead be hidden
-  -- When you use an action in finder like "open vsplit",
-  -- you can use <C-t> to jump back
+  -- Key mappings
   vim.keymap.set("n", "gh", "<cmd>Lspsaga finder<CR>", { desc = "Symbol definition" })
-
-  -- Code action
   vim.keymap.set({ "n", "v" }, "<leader>ca", "<cmd>Lspsaga code_action<CR>", { desc = "Code action" })
-
-  -- Rename all occurrences of the hovered word for the entire file
   vim.keymap.set("n", "gr", "<cmd>Lspsaga rename<CR>", { desc = "Rename occurences (file)" })
-
-  -- Rename all occurrences of the hovered word for the selected files
   vim.keymap.set("n", "gR", "<cmd>Lspsaga rename ++project<CR>", { desc = "Rename occurences (project)" })
-
-  -- Peek definition
-  -- You can edit the file containing the definition in the floating window
-  -- It also supports open/vsplit/etc operations, do refer to "definition_action_keys"
-  -- It also supports tagstack
-  -- Use <C-t> to jump back
   vim.keymap.set("n", "gD", "<cmd>Lspsaga peek_definition<CR>", { desc = "Peek definition" })
-
-  -- Go to definition
   vim.keymap.set("n", "gd", "<cmd>Lspsaga goto_definition<CR>", { desc = "Go to definition" })
-
-  -- Peek type definition
-  -- You can edit the file containing the type definition in the floating window
-  -- It also supports open/vsplit/etc operations, do refer to "definition_action_keys"
-  -- It also supports tagstack
-  -- Use <C-t> to jump back
   vim.keymap.set("n", "gT", "<cmd>Lspsaga peek_type_definition<CR>", { desc = "Peek type definition" })
-
-  -- Go to type definition
   vim.keymap.set("n", "gt", "<cmd>Lspsaga goto_type_definition<CR>", { desc = "Go to type definition" })
-
-  -- Show line diagnostics
-  -- You can pass argument ++unfocus to
-  -- unfocus the show_line_diagnostics floating window
   vim.keymap.set("n", "<leader>xl", "<cmd>Lspsaga show_line_diagnostics<CR>", { desc = "Show line diagnostics" })
-
-  -- Show buffer diagnostics
   vim.keymap.set("n", "<leader>xb", "<cmd>Lspsaga show_buf_diagnostics<CR>", { desc = "Show buffer diagnostics" })
-
-  -- Show workspace diagnostics
   vim.keymap.set(
     "n",
     "<leader>xw",
     "<cmd>Lspsaga show_workspace_diagnostics<CR>",
     { desc = "Show workspace diagnostics" }
   )
-
-  -- Show cursor diagnostics
   vim.keymap.set("n", "<leader>xc", "<cmd>Lspsaga show_cursor_diagnostics<CR>", { desc = "Show cursor diagnostics" })
-
-  -- Diagnostic jump
-  -- You can use <C-o> to jump back to your previous location
   vim.keymap.set("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>", { desc = "Next diagnostic" })
   vim.keymap.set("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>", { desc = "Previous next diagnostic" })
 
-  -- Diagnostic jump with filters such as only jumping to an error
   vim.keymap.set("n", "[E", function()
     require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
   end, { desc = "Previous error" })
@@ -94,23 +69,11 @@ local on_attach = function(client, bufnr)
     require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
   end, { desc = "Next error" })
 
-  -- Toggle outline
   vim.keymap.set("n", "<leader>o", "<cmd>Lspsaga outline<CR>", { desc = "Toggle outline" })
-
-  -- If you want to keep the hover window in the top right hand corner,
-  -- you can pass the ++keep argument
-  -- Note that if you use hover with ++keep, pressing this key again will
-  -- close the hover window. If you want to jump to the hover window
-  -- you should use the wincmd command "<C-w>w"
   vim.keymap.set("n", "K", "<cmd>Lspsaga hover_doc ++keep<CR>", { desc = "Hover doc" })
-
-  -- Call hierarchy
   vim.keymap.set("n", "<Leader>ci", "<cmd>Lspsaga incoming_calls<CR>", { desc = "Incoming calls" })
   vim.keymap.set("n", "<Leader>co", "<cmd>Lspsaga outgoing_calls<CR>", { desc = "Outgoing calls" })
-
-  -- Floating terminal
   vim.keymap.set({ "n", "t" }, "<A-d>", "<cmd>Lspsaga term_toggle<CR>", { desc = "Floating term toggle" })
-
   vim.keymap.set(
     "n",
     "<Leader>j",
@@ -126,6 +89,7 @@ local on_attach = function(client, bufnr)
 
   vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format()' ]])
 
+  -- Check for specific client and adjust capabilities
   if client.server_capabilities.documentSymbolProvider then
     navic.attach(client, bufnr)
   end
@@ -212,9 +176,11 @@ local on_attach = function(client, bufnr)
     }
   end
 end
--- used to enable autocompletion
+
+-- Enable autocompletion
 local capabilities = cmp_nvim_lsp.default_capabilities()
 
+-- List of LSP servers to set up
 local servers = {
   "tsserver",
   "html",
@@ -225,6 +191,7 @@ local servers = {
   "pyright",
   "omnisharp",
 }
+
 -- Setup Mason + LSPs + CMP + Null-ls + Navic
 require("vilho.lsp.cmp")
 require("vilho.lsp.lsp-colors")
@@ -238,19 +205,19 @@ mason_lspconfig.setup({
 
 mason_null_ls.setup({
   ensure_installed = {
-    "prettier",
+    "prettierd",
     "stylua",
-    "eslint_d",
     "cs",
     "c cpp",
   },
+  automatic_installation = true,
 })
 
-for _, s in pairs(servers) do
-  local server_config_ok, mod = pcall(require, "vilho.lsp.servers." .. s)
+-- Set up individual LSP servers
+for _, server in ipairs(servers) do
+  local server_config_ok, mod = pcall(require, "vilho.lsp.servers." .. server)
   if not server_config_ok then
-    print("The LSP '" .. s .. "' does not have a config.")
-    -- require("notify")("The LSP '" .. s .. "' does not have a config.", "warn")
+    print("The LSP '" .. server .. "' does not have a config.")
   else
     mod.setup(on_attach, capabilities)
   end
