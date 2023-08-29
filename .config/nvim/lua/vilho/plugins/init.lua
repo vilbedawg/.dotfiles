@@ -40,6 +40,11 @@ return {
   { "tpope/vim-unimpaired" },
   { "tpope/vim-rhubarb" },
 
+  {
+    "tpope/vim-fugitive",
+    dependencies = { "nvim-lua/plenary.nvim" },
+  },
+
   -- Better commenting
   {
     "numToStr/Comment.nvim",
