@@ -84,7 +84,6 @@ keymap("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "Commits" }
 keymap("n", "<leader>gs", "<cmd>Telescope git_status<CR>", { desc = "Status" })
 keymap("n", "<leader>gg", "<cmd>G<CR>", { desc = "Git menu" })
 
---
 -- search
 keymap("n", "<leader>sa", "<cmd>Telescope autocommands<cr>", { desc = "Auto commands" })
 keymap("n", "<leader>sb", "<cmd>Telescope current_buffer_fuzzy_find<cr>", { desc = "Buffer" })

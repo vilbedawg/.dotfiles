@@ -135,6 +135,7 @@ return {
   },
   event = "VeryLazy",
   version = "*",
+  build = ":TSUpdate",
   config = function()
     require("nvim-tree").setup({
       on_attach = on_attach,
