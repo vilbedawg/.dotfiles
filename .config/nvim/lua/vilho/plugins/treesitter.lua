@@ -1,13 +1,29 @@
 return {
   "nvim-treesitter/nvim-treesitter",
+  run = ":TSUpdate",
   dependencies = {
-    "p00f/nvim-ts-rainbow",
+    "windwp/nvim-ts-autotag",
     "nvim-treesitter/nvim-treesitter-textobjects",
   },
-  build = ":TSUpdate",
   config = function()
+    local disable_function = function(lang, bufnr)
+      if not bufnr then
+        bufnr = 0
+      end
+
+      if lang == "help" then
+        return true
+      end
+
+      local line_count = vim.api.nvim_buf_line_count(bufnr)
+      if line_count > 20000 or (line_count == 1 and lang == "json") then
+        vim.g.matchup_matchparen_enabled = 0
+        return true
+      else
+        return false
+      end
+    end
     require("nvim-treesitter.configs").setup({
-      auto_install = true,
       ensure_installed = {
         "javascript",
         "typescript",
@@ -31,17 +47,26 @@ return {
         "c_sharp",
         "markdown_inline",
       },
-      sync_install = false,
-      ignore_install = { "" },
+      sync_install = true,
+      auto_install = true,
       highlight = {
         enable = true,
-        disable = { "" },
         additional_vim_regex_highlighting = true,
+        disable = disable_function,
       },
-      indent = { enable = true, disable = { "yaml" } },
-      rainbow = {
+      indent = {
         enable = true,
-        max_file_lines = nil,
+        disable = { "yaml" },
+      },
+      autotag = {
+        enable = true,
+      },
+      matchup = {
+        enable = true,
+        disable = { "json", "csv" },
+      },
+      context_commentstring = {
+        enable = true,
       },
       textobjects = {
         move = {
@@ -120,6 +145,15 @@ return {
             ["al"] = "@loop.outer",
             ["ia"] = "@attribute.inner",
             ["aa"] = "@attribute.outer",
+          },
+        },
+        swap = {
+          enable = true,
+          swap_next = {
+            ["<leader>a"] = "@parameter.inner",
+          },
+          swap_previous = {
+            ["<leader>A"] = "@parameter.inner",
           },
         },
       },
