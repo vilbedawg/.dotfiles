@@ -8,7 +8,7 @@ return {
       bold = true,
       italic = {
         strings = true,
-        operators = true,
+        operators = false,
         comments = true,
       },
       strikethrough = true,
