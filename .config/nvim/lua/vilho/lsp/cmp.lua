@@ -5,9 +5,7 @@ local luasnip_status_ok, luasnip = pcall(require, "luasnip")
 if not (cmp_status_ok and lspkind_status_ok and luasnip_status_ok) then
   vim.notify("cmp dependencies not yet installed!")
   return
-end
-
-local check_backspace = function()
+end local check_backspace = function()
   local col = vim.fn.col(".") - 1
   return col == 0 or vim.fn.getline("."):sub(col, col):match("%s")
 end
@@ -20,7 +18,6 @@ cmp.setup({
   },
   sources = cmp.config.sources({
     { name = "nvim_lsp" },
-    { name = "buffer" },
     { name = "luasnip" },
     { name = "path" },
   }),

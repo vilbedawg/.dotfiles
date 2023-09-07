@@ -12,6 +12,5 @@ null_ls.setup({
     formatting.stylua,
     formatting.eslint_d,
     null_ls.builtins.code_actions.refactoring,
-    null_ls.builtins.completion.spell,
   },
 })
