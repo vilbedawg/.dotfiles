@@ -3,6 +3,7 @@ vim.opt.list = true
 return {
 	"lukas-reineke/indent-blankline.nvim",
 	event = { "BufReadPost", "BufNewFile" },
+  main = "ibl",
 	opts = {
 		char = " ",
 		filetype_exclude = { "help", "alpha", "dashboard", "neo-tree", "Trouble", "lazy" },
