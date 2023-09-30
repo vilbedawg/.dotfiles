@@ -190,6 +190,7 @@ local servers = {
   "cmake",
   "pyright",
   "omnisharp",
+  "jsonls",
 }
 
 -- Setup Mason + LSPs + CMP + Null-ls + Navic
