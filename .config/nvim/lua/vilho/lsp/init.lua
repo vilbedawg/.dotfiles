@@ -191,6 +191,7 @@ local servers = {
   "pyright",
   "omnisharp",
   "jsonls",
+  "erlangls",
 }
 
 -- Setup Mason + LSPs + CMP + Null-ls + Navic
