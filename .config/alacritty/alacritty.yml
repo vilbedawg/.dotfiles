@@ -16,16 +16,16 @@ env:
 
 font:
   normal:
-    family: Iosevka Nerd Font Mono
+    family: JetBrainsMonoNerdFont
     style: Medium
   bold:
-    family: Iosevka Nerd Font Mono
+    family: JetBrainsMonoNerdFont
     style: Bold
   italic:
-    family: Iosevka Nerd Font Mono
+    family: JetBrainsMonoNerdFont
     style: Italic
   bold_italic:
-    family: Iosevka Nerd Font Mono
+    family: JetBrainsMonoNerdFont
     style: Bold Italic
   size: 12
 draw_bold_text_with_bright_colors: false
