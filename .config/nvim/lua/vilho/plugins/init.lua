@@ -5,7 +5,6 @@ return {
   { "williamboman/mason-lspconfig.nvim" }, -- Helper for mason
   { "onsails/lspkind-nvim" },              -- VScode-like pictograms
   { "nvim-lua/plenary.nvim" },             -- Useful lua functions used by lots of plugins
-  { "lukas-reineke/lsp-format.nvim" },     -- A wrapper around Neovims native LSP formatting
   { "nvimtools/none-ls.nvim" },            -- For formatters and linters
   { "jayp0521/mason-null-ls.nvim" },       -- For managing formatters and linters
 
