@@ -24,12 +24,23 @@ local cmp_nvim_lsp = require("cmp_nvim_lsp")
 local mason = require("mason")
 local mason_lspconfig = require("mason-lspconfig")
 local mason_null_ls = require("mason-null-ls")
+local lsp_format = require("lsp-format")
 local navic = require("nvim-navic")
 
 mason.setup()
 
+lsp_format.setup({
+  sync = true,
+  order = {
+    "tsserver",
+    "eslint",
+  }
+})
+
 -- LSP configuration
 local on_attach = function(client, bufnr)
+  lsp_format.on_attach(client, bufnr)
+
   local function buf_set_option(...)
     vim.api.nvim_buf_set_option(bufnr, ...)
   end
@@ -86,8 +97,6 @@ local on_attach = function(client, bufnr)
     "<cmd>lua require('illuminate').goto_prev_reference(wrap)<CR>",
     { desc = "Go to prev highlight" }
   )
-
-  vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format()' ]])
 
   -- Check for specific client and adjust capabilities
   if client.server_capabilities.documentSymbolProvider then
@@ -192,12 +201,12 @@ local servers = {
   "omnisharp",
   "jsonls",
   "erlangls",
+  "eslint"
 }
 
 -- Setup Mason + LSPs + CMP + Null-ls + Navic
 require("vilho.lsp.cmp")
 require("vilho.lsp.lsp-colors")
-require("vilho.lsp.null-ls")
 require("vilho.lsp.navic")
 
 mason_lspconfig.setup({
@@ -207,7 +216,8 @@ mason_lspconfig.setup({
 
 mason_null_ls.setup({
   ensure_installed = {
-    "prettier",
+    "prettierd",
+    "eslint_d",
     "stylua",
     "cs",
     "c cpp",
