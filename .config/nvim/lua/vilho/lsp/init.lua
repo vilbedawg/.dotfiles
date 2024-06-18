@@ -87,7 +87,7 @@ local on_attach = function(client, bufnr)
     { desc = "Go to prev highlight" }
   )
 
-  vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format()' ]])
+  vim.cmd([[ command! Format execute 'lua vim.lsp.buf.format({ timeout_ms = 2000 })' ]])
 
   -- Check for specific client and adjust capabilities
   if client.server_capabilities.documentSymbolProvider then
@@ -195,10 +195,9 @@ local servers = {
   "eslint"
 }
 
--- Setup Mason + LSPs + CMP + Null-ls + Navic
+-- Setup Mason + LSPs + CMP + Navic
 require("vilho.lsp.cmp")
 require("vilho.lsp.lsp-colors")
-require("vilho.lsp.null-ls")
 require("vilho.lsp.navic")
 
 mason_lspconfig.setup({

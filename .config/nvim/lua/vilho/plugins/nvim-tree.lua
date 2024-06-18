@@ -130,9 +130,9 @@ end
 return {
   -- File explorer
   "nvim-tree/nvim-tree.lua",
-  dependencies = {
-    "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-  },
+  -- dependencies = {
+  --   "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+  -- },
   event = "VeryLazy",
   version = "*",
   build = ":TSUpdate",

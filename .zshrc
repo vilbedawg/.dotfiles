@@ -111,6 +111,7 @@ alias vim="nvim"
 alias view="nvim -R"
 alias vimdiff="nvim -d"
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias notes='obsidian'
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -120,7 +121,10 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-export DOTNET_ROOT=$HOME/dotnet
-export PATH=$PATH:$HOME/dotnet
+export DOTNET_ROOT=$HOME/.dotnet
+export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
+export PATH=$PATH:/usr/bin/obsidian
+export PATH=$PATH:~/.cache/rebar3/bin
 
 
+[ -f "/home/vilho/.ghcup/env" ] && source "/home/vilho/.ghcup/env" # ghcup-env
