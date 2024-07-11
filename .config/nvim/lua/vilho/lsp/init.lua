@@ -35,8 +35,6 @@ local on_attach = function(client, bufnr)
   end
 
   buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-  -- Debounce by 300ms by default
-  client.config.flags.debounce_text_changes = 300
   -- This will set up formatting for the attached LSPs
   client.server_capabilities.documentFormattingProvider = true
 
@@ -95,7 +93,7 @@ local on_attach = function(client, bufnr)
   end
 
   if client.name == "tsserver" then
-    client.resolved_capabilities.document_formatting = false
+    client.server_capabilities.documentFormattingProvider = false
   end
 
   -- Omnisharps provided tokens dont conform to the LSP semantic tokens specification, therefore Neovim cannot support it. This fixes the issue.
@@ -191,7 +189,6 @@ local servers = {
   "pyright",
   "omnisharp",
   "jsonls",
-  "erlangls",
   "eslint"
 }
 
@@ -235,7 +232,7 @@ vim.diagnostic.config({
   signs = true,
   float = {
     header = "",
-    source = "always",
+    source = true,
     border = "solid",
     focusable = true,
   },
