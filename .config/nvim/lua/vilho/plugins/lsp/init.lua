@@ -1,3 +1,3 @@
 return {
-	{ import = "vilho.plugins.lsp.configs" },
+  { import = "vilho.plugins.lsp.configs" },
 }

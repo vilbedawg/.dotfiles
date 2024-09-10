@@ -100,10 +100,10 @@ keymap("n", "<leader>qs", [[<cmd>lua require("persistence").load()<cr>]], { desc
 
 -- restore the last session
 keymap(
-	"n",
-	"<leader>ql",
-	[[<cmd>lua require("persistence").load({ last = true })<cr>]],
-	{ desc = "Restore last session" }
+  "n",
+  "<leader>ql",
+  [[<cmd>lua require("persistence").load({ last = true })<cr>]],
+  { desc = "Restore last session" }
 )
 -- stop Persistence => session won't be saved on exit
 keymap("n", "<leader>qd", [[<cmd>lua require("persistence").stop()<cr>]], { desc = "Stop persistence from saving" })
