@@ -1,0 +1,40 @@
+shell = { program = "wsl" }
+
+[window]
+padding = { x = 2, y = 2 }
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[font]
+normal = { family = "Iosevka NFM" }
+bold = { family = "Iosevka NFM"  }
+italic = { family = "Iosevka NFM" }
+bold_italic = { family = "Iosevka NFM" }
+
+size = 12
+
+[selection]
+save_to_clipboard = true
+
+[keyboard]
+bindings = [
+    { key = "Return", mods = "Super", action = "SpawnNewInstance" }
+]
+
+# VSCode theme
+[colors]
+  [colors.primary]
+    background = '0x1E1E1E'
+    foreground = '0xD4D4D4'
+
+  [colors.normal]
+    black =   '0x1E1E1E'
+    red =     '0xF44747'
+    green =   '0x608B4E'
+    yellow =  '0xD7BA7D'
+    blue =    '0x569CD6'
+    magenta = '0xC586C0'
+    cyan =    '0x9CDCFE'
+    white =   '0xD4D4D4'
