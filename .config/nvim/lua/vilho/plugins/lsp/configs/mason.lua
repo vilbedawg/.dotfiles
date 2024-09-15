@@ -22,9 +22,18 @@ return {
         },
       })
 
+      local disabled_servers = {
+        "ts_ls",
+      }
+
       mason_lspconfig.setup_handlers({
         -- Automatically configure the LSP installed
         function(server_name)
+          for _, name in pairs(disabled_servers) do
+            if name == server_name then
+              return
+            end
+          end
           local opts = {
             on_attach = on_attach,
             on_init = on_init,
