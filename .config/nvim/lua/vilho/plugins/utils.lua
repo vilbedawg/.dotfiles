@@ -35,4 +35,9 @@ return {
     priority = 1000,
     config = true,
   },
+
+  {
+    "RRethy/vim-illuminate",
+    event = "LspAttach",
+  },
 }
