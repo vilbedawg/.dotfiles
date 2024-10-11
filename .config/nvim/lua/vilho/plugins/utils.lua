@@ -24,10 +24,6 @@ return {
   { "tpope/vim-surround" },
   { "tpope/vim-unimpaired" },
   { "tpope/vim-rhubarb" },
-  {
-    "tpope/vim-fugitive",
-    dependencies = { "nvim-lua/plenary.nvim" },
-  },
 
   -- Add Luarocks support for lazy.nvim
   {

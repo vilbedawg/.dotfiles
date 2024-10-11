@@ -82,7 +82,6 @@ keymap("n", "<leader>fx", "<cmd>Telescope diagnostics<cr>", { desc = "Diagnostic
 -- git
 keymap("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "Commits" })
 keymap("n", "<leader>gs", "<cmd>Telescope git_status<CR>", { desc = "Status" })
-keymap("n", "<leader>gg", "<cmd>G<CR>", { desc = "Git menu" })
 
 -- search
 keymap("n", "<leader>sa", "<cmd>Telescope autocommands<cr>", { desc = "Auto commands" })
