@@ -1,16 +1,10 @@
-local event = {
-  "BufReadPre " .. vim.fn.expand("~") .. "/Obsidian-notes/*.md",
-  "BufNewFile " .. vim.fn.expand("~") .. "/Obsidian-notes/*.md",
-}
-
 return {
   {
     "epwalsh/obsidian.nvim",
     version = "*", -- recommended, use latest release instead of latest commit
     lazy = true,
     ft = "markdown",
-    -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
-    event = event,
+    cond = vim.fn.getcwd():find(vim.fn.expand("~/Obsidian-notes"), 1, true) == 1, -- only enabled if in Obsidian notes directory
     dependencies = {
       "nvim-lua/plenary.nvim", -- Required.
       "hrsh7th/nvim-cmp",
@@ -20,12 +14,10 @@ return {
     opts = {
       workspaces = {
         {
-          name = "school",
-          path = "~/Obsidian-notes/school_notes",
-        },
-        {
-          name = "work",
-          path = "~/Obsidian-notes/work_notes",
+          name = "buf-parent",
+          path = function()
+            return assert(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+          end,
         },
       },
       templates = {
@@ -65,6 +57,7 @@ return {
         mode = { "n", "v" },
         { "<leader>o", group = "obsidian" },
         { "<leader>on", "<cmd>ObsidianNewFromTemplate<cr>", desc = "New note" },
+        { "<leader>ot", "<cmd>ObsidianTemplate<cr>", desc = "Apply template" },
         { "<leader>ow", "<cmd>ObsidianWorkspace<cr>", desc = "Switch workspace" },
         { "<leader>os", "<cmd>ObsidianSearch<cr>", desc = "Search" },
       })
@@ -76,7 +69,6 @@ return {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     build = "cd app && npm install",
-    event = event,
     init = function()
       vim.g.mkdp_filetypes = { "markdown" }
     end,
