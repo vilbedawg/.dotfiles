@@ -8,72 +8,66 @@ local function lsp_keymaps(bufnr)
   local opts = { buffer = bufnr, silent = true }
 
   -- set keybinds
-  opts.desc = "Symbol definition"
-  keymap.set("n", "gh", "<cmd>Lspsaga finder<CR>", opts)
-
-  opts.desc = "Code action"
-  keymap.set({ "n", "v" }, "<leader>ca", "<cmd>Lspsaga code_action<CR>", opts)
-
-  opts.desc = "Rename occurrences (file)"
-  keymap.set("n", "gr", "<cmd>Lspsaga rename<CR>", opts)
-
-  opts.desc = "Rename occurrences (project)"
-  keymap.set("n", "gR", "<cmd>Lspsaga rename ++project<CR>", opts)
-
-  opts.desc = "Peek definition"
-  keymap.set("n", "gD", "<cmd>Lspsaga peek_definition<CR>", opts)
-
   opts.desc = "Go to definition"
-  keymap.set("n", "gd", "<cmd>Lspsaga goto_definition<CR>", opts)
-
-  opts.desc = "Peek type definition"
-  keymap.set("n", "gT", "<cmd>Lspsaga peek_type_definition<CR>", opts)
+  keymap.set("n", "gd", vim.lsp.buf.definition, opts)
 
   opts.desc = "Go to type definition"
-  keymap.set("n", "gt", "<cmd>Lspsaga goto_type_definition<CR>", opts)
+  keymap.set("n", "gt", vim.lsp.buf.type_definition, opts)
 
-  opts.desc = "Show line diagnostics"
-  keymap.set("n", "<leader>xl", "<cmd>Lspsaga show_line_diagnostics<CR>", opts)
+  opts.desc = "Go to implementation"
+  keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
 
-  opts.desc = "Show buffer diagnostics"
-  keymap.set("n", "<leader>xb", "<cmd>Lspsaga show_buf_diagnostics<CR>", opts)
+  opts.desc = "Go to references"
+  keymap.set("n", "gr", vim.lsp.buf.references, opts)
 
-  opts.desc = "Show workspace diagnostics"
-  keymap.set("n", "<leader>xw", "<cmd>Lspsaga show_workspace_diagnostics<CR>", opts)
+  opts.desc = "Split vertical and go to definition"
+  keymap.set("n", "gss", function()
+    vim.cmd.vsplit()
+    vim.lsp.buf.definition()
+  end, opts)
 
-  opts.desc = "Show cursor diagnostics"
-  keymap.set("n", "<leader>xc", "<cmd>Lspsaga show_cursor_diagnostics<CR>", opts)
+  opts.desc = "Split horizontal and go to definition"
+  keymap.set("n", "gsv", function()
+    vim.cmd.split()
+    vim.lsp.buf.definition()
+  end, opts)
 
-  opts.desc = "Next diagnostic"
-  keymap.set("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>", opts)
+  opts.desc = "Add diagnostics to quickfix list"
+  keymap.set("n", "<leader>lq", vim.diagnostic.setqflist, opts)
 
-  opts.desc = "Previous diagnostic"
-  keymap.set("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>", opts)
+  opts.desc = "Clear quickfix list"
+  keymap.set("n", "<leader>d", function()
+    vim.diagnostic.setqflist({})
+  end, opts)
+
+  opts.desc = "Rename symbol"
+  keymap.set("n", "<Leader>r", vim.lsp.buf.rename, opts)
+
+  opts.desc = "Signature documentation"
+  keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+
+  opts.desc = "Hover doc"
+  keymap.set("n", "K", vim.lsp.buf.hover, opts)
+
+  opts.desc = "Previous warning"
+  keymap.set("n", "[e", function()
+    vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN })
+  end, opts)
+
+  opts.desc = "Next warning"
+  keymap.set("n", "]e", function()
+    vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN })
+  end, opts)
 
   opts.desc = "Previous error"
   keymap.set("n", "[E", function()
-    require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
+    vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
   end, opts)
 
   opts.desc = "Next error"
   keymap.set("n", "]E", function()
-    require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
+    vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
   end, opts)
-
-  opts.desc = "Toggle outline"
-  keymap.set("n", "<leader>o", "<cmd>Lspsaga outline<CR>", opts)
-
-  opts.desc = "Hover doc"
-  keymap.set("n", "K", "<cmd>Lspsaga hover_doc ++keep<CR>", opts)
-
-  opts.desc = "Incoming calls"
-  keymap.set("n", "<Leader>ci", "<cmd>Lspsaga incoming_calls<CR>", opts)
-
-  opts.desc = "Outgoing calls"
-  keymap.set("n", "<Leader>co", "<cmd>Lspsaga outgoing_calls<CR>", opts)
-
-  opts.desc = "Floating term toggle"
-  keymap.set({ "n", "t" }, "<A-d>", "<cmd>Lspsaga term_toggle<CR>", opts)
 
   opts.desc = "Go to next highlight"
   keymap.set("n", "<Leader>j", "<cmd>lua require('illuminate').goto_next_reference(wrap)<CR>", opts)
