@@ -23,12 +23,3 @@ autocmd("TextYankPost", {
   group = general,
   desc = "Highlight when yanking",
 })
-
--- autocmd("FileType", {
---   pattern = { "c", "cpp", "py", "java", "cs" },
---   callback = function()
---     vim.bo.shiftwidth = 4
---   end,
---   group = general,
---   desc = "Set shiftwidth to 4 in these filetypes",
--- })
