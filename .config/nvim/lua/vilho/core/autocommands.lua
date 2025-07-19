@@ -18,7 +18,7 @@ autocmd("BufReadPost", {
 
 autocmd("TextYankPost", {
   callback = function()
-    require("vim.highlight").on_yank({ higroup = "Visual", timeout = 200 })
+    require("vim.hl").on_yank({ higroup = "Visual", timeout = 200 })
   end,
   group = general,
   desc = "Highlight when yanking",
