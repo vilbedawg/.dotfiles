@@ -41,6 +41,9 @@ keymap("n", "<S-l>", "<cmd>BufferLineCycleNext<cr>", opts)
 keymap("n", "<S-h>", "<cmd>BufferLineCyclePrev<cr>", opts)
 keymap("n", "<leader>bd", ":bd<CR>", { desc = "Close buffer" })
 keymap("n", "<leader>bD", ":bd!<CR>", { desc = "Close buffer (force)" })
+keymap("n", "<leader>bl", "<cmd>BufferLineCloseLeft<cr>", opts)
+keymap("n", "<leader>br", "<cmd>BufferLineCloseRight<cr>", opts)
+keymap("n", "<leader>bo", "<cmd>BufferLineCloseOthers<cr>", opts)
 
 -- Move Lines
 keymap("n", "<A-j>", "<cmd>m .+1<cr>==", opts)
