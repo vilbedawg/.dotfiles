@@ -1,8 +1,10 @@
+vim.g.mapleader = " " -- change leader to a space
+vim.g.maplocalleader = " " -- change localleader to a space
+
 local options = {
   backup = false, -- creates a backup file
   clipboard = "unnamedplus", -- allows neovim to access the system clipboard
   cmdheight = 2, -- more space in the neovim command line for displaying messages
-  completeopt = { "menuone", "noselect", "preview" }, -- mostly just for cmp
   conceallevel = 1, -- required for markdown formatters
   fileencoding = "utf-8", -- the encoding written to a file
   hlsearch = true, -- highlight all matches on previous search pattern

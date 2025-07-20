@@ -3,8 +3,6 @@ local keymap = vim.api.nvim_set_keymap
 local opts = { noremap = true, silent = true }
 
 keymap("", "<Space>", "<Nop>", opts)
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
 
 -- Splits
 keymap("n", "<leader>wv", "<C-w>v", { desc = "Split vertically" })
@@ -110,6 +108,7 @@ keymap(
 -- stop Persistence => session won't be saved on exit
 keymap("n", "<leader>qd", [[<cmd>lua require("persistence").stop()<cr>]], { desc = "Stop persistence from saving" })
 
+-- Formatting
 keymap("n", "<leader>F", ":Format<cr>", { desc = "Format", noremap = true })
 keymap("n", "<A-f>", ":Format<cr>", { desc = "Format", noremap = true })
 

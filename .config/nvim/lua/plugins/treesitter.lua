@@ -8,7 +8,7 @@ return {
   config = function()
     local disable_function = function(lang, bufnr)
       if not bufnr then
-        bufnr = 0
+        bfnr = 0
       end
 
       if lang == "help" then

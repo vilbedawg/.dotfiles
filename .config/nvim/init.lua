@@ -1,2 +1,5 @@
-require("vilho.core")
-require("vilho.lazy")
+require("config.options")
+require("core.lazy")
+require("core.lsp")
+require("config.keymaps")
+require("config.autocommands")
