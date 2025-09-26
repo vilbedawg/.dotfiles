@@ -14,6 +14,8 @@ vim.pack.add({
   { src = "https://github.com/blazkowolf/gruber-darker.nvim" },
   { src = "https://github.com/windwp/nvim-autopairs" },
   { src = "https://github.com/stevearc/conform.nvim" },
+  { src = "https://github.com/L3MON4D3/LuaSnip" },
+  { src = "https://github.com/rafamadriz/friendly-snippets" },
 })
 
 require("gitsigns").setup()
@@ -52,6 +54,9 @@ require("conform").setup({
 -- Colorscheme
 vim.cmd.colorscheme("gruber-darker")
 
+-- Luasnip
+require("luasnip.loaders.from_vscode").lazy_load()
+
 -- Blink
 require("blink.cmp").setup({
   fuzzy = { implementation = "prefer_rust_with_warning" },
@@ -75,7 +80,6 @@ require("blink.cmp").setup({
     use_nvim_cmp_as_default = true,
     nerd_font_variant = "normal",
   },
-
   completion = {
     menu = {
       border = nil,
@@ -100,14 +104,15 @@ require("blink.cmp").setup({
       auto_show_delay_ms = 500,
     },
   },
-
   cmdline = {
     keymap = {
       preset = "inherit",
       ["<CR>"] = { "accept_and_enter", "fallback" },
     },
   },
-
+  snippets = {
+    preset = "luasnip",
+  },
   sources = {
     default = { "lsp", "path", "snippets", "buffer" },
     providers = {
