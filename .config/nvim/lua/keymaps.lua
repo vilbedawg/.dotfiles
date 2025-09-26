@@ -98,12 +98,12 @@ keymap("n", "<leader>fW", fzf_vertical("grep_cWORD"))
 keymap("n", "<leader>fk", fzf_vertical("keymaps"))
 
 -- LSP
-vim.keymap.set("n", "gss", function()
+keymap("n", "gss", function()
   vim.cmd.vsplit()
   vim.lsp.buf.definition()
 end, { silent = true, desc = "split vertical and go to definition" })
 
-vim.keymap.set("n", "gsv", function()
+keymap("n", "gsv", function()
   vim.cmd.split()
   vim.lsp.buf.definition()
 end, { silent = true, desc = "split horizontal and go to definition" })
@@ -115,3 +115,40 @@ keymap({ "n", "v" }, "<leader>F", function()
     timeout_ms = 500,
   })
 end, { desc = "Format file or range (in visual mode)" })
+
+keymap("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
+keymap("n", "gt", vim.lsp.buf.type_definition, { desc = "Go to type definition" })
+keymap("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
+keymap("n", "gr", vim.lsp.buf.references, { desc = "Go to references" })
+keymap("n", "<leader>r", vim.lsp.buf.rename, { desc = "Rename symbol" })
+keymap("n", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature documentation" })
+keymap("n", "K", vim.lsp.buf.hover, { desc = "Hover doc" })
+keymap("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
+
+-- vim.pack
+local function pack_clean()
+  local active_plugins = {}
+  local unused_plugins = {}
+
+  for _, plugin in ipairs(vim.pack.get()) do
+    active_plugins[plugin.spec.name] = plugin.active
+  end
+
+  for _, plugin in ipairs(vim.pack.get()) do
+    if not active_plugins[plugin.spec.name] then
+      table.insert(unused_plugins, plugin.spec.name)
+    end
+  end
+
+  if #unused_plugins == 0 then
+    print("No unused plugins.")
+    return
+  end
+
+  local choice = vim.fn.confirm("Remove unused plugins?", "&Yes\n&No", 2)
+  if choice == 1 then
+    vim.pack.del(unused_plugins)
+  end
+end
+
+keymap("n", "<leader>pc", pack_clean)
