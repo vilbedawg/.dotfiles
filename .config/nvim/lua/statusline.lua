@@ -106,17 +106,17 @@ vim.keymap.set("n", "<leader>sb", function() Statusline.toggle_branch() end, { d
 local group = vim.api.nvim_create_augroup("Statusline", { clear = true })
 
 vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
-    group = group,
-    desc = "Activate statusline on focus",
-    callback = function()
-        vim.opt_local.statusline = "%!v:lua.Statusline.active()"
-    end,
+  group = group,
+  desc = "Activate statusline on focus",
+  callback = function()
+    vim.opt_local.statusline = "%!v:lua.Statusline.active()"
+  end,
 })
 
 vim.api.nvim_create_autocmd({ "WinLeave", "BufLeave" }, {
-    group = group,
-    desc = "Deactivate statusline when unfocused",
-    callback = function()
-        vim.opt_local.statusline = "%!v:lua.Statusline.inactive()"
-    end,
+  group = group,
+  desc = "Deactivate statusline when unfocused",
+  callback = function()
+    vim.opt_local.statusline = "%!v:lua.Statusline.inactive()"
+  end,
 })

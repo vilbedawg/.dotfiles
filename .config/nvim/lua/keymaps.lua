@@ -62,52 +62,56 @@ keymap("v", ">", ">gv", opts)
 -- Better yank insert
 keymap("v", "p", '"_dP', opts)
 
--- restore the session for the current directory
-keymap("n", "<leader>qs", [[<cmd>lua require("persistence").load()<cr>]], opts)
-
--- restore the last session
-keymap("n", "<leader>ql", [[<cmd>lua require("persistence").load({ last = true })<cr>]], opts)
--- stop Persistence => session won't be saved on exit
-keymap("n", "<leader>qd", [[<cmd>lua require("persistence").stop()<cr>]], opts)
-
 -- Replace word
 keymap("n", "<leader>sw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], opts)
 
 -- soft reload config file
-keymap({ 'n', 'v' }, '<leader>CU', ':update<CR> :source<CR>')
+keymap({ "n", "v" }, "<leader>CU", ":update<CR> :source<CR>")
 
 -- File explorer
 keymap("n", "<leader>e", [[<cmd>lua require("oil").toggle_float()<CR>]], { noremap = true, silent = true })
 
 local function fzf_vertical(command)
-    return function()
-        require("fzf-lua")[command]({
-            winopts = {
-                preview = {
-                    layout = "vertical",
-                },
-            },
-        })
-    end
+  return function()
+    require("fzf-lua")[command]({
+      winopts = {
+        preview = {
+          layout = "vertical",
+        },
+      },
+    })
+  end
 end
 
 -- fzf
-keymap("n", "<leader>ff", '<cmd>FzfLua files<CR>')
-keymap("n", "<leader>fb", '<cmd>FzfLua buffers<CR>')
-keymap("n", "<leader>fd", '<cmd>FzfLua diagnostics_document<CR>')
-keymap("n", "<leader>fD", '<cmd>FzfLua diagnostics_workspace<CR>')
-keymap("n", "<leader>fs", '<cmd>FzfLua spell_suggest<CR>')
-keymap("n", "<leader>fo", '<cmd>FzfLua resume<CR>')
+keymap("n", "<leader>ff", "<cmd>FzfLua files<CR>")
+keymap("n", "<leader>fb", "<cmd>FzfLua buffers<CR>")
+keymap("n", "<leader>fd", "<cmd>FzfLua diagnostics_document<CR>")
+keymap("n", "<leader>fD", "<cmd>FzfLua diagnostics_workspace<CR>")
+keymap("n", "<leader>fo", "<cmd>FzfLua resume<CR>")
 
-keymap("n", "<leader>fg", fzf_vertical('live_grep'))
-keymap("n", "<leader>fc", fzf_vertical('grep_curbuf'))
-keymap("n", "<leader>fr", fzf_vertical('lsp_references'))
-keymap("n", "<leader>fw", fzf_vertical('grep_cword'))
-keymap("n", "<leader>fW", fzf_vertical('grep_cWORD'))
-keymap("n", "<leader>fk", fzf_vertical('keymaps'))
+keymap("n", "<leader>fs", fzf_vertical("live_grep"))
+keymap("n", "<leader>fc", fzf_vertical("grep_curbuf"))
+keymap("n", "<leader>fr", fzf_vertical("lsp_references"))
+keymap("n", "<leader>fw", fzf_vertical("grep_cword"))
+keymap("n", "<leader>fW", fzf_vertical("grep_cWORD"))
+keymap("n", "<leader>fk", fzf_vertical("keymaps"))
 
 -- LSP
-keymap('n', '<leader>F', vim.lsp.buf.format)
-keymap("i", "<C-e>", function() ls.expand_or_jump(1) end, { silent = true })
-keymap({ "i", "s" }, "<C-J>", function() ls.jump(1) end, { silent = true })
-keymap({ "i", "s" }, "<C-K>", function() ls.jump(-1) end, { silent = true })
+vim.keymap.set("n", "gss", function()
+  vim.cmd.vsplit()
+  vim.lsp.buf.definition()
+end, { silent = true, desc = "split vertical and go to definition" })
+
+vim.keymap.set("n", "gsv", function()
+  vim.cmd.split()
+  vim.lsp.buf.definition()
+end, { silent = true, desc = "split horizontal and go to definition" })
+
+keymap({ "n", "v" }, "<leader>F", function()
+  require("conform").format({
+    lsp_fallback = true,
+    async = false,
+    timeout_ms = 500,
+  })
+end, { desc = "Format file or range (in visual mode)" })
