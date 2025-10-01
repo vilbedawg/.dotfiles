@@ -28,12 +28,27 @@ require("mason").setup({
 require("oil").setup()
 require("gitblame").setup({ enabled = true })
 require("nvim-autopairs").setup()
-require("gruber-darker").setup({
-  bold = false,
-  italic = {
-    strings = false,
-  },
-})
+
+-- Treesitter
+local ensure_installed = {
+  "javascript",
+  "typescript",
+  "lua",
+  "bash",
+  "json",
+  "dockerfile",
+  "html",
+  "python",
+  "markdown",
+  "tsx",
+  "cpp",
+  "make",
+  "cmake",
+  "yaml",
+  "c_sharp",
+  "markdown_inline",
+}
+require("nvim-treesitter").install(ensure_installed)
 
 -- Conform
 require("conform").setup({
@@ -57,6 +72,13 @@ require("conform").setup({
 })
 
 -- Colorscheme
+require("gruber-darker").setup({
+  bold = false,
+  italic = {
+    strings = false,
+  },
+})
+
 vim.cmd.colorscheme("gruber-darker")
 
 -- Luasnip
