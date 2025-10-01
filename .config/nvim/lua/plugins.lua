@@ -9,7 +9,6 @@ vim.pack.add({
   { src = "https://github.com/f-person/git-blame.nvim" },
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
   { src = "https://github.com/tpope/vim-surround" },
-  { src = "https://github.com/github/copilot.vim" },
   { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
   { src = "https://github.com/blazkowolf/gruber-darker.nvim" },
   { src = "https://github.com/windwp/nvim-autopairs" },
