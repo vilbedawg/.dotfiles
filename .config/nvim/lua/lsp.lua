@@ -2,7 +2,7 @@ vim.lsp.enable({
   "clangd",
   "jsonls",
   "lua_ls",
-  "omnisharp",
+  "roslyn",
   "ts_ls",
   "yamlls",
   "eslint_d",

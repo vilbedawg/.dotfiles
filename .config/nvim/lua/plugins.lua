@@ -16,10 +16,16 @@ vim.pack.add({
   { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/L3MON4D3/LuaSnip" },
   { src = "https://github.com/rafamadriz/friendly-snippets" },
+  { src = "https://github.com/seblyng/roslyn.nvim" },
 })
 
 require("gitsigns").setup()
-require("mason").setup()
+require("mason").setup({
+  registries = {
+    "github:Crashdummyy/mason-registry", -- for Roslyn
+    "github:mason-org/mason-registry",
+  },
+})
 require("oil").setup()
 require("gitblame").setup({ enabled = true })
 require("nvim-autopairs").setup()
