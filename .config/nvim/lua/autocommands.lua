@@ -38,7 +38,7 @@ autocmd("PackChanged", {
 })
 
 autocmd("FileType", {
-  desc = "User: enable treesitter highlighting, indents and folds",
+  desc = "User: enable treesitter highlighting and folds",
   callback = function(details)
     local bufnr = details.buf
     if not pcall(vim.treesitter.start, bufnr) then -- try to start treesitter which enables syntax highlighting
@@ -48,6 +48,5 @@ autocmd("FileType", {
     vim.wo.foldlevel = 99
     vim.wo.foldmethod = "expr"
     vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- Use treesitter for folds
-    vim.bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" -- Use treesitter for indentation
   end,
 })
