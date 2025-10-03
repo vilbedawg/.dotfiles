@@ -19,6 +19,7 @@ autoload -U compinit && compinit
 autoload -U colors && colors
 zstyle ':completion:*' menu select
 zmodload zsh/complist
+bindkey '^[[Z' reverse-menu-complete
 
 _comp_options+=(globdots)		# Include hidden files.
 
