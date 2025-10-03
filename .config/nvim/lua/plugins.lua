@@ -27,7 +27,6 @@ require("mason").setup({
 })
 require("oil").setup()
 require("gitblame").setup({ enabled = true })
-require("nvim-autopairs").setup()
 
 -- Treesitter
 local ensure_installed = {
