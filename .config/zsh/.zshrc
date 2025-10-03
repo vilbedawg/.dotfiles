@@ -1,41 +1,69 @@
-export ZSH="$HOME/.oh-my-zsh"
+autoload -U colors && colors
+bindkey -e
 
-plugins=(
-    git 
-    zsh-autosuggestions 
-    zsh-syntax-highlighting 
-    zsh-completions
-)
+PS1="%{$fg[magenta]%}%~%{$fg[red]%} %{$reset_color%}$%b "
 
-source $ZSH/oh-my-zsh.sh
+# Maximum lines kept in memory
+export HISTSIZE=100000
+# Maximum lines saved to $HISTFILE
+export SAVEHIST=100000
+setopt EXTENDED_HISTORY          # Write the history file in the ':start:elapsed;command' format.
+setopt HIST_IGNORE_ALL_DUPS      # Delete an old recorded event if a new event is a duplicate.
+setopt SHARE_HISTORY             # Share history between all sessions.
+export HISTIGNORE='exit:cd:ls:bg:fg:history:f:fd:vim'
 
-autoload -U promptinit; promptinit
-PURE_CMD_MAX_EXEC_TIME=10
-zstyle :prompt:pure:path color white
-zstyle :prompt:pure:git:stash show yes
-prompt pure
+source <(fzf --zsh)
 
 # Basic auto/tab complete:
 autoload -U compinit && compinit
+autoload -U colors && colors
+zstyle ':completion:*' menu select
 zmodload zsh/complist
 
 _comp_options+=(globdots)		# Include hidden files.
 
+# edit command line
+autoload edit-command-line
+zle -N edit-command-line
+bindkey '^Xe' edit-command-line
 
-# Aliases
+lazy_nvm() 
+{
+    unset -f nvm node npm npx
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+}
+
+nvm()
+{
+  lazy_nvm
+  nvm $@
+}
+
+node()
+{
+  lazy_nvm
+  node $@
+}
+
+npm()
+{
+  lazy_nvm
+  npm $@
+}
+
+npx()
+{
+  lazy_nvm
+  npx $@
+}
+
+alias src="source ~/.zshrc"
 alias vi="nvim"
 alias vim="nvim"
-alias view="nvim -R"
-alias vimdiff="nvim -d"
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export DOTNET_ROOT=$HOME/.dotnet
 export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
-export PATH="/home/linuxbrew/.linuxbrew/sbin:$PATH"
-export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 
-[ -f "/home/vilho/.ghcup/env" ] && source "/home/vilho/.ghcup/env" # ghcup-env
+# Load zsh-syntax-highlighting; should be last.
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
