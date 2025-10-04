@@ -26,7 +26,7 @@ require("mason").setup({
   },
 })
 require("oil").setup()
-require("gitblame").setup({ enabled = true })
+require("gitblame").setup()
 
 -- Treesitter
 local ensure_installed = {
