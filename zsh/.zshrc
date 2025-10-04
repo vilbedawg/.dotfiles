@@ -7,9 +7,9 @@ PS1="%{$fg[magenta]%}%~%{$fg[red]%} %{$reset_color%}$%b "
 export HISTSIZE=100000
 # Maximum lines saved to $HISTFILE
 export SAVEHIST=100000
-setopt EXTENDED_HISTORY          # Write the history file in the ':start:elapsed;command' format.
-setopt HIST_IGNORE_ALL_DUPS      # Delete an old recorded event if a new event is a duplicate.
-setopt SHARE_HISTORY             # Share history between all sessions.
+setopt HIST_IGNORE_ALL_DUPS     # Delete an old recorded event if a new event is a duplicate.
+setopt SHARE_HISTORY            # Share history between all sessions.
+setopt HIST_FIND_NO_DUPS        # Dont show dupes on search.
 export HISTIGNORE='exit:cd:ls:bg:fg:history:f:fd:vim'
 
 source <(fzf --zsh)
@@ -20,6 +20,8 @@ autoload -U colors && colors
 zstyle ':completion:*' menu select
 zmodload zsh/complist
 bindkey '^[[Z' reverse-menu-complete
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 _comp_options+=(globdots)		# Include hidden files.
 
@@ -66,5 +68,8 @@ alias vim="nvim"
 export DOTNET_ROOT=$HOME/.dotnet
 export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
 
-# Load zsh-syntax-highlighting; should be last.
-source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Load plugins; these should be last
+export HOMEBREW_PREFIX=/opt/homebrew
+source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOMEBREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh
