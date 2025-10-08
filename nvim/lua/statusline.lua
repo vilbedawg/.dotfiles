@@ -10,7 +10,7 @@ local config = {
         path = "",
         branch_hidden = "",
     },
-    placeholder_hl = "StatusLineDim", -- a dim highlight group we define below
+    placeholder_hl = "StatusLine",
 }
 
 -- helper to wrap text in a statusline highlight group
@@ -18,9 +18,7 @@ local function hl(group, text)
     return string.format("%%#%s#%s%%*", group, text)
 end
 
--- set (or link) the dim highlight once
-vim.api.nvim_set_hl(0, config.placeholder_hl, {}) -- create if missing
--- Link to Comment to keep it dim; adjust as you like
+-- vim.api.nvim_set_hl(0, config.placeholder_hl, {}) -- create if missing
 vim.api.nvim_set_hl(0, config.placeholder_hl, { link = "Comment" })
 
 local function filepath()
