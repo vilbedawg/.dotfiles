@@ -69,8 +69,10 @@ require("conform").setup({
 
 -- Colorscheme
 require("vague").setup({ transparent = true })
-
 vim.cmd.colorscheme("vague")
+vim.cmd("hi statusline guibg=NONE guifg=NONE")
+vim.cmd("hi statuslinenc guibg=NONE guifg=NONE ")
+
 
 -- Luasnip
 require("luasnip.loaders.from_vscode").lazy_load()
