@@ -14,6 +14,7 @@ vim.pack.add({
   { src = "https://github.com/rafamadriz/friendly-snippets" },
   { src = "https://github.com/seblyng/roslyn.nvim" },
   { src = "https://github.com/christoomey/vim-tmux-navigator" },
+  { src = "https://github.com/chomosuke/typst-preview.nvim" },
 })
 
 require("mason").setup({
@@ -43,6 +44,7 @@ local ensure_installed = {
   "yaml",
   "c_sharp",
   "markdown_inline",
+  "tinymist",
 }
 require("nvim-treesitter").install(ensure_installed)
 

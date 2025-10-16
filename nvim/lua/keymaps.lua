@@ -98,34 +98,6 @@ keymap("n", "<leader>fw", fzf_vertical("grep_cword"))
 keymap("n", "<leader>fW", fzf_vertical("grep_cWORD"))
 keymap("n", "<leader>fk", fzf_vertical("keymaps"))
 
--- LSP
-keymap("n", "gss", function()
-  vim.cmd.vsplit()
-  vim.lsp.buf.definition()
-end, { silent = true, desc = "split vertical and go to definition" })
-
-keymap("n", "gsv", function()
-  vim.cmd.split()
-  vim.lsp.buf.definition()
-end, { silent = true, desc = "split horizontal and go to definition" })
-
-keymap({ "n", "v" }, "<leader>F", function()
-  require("conform").format({
-    lsp_fallback = true,
-    async = false,
-    timeout_ms = 500,
-  })
-end, { desc = "Format file or range (in visual mode)" })
-
-keymap("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
-keymap("n", "gt", vim.lsp.buf.type_definition, { desc = "Go to type definition" })
-keymap("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
-keymap("n", "gr", vim.lsp.buf.references, { desc = "Go to references" })
-keymap("n", "<leader>r", vim.lsp.buf.rename, { desc = "Rename symbol" })
-keymap("n", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature documentation" })
-keymap("n", "K", vim.lsp.buf.hover, { desc = "Hover doc" })
-keymap("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
-
 -- vim.pack
 local function pack_clean()
   local active_plugins = {}
