@@ -26,7 +26,7 @@ opt.scrolloff = 8 -- Keep 8 lines above and below the cursor
 opt.inccommand = "nosplit" -- Shows the effects of a command incrementally in the buffer
 opt.undodir = os.getenv('HOME') .. '/.vim/undodir' -- Directory for undo files
 opt.undofile = true -- Enable persistent undo
-opt.hlsearch = false -- Disable highlighting of search results
+opt.hlsearch = true -- Enable highlighting of search results
 opt.backup = false -- creates a backup file
 opt.clipboard = "unnamedplus" -- allows neovim to access the system clipboard
 
