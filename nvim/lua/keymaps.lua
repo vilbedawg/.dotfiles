@@ -124,4 +124,14 @@ local function pack_clean()
   end
 end
 
+local function pack_update()
+  local plugins = {}
+  for _, plugin in ipairs(vim.pack.get()) do
+      table.insert(plugins, plugin.spec.name)
+  end
+
+  vim.pack.update(plugins)
+end
+
 keymap("n", "<leader>pc", pack_clean)
+keymap("n", "<leader>pu", pack_update)
