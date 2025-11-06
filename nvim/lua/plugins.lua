@@ -70,7 +70,7 @@ require("conform").setup({
 })
 
 -- Colorscheme
-require("vague").setup({ transparent = true })
+require("vague").setup({ transparent = false })
 vim.cmd.colorscheme("vague")
 
 

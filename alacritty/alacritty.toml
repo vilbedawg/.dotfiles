@@ -1,9 +1,9 @@
 [window]
-opacity = 0.6
+opacity = 1.0
 option_as_alt = "both"
 decorations = "none"
 dynamic_padding = true
-blur = true
+blur = false
 
 [scrolling]
 history = 10000
