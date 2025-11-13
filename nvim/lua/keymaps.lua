@@ -11,9 +11,8 @@ keymap("n", "<leader>we", "<C-w>=", opts)
 keymap("n", "<leader>wx", ":close<CR>", opts)
 keymap("n", "<leader>to", ":tabnew<CR>", opts)
 keymap("n", "<leader>tx", ":tabclose<CR>", opts)
-keymap("n", "<leader>tn", ":tabn<CR>", opts)
-keymap("n", "<leader>tp", ":tabp<CR>", opts)
-keymap("n", "<leader>nh", ":nohl<CR>", opts)
+keymap("n", "<leader>tl", ":tabn<CR>", opts)
+keymap("n", "<leader>th", ":tabp<CR>", opts)
 
 -- delete single character without copying to register
 keymap("n", "x", '"_x', opts)
@@ -39,7 +38,6 @@ keymap("n", "<leader>bd", ":bd<CR>", opts)
 keymap("n", "<leader>bD", ":bd!<CR>", opts)
 keymap("n", "<S-l>", ":bNext<CR>", opts)
 keymap("n", "<S-h>", ":bprevious<CR>", opts)
--- keymap("n", "<leader>bda", ":%bd|e#<CR>", opts) -- Delete all except this buffer
 
 -- Move Lines
 keymap("n", "<A-j>", "<cmd>m .+1<cr>==", opts)
@@ -135,3 +133,9 @@ end
 
 keymap("n", "<leader>pc", pack_clean)
 keymap("n", "<leader>pu", pack_update)
+
+keymap({ "n" }, "<leader>w", "<Cmd>update<CR>", { desc = "Write the current buffer." })
+keymap({ "n" }, "<leader>q", "<Cmd>:quit<CR>", { desc = "Quit the current buffer." })
+keymap({ "n" }, "<leader>Q", "<Cmd>:wqa<CR>", { desc = "Quit all buffers and write." })
+keymap({ "n", "v", "x" }, "<leader>n", ":norm ", { desc = "ENTER NORM COMMAND." })
+keymap("n", "<leader>ch", ":nohl<CR>", opts)
