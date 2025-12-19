@@ -1,6 +1,6 @@
 vim.pack.add({
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter"},
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/mason-org/mason.nvim" },
   { src = "https://github.com/stevearc/oil.nvim" },
@@ -27,7 +27,7 @@ require("mason").setup({
 require("oil").setup()
 
 -- Treesitter
-local ensure_installed = {
+require("nvim-treesitter").install({
   "javascript",
   "typescript",
   "lua",
@@ -45,8 +45,8 @@ local ensure_installed = {
   "c_sharp",
   "markdown_inline",
   "tinymist",
-}
-require("nvim-treesitter").install(ensure_installed)
+}):wait(300000)
+
 
 -- Conform
 require("conform").setup({
