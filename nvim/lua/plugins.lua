@@ -1,6 +1,5 @@
 vim.pack.add({
-  { src = "https://github.com/lewis6991/gitsigns.nvim" },
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter"},
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/mason-org/mason.nvim" },
   { src = "https://github.com/stevearc/oil.nvim" },
@@ -8,7 +7,6 @@ vim.pack.add({
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
   { src = "https://github.com/tpope/vim-surround" },
   { src = "https://github.com/vague-theme/vague.nvim" },
-  { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
   { src = "https://github.com/L3MON4D3/LuaSnip" },
   { src = "https://github.com/rafamadriz/friendly-snippets" },
@@ -27,52 +25,31 @@ require("mason").setup({
 require("oil").setup()
 
 -- Treesitter
-require("nvim-treesitter").install({
-  "javascript",
-  "typescript",
-  "lua",
-  "bash",
-  "json",
-  "dockerfile",
-  "html",
-  "python",
-  "markdown",
-  "tsx",
-  "cpp",
-  "make",
-  "cmake",
-  "yaml",
-  "c_sharp",
-  "markdown_inline",
-  "tinymist",
-}):wait(300000)
-
-
--- Conform
-require("conform").setup({
-  formatters_by_ft = {
-    javascript = { "prettier" },
-    typescript = { "prettier" },
-    javascriptreact = { "prettier" },
-    typescriptreact = { "prettier" },
-    css = { "prettier" },
-    html = { "prettier" },
-    json = { "prettier" },
-    yaml = { "prettier" },
-    markdown = { "prettier" },
-    lua = { "stylua" },
-    python = { "isort", "black" },
-  },
-  format_after_save = nil,
-  default_format_opts = {
-    lsp_format = "fallback",
-  },
-})
+require("nvim-treesitter")
+  .install({
+    "javascript",
+    "typescript",
+    "lua",
+    "bash",
+    "json",
+    "dockerfile",
+    "html",
+    "python",
+    "markdown",
+    "tsx",
+    "cpp",
+    "make",
+    "cmake",
+    "yaml",
+    "c_sharp",
+    "markdown_inline",
+    "tinymist",
+  })
+  :wait(300000)
 
 -- Colorscheme
 require("vague").setup({ transparent = false })
 vim.cmd.colorscheme("vague")
-
 
 -- Luasnip
 require("luasnip.loaders.from_vscode").lazy_load()
@@ -169,64 +146,4 @@ require("fzf-lua").setup({
       ["enter"] = actions.file_edit_or_qf,
     },
   },
-})
-
--- gitsigns
-require("gitsigns").setup({
-  on_attach = function(bufnr)
-    local gitsigns = require("gitsigns")
-
-    local function map(mode, l, r, opts)
-      opts = opts or {}
-      opts.buffer = bufnr
-      vim.keymap.set(mode, l, r, opts)
-    end
-
-    -- Navigation
-    map("n", "]c", function()
-      if vim.wo.diff then
-        vim.cmd.normal({ "]c", bang = true })
-      else
-        gitsigns.nav_hunk("next")
-      end
-    end, { desc = "next hunk" })
-
-    map("n", "[c", function()
-      if vim.wo.diff then
-        vim.cmd.normal({ "[c", bang = true })
-      else
-        gitsigns.nav_hunk("prev")
-      end
-    end, { desc = "prev hunk" })
-
-    -- Actions
-    map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "stage hunk" })
-    map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "reset hunk" })
-
-    map("v", "<leader>hs", function()
-      gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-    end, { desc = "stage selection" })
-
-    map("v", "<leader>hr", function()
-      gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-    end, { desc = "reset selection" })
-
-    map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "stage buffer" })
-    map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "reset buffer" })
-
-    map("n", "<leader>hb", function()
-      gitsigns.blame_line({ full = true })
-    end, { desc = "blame line" })
-
-    map("n", "<leader>hd", gitsigns.diffthis, { desc = "diff this" })
-
-    map("n", "<leader>hD", function()
-      gitsigns.diffthis("~")
-    end, { desc = "diff file" })
-
-    map("n", "<leader>hQ", function()
-      gitsigns.setqflist("all")
-    end, { desc = "send all to qf list" })
-    map("n", "<leader>hq", gitsigns.setqflist, { desc = "send to qf list" })
-  end,
 })

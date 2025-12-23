@@ -54,14 +54,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
       vim.lsp.buf.definition()
     end, { silent = true, desc = "split horizontal and go to definition" })
 
-    keymap({ "n", "v" }, "<leader>F", function()
-      require("conform").format({
-        lsp_fallback = true,
-        async = false,
-        timeout_ms = 500,
-      })
-    end, { desc = "Format file or range (in visual mode)" })
-
+    keymap({ "n", "v" }, "<leader>F", vim.lsp.buf.format, { desc = "Format file or range (in visual mode)" })
     keymap("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
     keymap("n", "gt", vim.lsp.buf.type_definition, { desc = "Go to type definition" })
     keymap("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
