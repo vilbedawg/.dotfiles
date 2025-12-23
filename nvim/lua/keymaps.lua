@@ -60,9 +60,8 @@ keymap("v", ">", ">gv", opts)
 -- Better yank insert
 keymap("v", "p", '"_dP', opts)
 
--- Replace word
-keymap("n", "<leader>sw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], opts)
-keymap({ "x", "n" }, "<C-s>", [[<esc>:'<,'>s/\V/]], { desc = "Enter substitue mode in selection" })
+-- Substitute
+keymap({ "n", "v", "x" }, "<leader>sw", [[:s/\V]], { desc = "Enter substitue mode in selection" })
 
 -- soft reload config file
 keymap({ "n", "v" }, "<leader>CU", ":update<CR> :source<CR>")
