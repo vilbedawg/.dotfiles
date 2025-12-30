@@ -24,29 +24,6 @@ require("mason").setup({
 
 require("oil").setup()
 
--- Treesitter
-require("nvim-treesitter")
-  .install({
-    "javascript",
-    "typescript",
-    "lua",
-    "bash",
-    "json",
-    "dockerfile",
-    "html",
-    "python",
-    "markdown",
-    "tsx",
-    "cpp",
-    "make",
-    "cmake",
-    "yaml",
-    "c_sharp",
-    "markdown_inline",
-    "tinymist",
-  })
-  :wait(300000)
-
 -- Colorscheme
 require("vague").setup({ transparent = false })
 vim.cmd.colorscheme("vague")
