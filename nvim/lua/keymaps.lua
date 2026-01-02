@@ -63,7 +63,7 @@ keymap({ "n", "v", "x" }, "<leader>sw", [[:s/\V]], { desc = "Enter substitue mod
 keymap({ "n", "v" }, "<leader>CU", ":update<CR> :source<CR>")
 
 -- File explorer
-keymap("n", "<leader>e", [[<cmd>lua require("oil").open()<CR>]], { noremap = true, silent = true })
+keymap("n", "<leader>e", "<cmd>Oil<CR>")
 
 local function fzf_vertical(command)
   return function()
