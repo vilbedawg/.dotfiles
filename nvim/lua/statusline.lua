@@ -1,25 +1,4 @@
--- internal state for toggles
-local state = {
-    show_path = true,
-    show_branch = true,
-}
-
--- config for placeholders + highlighting
-local config = {
-    icons = {
-        path = "",
-        branch_hidden = "",
-    },
-    placeholder_hl = "StatusLine",
-}
-
--- helper to wrap text in a statusline highlight group
-local function hl(group, text)
-    return string.format("%%#%s#%s%%*", group, text)
-end
-
--- vim.api.nvim_set_hl(0, config.placeholder_hl, {}) -- create if missing
-vim.api.nvim_set_hl(0, config.placeholder_hl, { link = "Comment" })
+vim.api.nvim_set_hl(0, "StatusLine", {})
 
 local function filepath()
     local fpath = vim.fn.fnamemodify(vim.fn.expand "%", ":~:.:h")
@@ -28,11 +7,7 @@ local function filepath()
         return ""
     end
 
-    if state.show_path then
-        return string.format("%%<%s/", fpath)
-    end
-
-    return hl(config.placeholder_hl, config.icons.path .. "/")
+    return string.format("%%<%s/", fpath)
 end
 
 local function git()
@@ -48,10 +23,6 @@ local function git()
     if git_info.added == 0 then added = "" end
     if git_info.changed == 0 then changed = "" end
     if git_info.removed == 0 then removed = "" end
-
-    if not state.show_branch then
-        head = hl(config.placeholder_hl, config.icons.branch_hidden)
-    end
 
     return table.concat({
         "[ ",
@@ -87,19 +58,6 @@ end
 function Statusline.inactive()
     return " %t"
 end
-
-function Statusline.toggle_path()
-    state.show_path = not state.show_path
-    vim.cmd("redrawstatus")
-end
-
-function Statusline.toggle_branch()
-    state.show_branch = not state.show_branch
-    vim.cmd("redrawstatus")
-end
-
-vim.keymap.set("n", "<leader>sp", function() Statusline.toggle_path() end, { desc = "Toggle statusline path" })
-vim.keymap.set("n", "<leader>sb", function() Statusline.toggle_branch() end, { desc = "Toggle statusline git branch" })
 
 local group = vim.api.nvim_create_augroup("Statusline", { clear = true })
 
