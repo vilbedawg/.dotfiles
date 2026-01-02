@@ -40,14 +40,10 @@ keymap("n", "<S-l>", ":bNext<CR>", opts)
 keymap("n", "<S-h>", ":bprevious<CR>", opts)
 
 -- Move Lines
-keymap("n", "<A-j>", "<cmd>m .+1<cr>==", opts)
-keymap("n", "<A-k>", "<cmd>m .-2<cr>==", opts)
-keymap("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", opts)
-keymap("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", opts)
-keymap("v", "<A-j>", ":m '>+1<cr>gv=gv", opts)
-keymap("v", "<A-k>", ":m '<-2<cr>gv=gv", opts)
-keymap("x", "<A-j>", ":m '>+1<CR>gv-gv", opts)
-keymap("x", "<A-k>", ":m '<-2<CR>gv-gv", opts)
+keymap("n", "<M-j>", "<cmd>m .+1<cr>==", opts)
+keymap("n", "<M-k>", "<cmd>m .-2<cr>==", opts)
+keymap("v", "<M-j>", ":m '>+1<cr>gv=gv", opts)
+keymap("v", "<M-k>", ":m '<-2<cr>gv=gv", opts)
 
 -- Press jk fast to exit insert mode
 keymap("i", "jk", "<ESC>", opts)
