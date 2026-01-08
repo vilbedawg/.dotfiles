@@ -66,15 +66,15 @@ keymap({ "n", "v" }, "<leader>CU", ":update<CR> :source<CR>")
 keymap("n", "<leader>e", "<cmd>Oil<CR>")
 
 local function fzf_vertical(command)
-  return function()
-    require("fzf-lua")[command]({
-      winopts = {
-        preview = {
-          layout = "vertical",
-        },
-      },
-    })
-  end
+    return function()
+        require("fzf-lua")[command]({
+            winopts = {
+                preview = {
+                    layout = "vertical",
+                },
+            },
+        })
+    end
 end
 
 -- fzf
@@ -93,37 +93,37 @@ keymap("n", "<leader>fk", fzf_vertical("keymaps"))
 
 -- vim.pack
 local function pack_clean()
-  local active_plugins = {}
-  local unused_plugins = {}
+    local active_plugins = {}
+    local unused_plugins = {}
 
-  for _, plugin in ipairs(vim.pack.get()) do
-    active_plugins[plugin.spec.name] = plugin.active
-  end
-
-  for _, plugin in ipairs(vim.pack.get()) do
-    if not active_plugins[plugin.spec.name] then
-      table.insert(unused_plugins, plugin.spec.name)
+    for _, plugin in ipairs(vim.pack.get()) do
+        active_plugins[plugin.spec.name] = plugin.active
     end
-  end
 
-  if #unused_plugins == 0 then
-    print("No unused plugins.")
-    return
-  end
+    for _, plugin in ipairs(vim.pack.get()) do
+        if not active_plugins[plugin.spec.name] then
+            table.insert(unused_plugins, plugin.spec.name)
+        end
+    end
 
-  local choice = vim.fn.confirm("Remove unused plugins?", "&Yes\n&No", 2)
-  if choice == 1 then
-    vim.pack.del(unused_plugins)
-  end
+    if #unused_plugins == 0 then
+        print("No unused plugins.")
+        return
+    end
+
+    local choice = vim.fn.confirm("Remove unused plugins?", "&Yes\n&No", 2)
+    if choice == 1 then
+        vim.pack.del(unused_plugins)
+    end
 end
 
 local function pack_update()
-  local plugins = {}
-  for _, plugin in ipairs(vim.pack.get()) do
-      table.insert(plugins, plugin.spec.name)
-  end
+    local plugins = {}
+    for _, plugin in ipairs(vim.pack.get()) do
+        table.insert(plugins, plugin.spec.name)
+    end
 
-  vim.pack.update(plugins)
+    vim.pack.update(plugins)
 end
 
 keymap("n", "<leader>pc", pack_clean)

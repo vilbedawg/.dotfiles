@@ -41,8 +41,8 @@ autocmd("FileType", {
   desc = "User: enable treesitter highlighting and folds",
   callback = function(details)
     local bufnr = details.buf
-    if not pcall(vim.treesitter.start, bufnr) then -- try to start treesitter which enables syntax highlighting
-      return -- Exit if treesitter was unable to start
+    if not pcall(vim.treesitter.start, bufnr) then
+      return
     end
     vim.bo[bufnr].syntax = "on" -- Use regex based syntax-highlighting as fallback as some plugins might need it
     vim.wo.foldlevel = 99

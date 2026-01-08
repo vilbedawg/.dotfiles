@@ -4,10 +4,9 @@ vim.g.mapleader = " " -- change leader to a space
 vim.g.maplocalleader = " " -- change localleader to a space
 
 opt.smartindent = true
-opt.backup = false -- creates a backup file
 opt.conceallevel = 1 -- required for markdown formatters
 opt.updatetime = 300 -- faster completion (4000ms default)
-opt.signcolumn = "yes" -- Always show sign column opt.termguicolors = true -- Enable true colors
+opt.signcolumn = "yes" -- Always show sign column
 opt.termguicolors = true -- Enable true colors
 opt.ignorecase = true -- Ignore case in search
 opt.swapfile = false -- Disable swap files
@@ -37,6 +36,6 @@ opt.iskeyword:append("-") -- hyphenated words recognized by searches
 opt.formatoptions:remove({ "c", "r", "o" }) -- don't insert the current comment leader automatically for auto-wrapping comments using 'textwidth', hitting <Enter> in insert mode, or hitting 'o' or 'O' in normal mode.
 opt.runtimepath:remove("/usr/share/vim/vimfiles") -- separate vim plugins from neovim in case vim still in use
 
--- disable netrw at the very start of your init.lua (strongly advised)
+-- disable native file explorer
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
