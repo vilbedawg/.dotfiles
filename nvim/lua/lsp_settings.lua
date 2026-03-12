@@ -64,6 +64,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
     keymap("n", "K", vim.lsp.buf.hover, { desc = "Hover doc" })
     keymap("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 
+    if client.name == "clangd" then
+        keymap("n", "<leader>gw", "<cmd>LspClangdSwitchSourceHeader<cr>", { desc = "Hover doc" })
+    end
+
     if client.name == "tinymist" then
       -- Necessary for typst to pickup the main file when dealing with multiple files
       -- This is a temporary workaround for writing my thesis
