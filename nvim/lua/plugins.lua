@@ -61,7 +61,7 @@ local ensure_installed = {
     "cmake",
     "c_sharp",
     "markdown_inline",
-    "tinymist",
+    -- "tinymist",
 }
 
 require("nvim-treesitter").install(ensure_installed)
