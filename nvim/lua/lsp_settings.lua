@@ -1,84 +1,98 @@
 vim.lsp.enable({
-  "clangd",
-  "jsonls",
-  "lua_ls",
-  "roslyn",
-  "ts_ls",
-  "yamlls",
-  "eslint_d",
-  "tinymist",
+    "clangd",
+    "jsonls",
+    "lua_ls",
+    "roslyn",
+    "ts_ls",
+    "yamlls",
+    "eslint_d",
+    "tinymist",
 })
 
 vim.diagnostic.config({
-  virtual_text = true,
-  underline = true,
-  update_in_insert = false,
-  severity_sort = true,
-  float = {
-    border = "rounded",
-    source = true,
-  },
-  signs = {
-    text = {
-      [vim.diagnostic.severity.ERROR] = "󰅚 ",
-      [vim.diagnostic.severity.WARN] = "󰀪 ",
-      [vim.diagnostic.severity.INFO] = "󰋽 ",
-      [vim.diagnostic.severity.HINT] = "󰌶 ",
+    virtual_text = true,
+    underline = true,
+    update_in_insert = false,
+    severity_sort = true,
+    float = {
+        border = "rounded",
+        source = true,
     },
-    numhl = {
-      [vim.diagnostic.severity.ERROR] = "ErrorMsg",
-      [vim.diagnostic.severity.WARN] = "WarningMsg",
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = "󰅚 ",
+            [vim.diagnostic.severity.WARN] = "󰀪 ",
+            [vim.diagnostic.severity.INFO] = "󰋽 ",
+            [vim.diagnostic.severity.HINT] = "󰌶 ",
+        },
+        numhl = {
+            [vim.diagnostic.severity.ERROR] = "ErrorMsg",
+            [vim.diagnostic.severity.WARN] = "WarningMsg",
+        },
     },
-  },
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("lsp-attach-config", { clear = true }),
-  callback = function(args)
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    if client == nil then
-      return
-    end
+    group = vim.api.nvim_create_augroup("lsp-attach-config", { clear = true }),
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client == nil then
+            return
+        end
 
-    local bufnr = args.buf
+        local bufnr = args.buf
+        local keymap = vim.keymap.set
 
-    local keymap = vim.keymap.set
+        local opts = {
+            noremap = true, -- prevent recursive mapping
+            silent = true,  -- don't print the cmd to cli
+            buffer = bufnr,
+        }
 
-    keymap("n", "gss", function()
-      vim.cmd.vsplit()
-      vim.lsp.buf.definition()
-    end, { silent = true, desc = "split vertical and go to definition" })
+        require("fzf-lua").register_ui_select()
+        -- Native nvim keymaps
+        keymap({ "n", "v" }, "<leader>F", vim.lsp.buf.format, opts)                                   -- Format
+        keymap("n", "gd", vim.lsp.buf.definition, opts)                                               -- Go to definition
+        keymap("n", "gt", vim.lsp.buf.type_definition, opts)                                          -- Go to type def
+        keymap("n", "gi", vim.lsp.buf.implementation, opts)                                           -- Go to implementation
+        keymap("n", "gD", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts)                     -- Go to definition in split
+        keymap("n", "<leader>r", vim.lsp.buf.rename, opts)                                            -- Rename
+        keymap("n", "K", vim.lsp.buf.hover, opts)                                                     -- Hover doc
+        keymap("n", "<leader>vd", vim.diagnostic.open_float, opts)                                    -- cursor diagnostics
+        keymap("n", "<leader>vD", "<cmd>lua vim.diagnostic.open_float({ scope = 'line' })<CR>", opts) -- line diagnostics
 
-    keymap("n", "gsv", function()
-      vim.cmd.split()
-      vim.lsp.buf.definition()
-    end, { silent = true, desc = "split horizontal and go to definition" })
+        keymap('n', ']d', function()
+            vim.diagnostic.jump({ count = 1, float = true }) -- float=true shows diagnostic automatically
+        end)
+        keymap('n', '[d', function()
+            vim.diagnostic.jump({ count = -1, float = true })
+        end)
 
-    keymap({ "n", "v" }, "<leader>F", vim.lsp.buf.format, { desc = "Format file or range (in visual mode)" })
-    keymap("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
-    keymap("n", "gt", vim.lsp.buf.type_definition, { desc = "Go to type definition" })
-    keymap("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
-    keymap("n", "gr", vim.lsp.buf.references, { desc = "Go to references" })
-    keymap("n", "<leader>r", vim.lsp.buf.rename, { desc = "Rename symbol" })
-    keymap("n", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature documentation" })
-    keymap("n", "K", vim.lsp.buf.hover, { desc = "Hover doc" })
-    keymap("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
+        keymap("n", "<leader>ca", "<cmd>FzfLua lsp_code_actions<CR>", opts)      -- lsp code actions
+        keymap("n", "<leader>fd", "<cmd>FzfLua lsp_finder<CR>", opts)            -- lsp finder (definitions + references)
+        keymap("n", "<leader>fr", "<cmd>FzfLua lsp_references<CR>", opts)        -- show all references to symbol under cursor
+        keymap("n", "<leader>ft", "<cmd>FzfLua lsp_typedefs<CR>", opts)          -- jump to the typedefs of symbol under cursor
+        keymap("n", "<leader>ds", "<cmd>FzfLua lsp_document_symbols<CR>", opts)  -- list all symbols in file
+        keymap("n", "<leader>ws", "<cmd>FzfLua lsp_workspace_symbols<CR>", opts) -- search for symbol across entire project
+        keymap("n", "<leader>fi", "<cmd>FzfLua lsp_implementations<CR>", opts)   -- go to implementation
 
-    if client.name == "clangd" then
-        keymap("n", "<leader>gw", "<cmd>LspClangdSwitchSourceHeader<cr>", { desc = "Hover doc" })
-    end
 
-    if client.name == "tinymist" then
-      -- Necessary for typst to pickup the main file when dealing with multiple files
-      -- This is a temporary workaround for writing my thesis
-      local main = client.root_dir .. "/Thesis/main.typ"
-      client:exec_cmd({
-        title = "tinymist.pinMain",
-        command = "tinymist.pinMain",
-        arguments = { main },
-      }, { bufnr = bufnr })
-    end
-  end,
+        if client.name == "clangd" then
+            keymap("n", "<leader>gw", "<cmd>LspClangdSwitchSourceHeader<cr>", { desc = "Hover doc" })
+        end
+
+        if client.name == "tinymist" then
+            -- Necessary for typst to pickup the main file when dealing with multiple files
+            -- This is a temporary workaround for writing my thesis
+            vim.cmd("set wrap")
+            local main = client.root_dir .. "/Thesis/main.typ"
+            client:exec_cmd({
+                title = "tinymist.pinMain",
+                command = "tinymist.pinMain",
+                arguments = { main },
+            }, { bufnr = bufnr })
+        end
+    end,
 })
 
 vim.cmd([[set completeopt+=menuone,noselect,popup]])
