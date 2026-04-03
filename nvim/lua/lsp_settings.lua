@@ -49,7 +49,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
             buffer = bufnr,
         }
 
-        require("fzf-lua").register_ui_select()
+        -- require("fzf-lua").register_ui_select()
         -- Native nvim keymaps
         keymap({ "n", "v" }, "<leader>F", vim.lsp.buf.format, opts)                                   -- Format
         keymap("n", "gd", vim.lsp.buf.definition, opts)                                               -- Go to definition
@@ -79,18 +79,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
         if client.name == "clangd" then
             keymap("n", "<leader>gw", "<cmd>LspClangdSwitchSourceHeader<cr>", { desc = "Hover doc" })
-        end
-
-        if client.name == "tinymist" then
-            -- Necessary for typst to pickup the main file when dealing with multiple files
-            -- This is a temporary workaround for writing my thesis
-            vim.cmd("set wrap")
-            local main = client.root_dir .. "/Thesis/main.typ"
-            client:exec_cmd({
-                title = "tinymist.pinMain",
-                command = "tinymist.pinMain",
-                arguments = { main },
-            }, { bufnr = bufnr })
         end
     end,
 })
