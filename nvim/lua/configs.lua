@@ -39,3 +39,5 @@ opt.runtimepath:remove("/usr/share/vim/vimfiles") -- separate vim plugins from n
 -- disable native file explorer
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+
+vim.cmd([[set completeopt+=menuone,noselect,popup]])

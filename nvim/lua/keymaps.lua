@@ -1,6 +1,6 @@
 -- Shorten function name
 local keymap = vim.keymap.set
-local opts = { noremap = true, silent = true }
+local opts = { silent = true }
 
 keymap("", "<Space>", "<Nop>", opts)
 
@@ -18,8 +18,8 @@ keymap("n", "<leader>th", ":tabp<CR>", opts)
 keymap("n", "x", '"_x', opts)
 
 -- better up/down
-keymap("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true, noremap = true })
-keymap("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true, noremap = true })
+keymap("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+keymap("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
 -- Move to window using the <ctrl> hjkl keys
 keymap("n", "<C-h>", "<C-w>h", opts)
@@ -86,7 +86,6 @@ keymap("n", "<leader>fo", "<cmd>FzfLua resume<CR>")
 
 keymap("n", "<leader>fs", fzf_vertical("live_grep"))
 keymap("n", "<leader>fc", fzf_vertical("grep_curbuf"))
-keymap("n", "<leader>fr", fzf_vertical("lsp_references"))
 keymap("n", "<leader>fw", fzf_vertical("grep_cword"))
 keymap("n", "<leader>fW", fzf_vertical("grep_cWORD"))
 keymap("n", "<leader>fk", fzf_vertical("keymaps"))

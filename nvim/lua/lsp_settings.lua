@@ -1,14 +1,3 @@
-vim.lsp.enable({
-    "clangd",
-    "jsonls",
-    "lua_ls",
-    "roslyn",
-    "ts_ls",
-    "yamlls",
-    "eslint_d",
-    "tinymist",
-})
-
 vim.diagnostic.config({
     virtual_text = true,
     underline = true,
@@ -43,13 +32,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
         local bufnr = args.buf
         local keymap = vim.keymap.set
 
-        local opts = {
-            noremap = true, -- prevent recursive mapping
-            silent = true,  -- don't print the cmd to cli
-            buffer = bufnr,
-        }
+        local opts = { silent = true, buffer = bufnr, }
 
-        -- require("fzf-lua").register_ui_select()
+        local function fzf_vertical(command)
+            return function()
+                require("fzf-lua")[command]({
+                    winopts = { preview = { layout = "vertical" } },
+                })
+            end
+        end
+
         -- Native nvim keymaps
         keymap({ "n", "v" }, "<leader>F", vim.lsp.buf.format, opts)                                   -- Format
         keymap("n", "gd", vim.lsp.buf.definition, opts)                                               -- Go to definition
@@ -62,25 +54,24 @@ vim.api.nvim_create_autocmd("LspAttach", {
         keymap("n", "<leader>vD", "<cmd>lua vim.diagnostic.open_float({ scope = 'line' })<CR>", opts) -- line diagnostics
 
         keymap('n', ']d', function()
-            vim.diagnostic.jump({ count = 1, float = true }) -- float=true shows diagnostic automatically
-        end)
+            vim.diagnostic.jump({ count = 1, float = true })
+        end, opts)
         keymap('n', '[d', function()
             vim.diagnostic.jump({ count = -1, float = true })
-        end)
+        end, opts)
 
-        keymap("n", "<leader>ca", "<cmd>FzfLua lsp_code_actions<CR>", opts)      -- lsp code actions
-        keymap("n", "<leader>fd", "<cmd>FzfLua lsp_finder<CR>", opts)            -- lsp finder (definitions + references)
-        keymap("n", "<leader>fr", "<cmd>FzfLua lsp_references<CR>", opts)        -- show all references to symbol under cursor
-        keymap("n", "<leader>ft", "<cmd>FzfLua lsp_typedefs<CR>", opts)          -- jump to the typedefs of symbol under cursor
-        keymap("n", "<leader>ds", "<cmd>FzfLua lsp_document_symbols<CR>", opts)  -- list all symbols in file
-        keymap("n", "<leader>ws", "<cmd>FzfLua lsp_workspace_symbols<CR>", opts) -- search for symbol across entire project
-        keymap("n", "<leader>fi", "<cmd>FzfLua lsp_implementations<CR>", opts)   -- go to implementation
-
+        -- FzfLua LSP keymaps
+        keymap("n", "<leader>ca", fzf_vertical("lsp_code_actions"), opts)      -- lsp code actions
+        keymap("n", "<leader>fl", fzf_vertical("lsp_finder"), opts)            -- lsp finder (definitions + references)
+        keymap("n", "<leader>fr", fzf_vertical("lsp_references"), opts)        -- show all references to symbol under cursor
+        keymap("n", "<leader>ft", fzf_vertical("lsp_typedefs"), opts)          -- jump to the typedefs of symbol under cursor
+        keymap("n", "<leader>ds", fzf_vertical("lsp_document_symbols"), opts)  -- list all symbols in file
+        keymap("n", "<leader>ws", fzf_vertical("lsp_workspace_symbols"), opts) -- search for symbol across entire project
+        keymap("n", "<leader>fi", fzf_vertical("lsp_implementations"), opts)   -- go to implementation
 
         if client.name == "clangd" then
-            keymap("n", "<leader>gw", "<cmd>LspClangdSwitchSourceHeader<cr>", { desc = "Hover doc" })
+            keymap("n", "<leader>gw", "<cmd>LspClangdSwitchSourceHeader<cr>",
+                { buffer = bufnr, desc = "Switch source/header" })
         end
     end,
 })
-
-vim.cmd([[set completeopt+=menuone,noselect,popup]])

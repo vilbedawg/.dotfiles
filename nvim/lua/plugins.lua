@@ -25,46 +25,52 @@ require("mason").setup({
 
 require("oil").setup()
 
-local ensure_installed = {
-    "c",
-    "markdown",
-    "markdown_inline",
-    "vim",
-    "vimdoc",
-    "query",
-    "bash",
-    "diff",
-    "comment",
-    "editorconfig",
-    "git_config",
-    "git_rebase",
-    "gitattributes",
-    "gitcommit",
-    "gitignore",
-    "javascript",
-    "typescript",
-    "tsx",
-    "jsdoc",
-    "yaml",
-    "toml",
-    "json",
-    "lua",
-    "luadoc",
-    "python",
-    "html",
-    "css",
-    "cpp",
-    "dockerfile",
-    "python",
-    "tsx",
-    "make",
-    "cmake",
-    "c_sharp",
-    "markdown_inline",
-    -- "tinymist",
+local languages = {
+    { ts = "lua",            lsp = "lua_ls" },
+    { ts = "python" },
+    { ts = "typescript",     lsp = "ts_ls" },
+    { ts = "tsx" },
+    { ts = "javascript" },
+    { ts = "jsdoc" },
+    { ts = "c",              lsp = "clangd" },
+    { ts = "cpp" },
+    { ts = "c_sharp",        lsp = "roslyn" },
+    { ts = "json",           lsp = "jsonls" },
+    { ts = "yaml",           lsp = "yamlls" },
+    { ts = "html" },
+    { ts = "css" },
+    { ts = "bash" },
+    { ts = "markdown" },
+    { ts = "markdown_inline" },
+    { ts = "vim" },
+    { ts = "vimdoc" },
+    { ts = "query" },
+    { ts = "diff" },
+    { ts = "comment" },
+    { ts = "editorconfig" },
+    { ts = "git_config" },
+    { ts = "git_rebase" },
+    { ts = "gitattributes" },
+    { ts = "gitcommit" },
+    { ts = "gitignore" },
+    { ts = "toml" },
+    { ts = "dockerfile" },
+    { ts = "make" },
+    { ts = "cmake" },
+    { ts = "luadoc" },
+    { lsp = "tinymist" },
+    { lsp = "eslint_d" },
 }
 
-require("nvim-treesitter").install(ensure_installed)
+local ts_parsers = {}
+local lsp_servers = {}
+for _, lang in ipairs(languages) do
+    if lang.ts then table.insert(ts_parsers, lang.ts) end
+    if lang.lsp then table.insert(lsp_servers, lang.lsp) end
+end
+
+require("nvim-treesitter").install(ts_parsers)
+vim.lsp.enable(lsp_servers)
 
 -- Colorscheme
 require("vague").setup({ transparent = false })
@@ -229,17 +235,17 @@ require("gitsigns").setup({
 
 -- incremental selection treesitter/lsp
 vim.keymap.set({ "n", "x", "o" }, "<A-o>", function()
-	if vim.treesitter.get_parser(nil, nil, { error = false }) then
-		require("vim.treesitter._select").select_parent(vim.v.count1)
-	else
-		vim.lsp.buf.selection_range(vim.v.count1)
-	end
+    if vim.treesitter.get_parser(nil, nil, { error = false }) then
+        require("vim.treesitter._select").select_parent(vim.v.count1)
+    else
+        vim.lsp.buf.selection_range(vim.v.count1)
+    end
 end, { desc = "Select parent treesitter node or outer incremental lsp selections" })
 
 vim.keymap.set({ "n", "x", "o" }, "<A-i>", function()
-	if vim.treesitter.get_parser(nil, nil, { error = false }) then
-		require("vim.treesitter._select").select_child(vim.v.count1)
-	else
-		vim.lsp.buf.selection_range(-vim.v.count1)
-	end
+    if vim.treesitter.get_parser(nil, nil, { error = false }) then
+        require("vim.treesitter._select").select_child(vim.v.count1)
+    else
+        vim.lsp.buf.selection_range(-vim.v.count1)
+    end
 end, { desc = "Select child treesitter node or inner incremental lsp selections" })
