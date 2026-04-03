@@ -22,8 +22,11 @@ autocmd("TextYankPost", {
   desc = "Highlight when yanking",
 })
 
--- resize neovim split when terminal is resized
-vim.api.nvim_command("autocmd VimResized * wincmd =")
+autocmd("VimResized", {
+  command = "wincmd =",
+  group = general,
+  desc = "Equalize splits on terminal resize",
+})
 
 autocmd("PackChanged", {
   desc = "Handle nvim-treesitter updates",
