@@ -133,3 +133,21 @@ keymap({ "n" }, "<leader>q", "<Cmd>:quit<CR>", { desc = "Quit the current buffer
 keymap({ "n" }, "<leader>Q", "<Cmd>:wqa<CR>", { desc = "Quit all buffers and write." })
 keymap({ "n", "v", "x" }, "<leader>n", ":norm ", { desc = "ENTER NORM COMMAND." })
 keymap("n", "<leader>ch", ":nohl<CR>", opts)
+
+
+-- Fugitive
+vim.keymap.set("n", "<leader>gg", "<cmd>leftabove vertical Git<cr>", {silent = true})
+vim.keymap.set("n", "<leader>ga", "<cmd>Git add %:p<cr><cr>", {silent = true})
+vim.keymap.set("n", "<leader>gd", "<cmd>Gdiff<cr>", {silent = true})
+vim.keymap.set("n", "<leader>ge", "<cmd>Gedit<cr>", {silent = true})
+vim.keymap.set("n", "<leader>gw", "<cmd>Gwrite<cr>", {silent = true})
+vim.keymap.set("n", "<leader>gf", "<cmd>FzfLua git_commits<cr>", {silent = true})
+vim.keymap.set("n", "<leader>gb", function()
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "fugitiveblame" then
+            vim.api.nvim_win_close(win, false)
+            return
+        end
+    end
+    vim.cmd("G blame")
+end, { silent = true, desc = "Toggle git blame" })
