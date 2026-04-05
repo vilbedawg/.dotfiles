@@ -1,30 +1,3 @@
-vim.pack.add({
-    { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
-    { src = "https://github.com/neovim/nvim-lspconfig" },
-    { src = "https://github.com/mason-org/mason.nvim" },
-    { src = "https://github.com/stevearc/oil.nvim" },
-    { src = "https://github.com/ibhagwan/fzf-lua" },
-    { src = "https://github.com/nvim-tree/nvim-web-devicons" },
-    { src = "https://github.com/tpope/vim-surround" },
-    { src = "https://github.com/vague-theme/vague.nvim" },
-    { src = "https://github.com/saghen/blink.cmp",               version = vim.version.range("^1") },
-    { src = "https://github.com/L3MON4D3/LuaSnip" },
-    { src = "https://github.com/rafamadriz/friendly-snippets" },
-    { src = "https://github.com/seblyng/roslyn.nvim" },
-    { src = "https://github.com/tpope/vim-fugitive" },
-    { src = "https://github.com/christoomey/vim-tmux-navigator" },
-    { src = "https://github.com/chomosuke/typst-preview.nvim" },
-})
-
-require("mason").setup({
-    registries = {
-        "github:Crashdummyy/mason-registry", -- for Roslyn
-        "github:mason-org/mason-registry",
-    },
-})
-
-require("oil").setup()
-
 local languages = {
     { ts = "lua",            lsp = "lua_ls" },
     { ts = "python" },
@@ -69,123 +42,154 @@ for _, lang in ipairs(languages) do
     if lang.lsp then table.insert(lsp_servers, lang.lsp) end
 end
 
-require("nvim-treesitter").install(ts_parsers)
-vim.lsp.enable(lsp_servers)
+vim.pack.add({
+    { src = "https://github.com/vague-theme/vague.nvim" },
+    { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+    { src = "https://github.com/neovim/nvim-lspconfig" },
+    { src = "https://github.com/seblyng/roslyn.nvim" },
+})
 
--- Colorscheme
 require("vague").setup({ transparent = false })
 vim.cmd.colorscheme("vague")
 
--- Luasnip
-require("luasnip.loaders.from_vscode").lazy_load()
+vim.lsp.enable(lsp_servers)
 
--- Blink
-require("blink.cmp").setup({
-    fuzzy = { implementation = "prefer_rust_with_warning" },
-    signature = { enabled = true },
-    keymap = {
-        preset = "default",
-        ["<C-space>"] = {},
-        ["<C-p>"] = {},
-        ["<Tab>"] = {},
-        ["<S-Tab>"] = {},
-        ["<C-y>"] = { "show", "show_documentation", "hide_documentation" },
-        ["<CR>"] = { "accept", "fallback" },
-        ["<C-k>"] = { "select_prev", "fallback" },
-        ["<C-j>"] = { "select_next", "fallback" },
-        ["<C-b>"] = { "scroll_documentation_down", "fallback" },
-        ["<C-f>"] = { "scroll_documentation_up", "fallback" },
-        ["<C-l>"] = { "snippet_forward", "fallback" },
-        ["<C-h>"] = { "snippet_backward", "fallback" },
-    },
-    appearance = {
-        use_nvim_cmp_as_default = true,
-        nerd_font_variant = "normal",
-    },
-    completion = {
-        menu = {
-            border = nil,
-            scrolloff = 1,
-            scrollbar = false,
-            draw = {
-                columns = {
-                    { "kind_icon" },
-                    { "label",      "label_description", gap = 1 },
-                    { "kind" },
-                    { "source_name" },
+vim.api.nvim_create_user_command("Mason", function(opts)
+    vim.pack.add({ { src = "https://github.com/mason-org/mason.nvim" } })
+    require("mason").setup({
+        registries = {
+            "github:Crashdummyy/mason-registry", -- for Roslyn
+            "github:mason-org/mason-registry",
+        },
+    })
+    vim.cmd("Mason " .. opts.args)
+end, { nargs = "*" })
+
+vim.schedule(function()
+    vim.pack.add({
+        { src = "https://github.com/stevearc/oil.nvim" },
+        { src = "https://github.com/ibhagwan/fzf-lua" },
+        { src = "https://github.com/nvim-tree/nvim-web-devicons" },
+        { src = "https://github.com/tpope/vim-surround" },
+        { src = "https://github.com/tpope/vim-fugitive" },
+        { src = "https://github.com/christoomey/vim-tmux-navigator" },
+    })
+
+    require("oil").setup()
+
+    require("nvim-treesitter").install(ts_parsers)
+
+    local actions = require("fzf-lua.actions")
+    require("fzf-lua").setup({
+        winopts = { backdrop = 85 },
+        keymap = {
+            builtin = {
+                ["<C-f>"] = "preview-page-down",
+                ["<C-b>"] = "preview-page-up",
+                ["<C-p>"] = "toggle-preview",
+            },
+            fzf = {
+                ["ctrl-a"] = "toggle-all",
+                ["ctrl-t"] = "first",
+                ["ctrl-g"] = "last",
+                ["ctrl-d"] = "half-page-down",
+                ["ctrl-u"] = "half-page-up",
+            },
+        },
+        actions = {
+            files = {
+                ["ctrl-q"] = actions.file_sel_to_qf,
+                ["ctrl-n"] = actions.toggle_ignore,
+                ["ctrl-h"] = actions.toggle_hidden,
+                ["enter"] = actions.file_edit_or_qf,
+            },
+        },
+    })
+end)
+
+vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
+    once = true,
+    callback = function()
+        vim.pack.add({
+            { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
+            { src = "https://github.com/L3MON4D3/LuaSnip" },
+            { src = "https://github.com/rafamadriz/friendly-snippets" },
+        })
+
+        require("luasnip.loaders.from_vscode").lazy_load()
+
+        require("blink.cmp").setup({
+            fuzzy = { implementation = "prefer_rust_with_warning" },
+            signature = { enabled = true },
+            keymap = {
+                preset = "default",
+                ["<C-space>"] = {},
+                ["<C-p>"] = {},
+                ["<Tab>"] = {},
+                ["<S-Tab>"] = {},
+                ["<C-y>"] = { "show", "show_documentation", "hide_documentation" },
+                ["<CR>"] = { "accept", "fallback" },
+                ["<C-k>"] = { "select_prev", "fallback" },
+                ["<C-j>"] = { "select_next", "fallback" },
+                ["<C-b>"] = { "scroll_documentation_down", "fallback" },
+                ["<C-f>"] = { "scroll_documentation_up", "fallback" },
+                ["<C-l>"] = { "snippet_forward", "fallback" },
+                ["<C-h>"] = { "snippet_backward", "fallback" },
+            },
+            appearance = {
+                use_nvim_cmp_as_default = true,
+                nerd_font_variant = "normal",
+            },
+            completion = {
+                menu = {
+                    border = nil,
+                    scrolloff = 1,
+                    scrollbar = false,
+                    draw = {
+                        columns = {
+                            { "kind_icon" },
+                            { "label",      "label_description", gap = 1 },
+                            { "kind" },
+                            { "source_name" },
+                        },
+                    },
+                },
+                documentation = {
+                    window = {
+                        border = nil,
+                        scrollbar = false,
+                        winhighlight = "Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,EndOfBuffer:BlinkCmpDoc",
+                    },
+                    auto_show = true,
+                    auto_show_delay_ms = 500,
                 },
             },
-        },
-        documentation = {
-            window = {
-                border = nil,
-                scrollbar = false,
-                winhighlight = "Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,EndOfBuffer:BlinkCmpDoc",
-            },
-            auto_show = true,
-            auto_show_delay_ms = 500,
-        },
-    },
-    cmdline = {
-        keymap = {
-            preset = "inherit",
-            ["<CR>"] = { "accept_and_enter", "fallback" },
-        },
-    },
-    snippets = {
-        preset = "luasnip",
-    },
-    sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
-        providers = {
             cmdline = {
-                min_keyword_length = 2,
+                keymap = {
+                    preset = "inherit",
+                    ["<CR>"] = { "accept_and_enter", "fallback" },
+                },
             },
-        },
-    },
+            snippets = {
+                preset = "luasnip",
+            },
+            sources = {
+                default = { "lsp", "path", "snippets", "buffer" },
+                providers = {
+                    cmdline = {
+                        min_keyword_length = 2,
+                    },
+                },
+            },
+        })
+    end,
 })
 
--- Fzf
-local actions = require("fzf-lua.actions")
-require("fzf-lua").setup({
-    winopts = { backdrop = 85 },
-    keymap = {
-        builtin = {
-            ["<C-f>"] = "preview-page-down",
-            ["<C-b>"] = "preview-page-up",
-            ["<C-p>"] = "toggle-preview",
-        },
-        fzf = {
-            ["ctrl-a"] = "toggle-all",
-            ["ctrl-t"] = "first",
-            ["ctrl-g"] = "last",
-            ["ctrl-d"] = "half-page-down",
-            ["ctrl-u"] = "half-page-up",
-        },
-    },
-    actions = {
-        files = {
-            ["ctrl-q"] = actions.file_sel_to_qf,
-            ["ctrl-n"] = actions.toggle_ignore,
-            ["ctrl-h"] = actions.toggle_hidden,
-            ["enter"] = actions.file_edit_or_qf,
-        },
-    },
+-- typst-preview: only needed for typst files
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "typst",
+    once = true,
+    callback = function()
+        vim.pack.add({ { src = "https://github.com/chomosuke/typst-preview.nvim" } })
+    end,
 })
-
--- incremental selection treesitter/lsp
-vim.keymap.set({ "n", "x", "o" }, "<A-o>", function()
-    if vim.treesitter.get_parser(nil, nil, { error = false }) then
-        require("vim.treesitter._select").select_parent(vim.v.count1)
-    else
-        vim.lsp.buf.selection_range(vim.v.count1)
-    end
-end, { desc = "Select parent treesitter node or outer incremental lsp selections" })
-
-vim.keymap.set({ "n", "x", "o" }, "<A-i>", function()
-    if vim.treesitter.get_parser(nil, nil, { error = false }) then
-        require("vim.treesitter._select").select_child(vim.v.count1)
-    else
-        vim.lsp.buf.selection_range(-vim.v.count1)
-    end
-end, { desc = "Select child treesitter node or inner incremental lsp selections" })
