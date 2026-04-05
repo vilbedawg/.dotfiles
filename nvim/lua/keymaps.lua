@@ -136,13 +136,13 @@ keymap("n", "<leader>ch", ":nohl<CR>", opts)
 
 
 -- Fugitive
-vim.keymap.set("n", "<leader>gg", "<cmd>leftabove vertical Git<cr>", {silent = true})
-vim.keymap.set("n", "<leader>ga", "<cmd>Git add %:p<cr><cr>", {silent = true})
-vim.keymap.set("n", "<leader>gd", "<cmd>Gdiff<cr>", {silent = true})
-vim.keymap.set("n", "<leader>ge", "<cmd>Gedit<cr>", {silent = true})
-vim.keymap.set("n", "<leader>gw", "<cmd>Gwrite<cr>", {silent = true})
-vim.keymap.set("n", "<leader>gf", "<cmd>FzfLua git_commits<cr>", {silent = true})
-vim.keymap.set("n", "<leader>gb", function()
+keymap("n", "<leader>gg", "<cmd>leftabove vertical Git<cr>", {silent = true})
+keymap("n", "<leader>ga", "<cmd>Git add %:p<cr><cr>", {silent = true})
+keymap("n", "<leader>gd", "<cmd>Gdiff<cr>", {silent = true})
+keymap("n", "<leader>ge", "<cmd>Gedit<cr>", {silent = true})
+keymap("n", "<leader>gw", "<cmd>Gwrite<cr>", {silent = true})
+keymap("n", "<leader>gf", "<cmd>FzfLua git_commits<cr>", {silent = true})
+keymap("n", "<leader>gb", function()
     for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
         if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "fugitiveblame" then
             vim.api.nvim_win_close(win, false)
@@ -153,7 +153,7 @@ vim.keymap.set("n", "<leader>gb", function()
 end, { silent = true, desc = "Toggle git blame" })
 
 -- incremental selection treesitter/lsp
-vim.keymap.set({ "n", "x", "o" }, "<A-o>", function()
+keymap({ "n", "x", "o" }, "<A-o>", function()
     if vim.treesitter.get_parser(nil, nil, { error = false }) then
         require("vim.treesitter._select").select_parent(vim.v.count1)
     else
@@ -161,7 +161,7 @@ vim.keymap.set({ "n", "x", "o" }, "<A-o>", function()
     end
 end, { desc = "Select parent treesitter node or outer incremental lsp selections" })
 
-vim.keymap.set({ "n", "x", "o" }, "<A-i>", function()
+keymap({ "n", "x", "o" }, "<A-i>", function()
     if vim.treesitter.get_parser(nil, nil, { error = false }) then
         require("vim.treesitter._select").select_child(vim.v.count1)
     else
