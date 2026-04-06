@@ -47,12 +47,109 @@ vim.pack.add({
     { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
     { src = "https://github.com/neovim/nvim-lspconfig" },
     { src = "https://github.com/seblyng/roslyn.nvim" },
+    { src = "https://github.com/stevearc/oil.nvim" },
+    { src = "https://github.com/ibhagwan/fzf-lua" },
+    { src = "https://github.com/nvim-tree/nvim-web-devicons" },
+    { src = "https://github.com/tpope/vim-surround" },
+    { src = "https://github.com/tpope/vim-fugitive" },
+    { src = "https://github.com/christoomey/vim-tmux-navigator" },
+    { src = "https://github.com/lewis6991/gitsigns.nvim" },
 })
 
 require("vague").setup({ transparent = false })
 vim.cmd.colorscheme("vague")
 
 vim.lsp.enable(lsp_servers)
+
+require("oil").setup()
+
+require("nvim-treesitter").install(ts_parsers)
+
+local actions = require("fzf-lua.actions")
+require("fzf-lua").setup({
+    winopts = { backdrop = 85 },
+    keymap = {
+        builtin = {
+            ["<C-f>"] = "preview-page-down",
+            ["<C-b>"] = "preview-page-up",
+            ["<C-p>"] = "toggle-preview",
+        },
+        fzf = {
+            ["ctrl-a"] = "toggle-all",
+            ["ctrl-t"] = "first",
+            ["ctrl-g"] = "last",
+            ["ctrl-d"] = "half-page-down",
+            ["ctrl-u"] = "half-page-up",
+        },
+    },
+    actions = {
+        files = {
+            ["ctrl-q"] = actions.file_sel_to_qf,
+            ["ctrl-n"] = actions.toggle_ignore,
+            ["ctrl-h"] = actions.toggle_hidden,
+            ["enter"] = actions.file_edit_or_qf,
+        },
+    },
+})
+
+require("gitsigns").setup({
+    on_attach = function(bufnr)
+        local gitsigns = require("gitsigns")
+
+        local function map(mode, l, r, opts)
+            opts = opts or {}
+            opts.buffer = bufnr
+            vim.keymap.set(mode, l, r, opts)
+        end
+
+        -- Navigation
+        map("n", "]c", function()
+            if vim.wo.diff then
+                vim.cmd.normal({ "]c", bang = true })
+            else
+                gitsigns.nav_hunk("next")
+            end
+        end, { desc = "next hunk" })
+
+        map("n", "[c", function()
+            if vim.wo.diff then
+                vim.cmd.normal({ "[c", bang = true })
+            else
+                gitsigns.nav_hunk("prev")
+            end
+        end, { desc = "prev hunk" })
+
+        -- Actions
+        map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "stage hunk" })
+        map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "reset hunk" })
+
+        map("v", "<leader>hs", function()
+            gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+        end, { desc = "stage selection" })
+
+        map("v", "<leader>hr", function()
+            gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+        end, { desc = "reset selection" })
+
+        map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "stage buffer" })
+        map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "reset buffer" })
+
+        map("n", "<leader>hb", function()
+            gitsigns.blame_line({ full = true })
+        end, { desc = "blame line" })
+
+        map("n", "<leader>hd", gitsigns.diffthis, { desc = "diff this" })
+
+        map("n", "<leader>hD", function()
+            gitsigns.diffthis("~")
+        end, { desc = "diff file" })
+
+        map("n", "<leader>hQ", function()
+            gitsigns.setqflist("all")
+        end, { desc = "send all to qf list" })
+        map("n", "<leader>hq", gitsigns.setqflist, { desc = "send to qf list" })
+    end,
+})
 
 vim.api.nvim_create_user_command("Mason", function(opts)
     vim.pack.add({ { src = "https://github.com/mason-org/mason.nvim" } })
@@ -65,107 +162,6 @@ vim.api.nvim_create_user_command("Mason", function(opts)
     vim.cmd("Mason " .. opts.args)
 end, { nargs = "*" })
 
-vim.schedule(function()
-    vim.pack.add({
-        { src = "https://github.com/stevearc/oil.nvim" },
-        { src = "https://github.com/ibhagwan/fzf-lua" },
-        { src = "https://github.com/nvim-tree/nvim-web-devicons" },
-        { src = "https://github.com/tpope/vim-surround" },
-        { src = "https://github.com/tpope/vim-fugitive" },
-        { src = "https://github.com/christoomey/vim-tmux-navigator" },
-        { src = "https://github.com/lewis6991/gitsigns.nvim" },
-    })
-
-    require("oil").setup()
-
-    require("nvim-treesitter").install(ts_parsers)
-
-    local actions = require("fzf-lua.actions")
-    require("fzf-lua").setup({
-        winopts = { backdrop = 85 },
-        keymap = {
-            builtin = {
-                ["<C-f>"] = "preview-page-down",
-                ["<C-b>"] = "preview-page-up",
-                ["<C-p>"] = "toggle-preview",
-            },
-            fzf = {
-                ["ctrl-a"] = "toggle-all",
-                ["ctrl-t"] = "first",
-                ["ctrl-g"] = "last",
-                ["ctrl-d"] = "half-page-down",
-                ["ctrl-u"] = "half-page-up",
-            },
-        },
-        actions = {
-            files = {
-                ["ctrl-q"] = actions.file_sel_to_qf,
-                ["ctrl-n"] = actions.toggle_ignore,
-                ["ctrl-h"] = actions.toggle_hidden,
-                ["enter"] = actions.file_edit_or_qf,
-            },
-        },
-    })
-
-    require("gitsigns").setup({
-        on_attach = function(bufnr)
-            local gitsigns = require("gitsigns")
-
-            local function map(mode, l, r, opts)
-                opts = opts or {}
-                opts.buffer = bufnr
-                vim.keymap.set(mode, l, r, opts)
-            end
-
-            -- Navigation
-            map("n", "]c", function()
-                if vim.wo.diff then
-                    vim.cmd.normal({ "]c", bang = true })
-                else
-                    gitsigns.nav_hunk("next")
-                end
-            end, { desc = "next hunk" })
-
-            map("n", "[c", function()
-                if vim.wo.diff then
-                    vim.cmd.normal({ "[c", bang = true })
-                else
-                    gitsigns.nav_hunk("prev")
-                end
-            end, { desc = "prev hunk" })
-
-            -- Actions
-            map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "stage hunk" })
-            map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "reset hunk" })
-
-            map("v", "<leader>hs", function()
-                gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-            end, { desc = "stage selection" })
-
-            map("v", "<leader>hr", function()
-                gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-            end, { desc = "reset selection" })
-
-            map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "stage buffer" })
-            map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "reset buffer" })
-
-            map("n", "<leader>hb", function()
-                gitsigns.blame_line({ full = true })
-            end, { desc = "blame line" })
-
-            map("n", "<leader>hd", gitsigns.diffthis, { desc = "diff this" })
-
-            map("n", "<leader>hD", function()
-                gitsigns.diffthis("~")
-            end, { desc = "diff file" })
-
-            map("n", "<leader>hQ", function()
-                gitsigns.setqflist("all")
-            end, { desc = "send all to qf list" })
-            map("n", "<leader>hq", gitsigns.setqflist, { desc = "send to qf list" })
-        end,
-    })
-end)
 
 vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
     once = true,
