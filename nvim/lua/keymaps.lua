@@ -79,7 +79,7 @@ end
 
 -- fzf
 keymap("n", "<leader>ff", "<cmd>FzfLua files<CR>")
-keymap("n", "<leader>fb", "<cmd>FzfLua buffers<CR>")
+keymap("n", "<leader><leader>", "<cmd>FzfLua buffers<CR>")
 keymap("n", "<leader>fd", "<cmd>FzfLua diagnostics_document<CR>")
 keymap("n", "<leader>fD", "<cmd>FzfLua diagnostics_workspace<CR>")
 keymap("n", "<leader>fo", "<cmd>FzfLua resume<CR>")
