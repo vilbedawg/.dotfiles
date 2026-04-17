@@ -9,10 +9,12 @@ keymap("n", "<leader>wv", "<C-w>v", opts)
 keymap("n", "<leader>wh", "<C-w>s", opts)
 keymap("n", "<leader>we", "<C-w>=", opts)
 keymap("n", "<leader>wx", ":close<CR>", opts)
+
 keymap("n", "<leader>to", ":tabnew<CR>", opts)
 keymap("n", "<leader>tx", ":tabclose<CR>", opts)
-keymap("n", "<leader>tl", ":tabn<CR>", opts)
-keymap("n", "<leader>th", ":tabp<CR>", opts)
+for i = 1, 8 do
+	keymap({ "n", "t" }, "<Leader>" .. i, "<Cmd>tabnext " .. i .. "<CR>")
+end
 
 -- delete single character without copying to register
 keymap("n", "x", '"_x', opts)
