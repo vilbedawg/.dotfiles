@@ -46,7 +46,7 @@ Statusline = {}
 
 function Statusline.active()
     return table.concat {
-        "[", filepath(), "%t] ",
+        "[", filepath(), "%t%m] ",
         git(),
         " ",
         diagnostics(),
