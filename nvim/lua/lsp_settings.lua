@@ -46,6 +46,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         keymap({ "n", "v" }, "<leader>F", vim.lsp.buf.format, opts)                                   -- Format
         keymap("n", "gd", vim.lsp.buf.definition, opts)                                               -- Go to definition
         keymap("n", "gt", vim.lsp.buf.type_definition, opts)                                          -- Go to type def
+        keymap("n", "gr", vim.lsp.buf.references, opts)                                               -- Go to type def
         keymap("n", "gi", vim.lsp.buf.implementation, opts)                                           -- Go to implementation
         keymap("n", "gD", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts)                     -- Go to definition in split
         keymap("n", "<leader>r", vim.lsp.buf.rename, opts)                                            -- Rename
