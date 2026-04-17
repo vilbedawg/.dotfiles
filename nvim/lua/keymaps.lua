@@ -132,7 +132,7 @@ keymap({ "n" }, "<leader>w", "<Cmd>update<CR>", { desc = "Write the current buff
 keymap({ "n" }, "<leader>q", "<Cmd>:quit<CR>", { desc = "Quit the current buffer." })
 keymap({ "n" }, "<leader>Q", "<Cmd>:wqa<CR>", { desc = "Quit all buffers and write." })
 keymap({ "n", "v", "x" }, "<leader>n", ":norm ", { desc = "ENTER NORM COMMAND." })
-keymap("n", "<leader>ch", ":nohl<CR>", opts)
+keymap("n", "<ESC>", ":nohl<CR>", { noremap = true, silent = true})
 
 
 -- Fugitive
