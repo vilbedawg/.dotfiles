@@ -46,8 +46,8 @@
       "src": "https://github.com/seblyng/roslyn.nvim"
     },
     "typst-preview.nvim": {
-      "rev": "0c5c6d99c432feb4104680c4111bde9fb6de8d86",
-      "src": "https://github.com/PatrickMassot/typst-preview.nvim"
+      "rev": "87db18b8d19c8b0eed399f52e4c527ce5afe4817",
+      "src": "https://github.com/chomosuke/typst-preview.nvim"
     },
     "vague.nvim": {
       "rev": "8c4643f8a5106dbc492918f86ff6b5c81111ce9a",

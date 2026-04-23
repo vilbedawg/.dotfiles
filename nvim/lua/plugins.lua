@@ -1,35 +1,3 @@
-local languages = {
-    { ts = "lua",            lsp = "lua_ls" },
-    { ts = "python" },
-    { ts = "typescript",     lsp = "ts_ls" },
-    { ts = "tsx" },
-    { ts = "javascript" },
-    { ts = "c",              lsp = "clangd" },
-    { ts = "cpp" },
-    { ts = "c_sharp",        lsp = "roslyn" },
-    { ts = "json",           lsp = "jsonls" },
-    { ts = "yaml",           lsp = "yamlls" },
-    { ts = "rust",           lsp = "rust_analyzer" },
-    { ts = "html" },
-    { ts = "css" },
-    { ts = "bash" },
-    { ts = "markdown" },
-    { ts = "markdown_inline" },
-    { ts = "vim" },
-    { ts = "vimdoc" },
-    { ts = "toml" },
-    { ts = "dockerfile" },
-    { ts = "cmake" },
-    { lsp = "tinymist" },
-}
-
-local ts_parsers = {}
-local lsp_servers = {}
-for _, lang in ipairs(languages) do
-    if lang.ts then table.insert(ts_parsers, lang.ts) end
-    if lang.lsp then table.insert(lsp_servers, lang.lsp) end
-end
-
 vim.pack.add({
     { src = "https://github.com/vague-theme/vague.nvim" },
     { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
@@ -42,16 +10,33 @@ vim.pack.add({
     { src = "https://github.com/tpope/vim-fugitive" },
     { src = "https://github.com/christoomey/vim-tmux-navigator" },
     { src = "https://github.com/lewis6991/gitsigns.nvim" },
+    { src = "https://github.com/mason-org/mason.nvim" },
+    { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
+    { src = "https://github.com/L3MON4D3/LuaSnip" },
+    { src = "https://github.com/rafamadriz/friendly-snippets" },
+})
+
+require("mason").setup({
+    registries = {
+        "github:Crashdummyy/mason-registry", -- for Roslyn
+        "github:mason-org/mason-registry",
+    },
 })
 
 require("vague").setup({ transparent = false })
 vim.cmd.colorscheme("vague")
 
-vim.lsp.enable(lsp_servers)
-
 require("oil").setup()
 
-require("nvim-treesitter").install(ts_parsers)
+require("nvim-treesitter").install({
+    "lua", "python", "typescript",
+    "tsx", "javascript", "c",
+    "cpp", "c_sharp", "json",
+    "yaml", "rust", "html",
+    "css", "bash", "markdown",
+    "markdown_inline", "vim", "vimdoc",
+    "toml", "dockerfile", "cmake",
+})
 
 local actions = require("fzf-lua.actions")
 require("fzf-lua").setup({
@@ -139,94 +124,165 @@ require("gitsigns").setup({
     end,
 })
 
-vim.api.nvim_create_user_command("Mason", function(opts)
-    vim.pack.add({ { src = "https://github.com/mason-org/mason.nvim" } })
-    require("mason").setup({
-        registries = {
-            "github:Crashdummyy/mason-registry", -- for Roslyn
-            "github:mason-org/mason-registry",
+require("luasnip.loaders.from_vscode").lazy_load()
+require("blink.cmp").setup({
+    fuzzy = { implementation = "prefer_rust_with_warning" },
+    signature = { enabled = true },
+    keymap = {
+        preset = "default",
+        ["<C-space>"] = {},
+        ["<C-p>"] = {},
+        ["<Tab>"] = {},
+        ["<S-Tab>"] = {},
+        ["<C-y>"] = { "show", "show_documentation", "hide_documentation" },
+        ["<CR>"] = { "accept", "fallback" },
+        ["<C-k>"] = { "select_prev", "fallback" },
+        ["<C-j>"] = { "select_next", "fallback" },
+        ["<C-b>"] = { "scroll_documentation_down", "fallback" },
+        ["<C-f>"] = { "scroll_documentation_up", "fallback" },
+        ["<C-l>"] = { "snippet_forward", "fallback" },
+        ["<C-h>"] = { "snippet_backward", "fallback" },
+    },
+    appearance = {
+        use_nvim_cmp_as_default = true,
+        nerd_font_variant = "normal",
+    },
+    completion = {
+        menu = {
+            border = nil,
+            scrolloff = 1,
+            scrollbar = false,
+            draw = {
+                columns = {
+                    { "kind_icon" },
+                    { "label",      "label_description", gap = 1 },
+                    { "kind" },
+                    { "source_name" },
+                },
+            },
         },
-    })
-    vim.cmd("Mason " .. opts.args)
-end, { nargs = "*" })
-
-
-vim.api.nvim_create_autocmd({ "InsertEnter", "CmdlineEnter" }, {
-    once = true,
-    callback = function()
-        vim.pack.add({
-            { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
-            { src = "https://github.com/L3MON4D3/LuaSnip" },
-            { src = "https://github.com/rafamadriz/friendly-snippets" },
-        })
-
-        require("luasnip.loaders.from_vscode").lazy_load()
-
-        require("blink.cmp").setup({
-            fuzzy = { implementation = "prefer_rust_with_warning" },
-            signature = { enabled = true },
-            keymap = {
-                preset = "default",
-                ["<C-space>"] = {},
-                ["<C-p>"] = {},
-                ["<Tab>"] = {},
-                ["<S-Tab>"] = {},
-                ["<C-y>"] = { "show", "show_documentation", "hide_documentation" },
-                ["<CR>"] = { "accept", "fallback" },
-                ["<C-k>"] = { "select_prev", "fallback" },
-                ["<C-j>"] = { "select_next", "fallback" },
-                ["<C-b>"] = { "scroll_documentation_down", "fallback" },
-                ["<C-f>"] = { "scroll_documentation_up", "fallback" },
-                ["<C-l>"] = { "snippet_forward", "fallback" },
-                ["<C-h>"] = { "snippet_backward", "fallback" },
+        documentation = {
+            window = {
+                border = nil,
+                scrollbar = false,
+                winhighlight = "Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,EndOfBuffer:BlinkCmpDoc",
             },
-            appearance = {
-                use_nvim_cmp_as_default = true,
-                nerd_font_variant = "normal",
-            },
-            completion = {
-                menu = {
-                    border = nil,
-                    scrolloff = 1,
-                    scrollbar = false,
-                    draw = {
-                        columns = {
-                            { "kind_icon" },
-                            { "label",      "label_description", gap = 1 },
-                            { "kind" },
-                            { "source_name" },
-                        },
-                    },
-                },
-                documentation = {
-                    window = {
-                        border = nil,
-                        scrollbar = false,
-                        winhighlight = "Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,EndOfBuffer:BlinkCmpDoc",
-                    },
-                    auto_show = true,
-                    auto_show_delay_ms = 500,
-                },
-            },
+            auto_show = true,
+            auto_show_delay_ms = 500,
+        },
+    },
+    cmdline = {
+        keymap = {
+            preset = "inherit",
+            ["<CR>"] = { "accept_and_enter", "fallback" },
+        },
+    },
+    snippets = {
+        preset = "luasnip",
+    },
+    sources = {
+        default = { "lsp", "path", "snippets", "buffer" },
+        providers = {
             cmdline = {
-                keymap = {
-                    preset = "inherit",
-                    ["<CR>"] = { "accept_and_enter", "fallback" },
-                },
+                min_keyword_length = 2,
             },
-            snippets = {
-                preset = "luasnip",
-            },
-            sources = {
-                default = { "lsp", "path", "snippets", "buffer" },
-                providers = {
-                    cmdline = {
-                        min_keyword_length = 2,
-                    },
-                },
-            },
-        })
+        },
+    },
+})
+
+vim.diagnostic.config({
+    virtual_text = true,
+    underline = true,
+    update_in_insert = false,
+    severity_sort = true,
+    float = {
+        border = "rounded",
+        source = true,
+    },
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = "󰅚 ",
+            [vim.diagnostic.severity.WARN] = "󰀪 ",
+            [vim.diagnostic.severity.INFO] = "󰋽 ",
+            [vim.diagnostic.severity.HINT] = "󰌶 ",
+        },
+        numhl = {
+            [vim.diagnostic.severity.ERROR] = "ErrorMsg",
+            [vim.diagnostic.severity.WARN] = "WarningMsg",
+        },
+    },
+})
+
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("lsp-attach-config", { clear = true }),
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client == nil then
+            return
+        end
+
+        local bufnr = args.buf
+        local keymap = vim.keymap.set
+
+        local opts = { silent = true, buffer = bufnr, }
+
+        local function fzf_vertical(command)
+            return function()
+                require("fzf-lua")[command]({
+                    winopts = { preview = { layout = "vertical" } },
+                })
+            end
+        end
+
+        -- Native nvim keymaps
+        keymap({ "n", "v" }, "<leader>F", vim.lsp.buf.format, opts)                                   -- Format
+        keymap("n", "gd", vim.lsp.buf.definition, opts)                                               -- Go to definition
+        keymap("n", "gt", vim.lsp.buf.type_definition, opts)                                          -- Go to type def
+        keymap("n", "gr", vim.lsp.buf.references, opts)                                               -- Go to type def
+        keymap("n", "gi", vim.lsp.buf.implementation, opts)                                           -- Go to implementation
+        keymap("n", "gD", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts)                     -- Go to definition in split
+        keymap("n", "<leader>r", vim.lsp.buf.rename, opts)                                            -- Rename
+        keymap("n", "K", vim.lsp.buf.hover, opts)                                                     -- Hover doc
+        keymap("n", "<leader>vd", vim.diagnostic.open_float, opts)                                    -- cursor diagnostics
+        keymap("n", "<leader>vD", "<cmd>lua vim.diagnostic.open_float({ scope = 'line' })<CR>", opts) -- line diagnostics
+
+        keymap('n', ']d', function()
+            vim.diagnostic.jump({ count = 1, float = true })
+        end, opts)
+        keymap('n', '[d', function()
+            vim.diagnostic.jump({ count = -1, float = true })
+        end, opts)
+
+        -- FzfLua LSP keymaps
+        keymap("n", "<leader>ca", fzf_vertical("lsp_code_actions"), opts)      -- lsp code actions
+        keymap("n", "<leader>fl", fzf_vertical("lsp_finder"), opts)            -- lsp finder (definitions + references)
+        keymap("n", "<leader>fr", fzf_vertical("lsp_references"), opts)        -- show all references to symbol under cursor
+        keymap("n", "<leader>ft", fzf_vertical("lsp_typedefs"), opts)          -- jump to the typedefs of symbol under cursor
+        keymap("n", "<leader>ds", fzf_vertical("lsp_document_symbols"), opts)  -- list all symbols in file
+        keymap("n", "<leader>ws", fzf_vertical("lsp_workspace_symbols"), opts) -- search for symbol across entire project
+        keymap("n", "<leader>fi", fzf_vertical("lsp_implementations"), opts)   -- go to implementation
+
+        if client.name == "clangd" then
+            keymap("n", "<leader>gw", "<cmd>LspClangdSwitchSourceHeader<cr>", { buffer = bufnr, desc = "Switch source/header" })
+        end
+
+        if client.name == "tinymist" then
+            -- Necessary for typst to pickup the main file when dealing with multiple files
+            -- This is a temporary workaround for writing my thesis
+            local main = client.root_dir .. "/Thesis/main.typ"
+            client:exec_cmd({
+                title = "tinymist.pinMain",
+                command = "tinymist.pinMain",
+                arguments = { main },
+            }, { bufnr = bufnr })
+        end
     end,
+})
+
+vim.lsp.enable({
+	"lua_ls", "cssls", "tinymist", "rust_analyzer", "clangd",
+	"ts_ls", "emmet_language_server", "emmet_ls", "pyright",
+    "roslyn", "jsonls", "yamlls",
 })
 
 -- typst-preview: only needed for typst files

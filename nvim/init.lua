@@ -1,6 +1,5 @@
 require("plugins")
 require("configs")
-require("lsp_settings")
 require("keymaps")
 require("statusline")
 require("autocommands")
