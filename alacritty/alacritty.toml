@@ -10,10 +10,10 @@ history = 10000
 multiplier = 3
 
 [font]
-size = 18
+size = 24
 
 [font.normal]
-family = "JetBrainsMono Nerd Font"
+family = "Iosevka Nerd Font"
 style = "Regular"
 
 [selection]
