@@ -91,6 +91,7 @@ keymap("n", "<leader>fc", fzf_vertical("grep_curbuf"))
 keymap("n", "<leader>fw", fzf_vertical("grep_cword"))
 keymap("n", "<leader>fW", fzf_vertical("grep_cWORD"))
 keymap("n", "<leader>fk", fzf_vertical("keymaps"))
+keymap("n", "<leader>fg", fzf_vertical("git_status"), opts)
 
 -- vim.pack
 local function pack_clean()
