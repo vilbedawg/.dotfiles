@@ -40,6 +40,18 @@ require("nvim-treesitter").install({
 
 local actions = require("fzf-lua.actions")
 require("fzf-lua").setup({
+    file_ignore_patterns = {
+        "node_modules/",
+        "dist/",
+        ".next/",
+        ".git/",
+        ".gitlab/",
+        "build/",
+        "target/",
+        "package-lock.json",
+        "pnpm-lock.yaml",
+        "yarn.lock",
+    },
     winopts = { backdrop = 85 },
     keymap = {
         builtin = {
@@ -261,6 +273,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         keymap("n", "<leader>ds", fzf_vertical("lsp_document_symbols"), opts)  -- list all symbols in file
         keymap("n", "<leader>ws", fzf_vertical("lsp_workspace_symbols"), opts) -- search for symbol across entire project
         keymap("n", "<leader>fi", fzf_vertical("lsp_implementations"), opts)   -- go to implementation
+        keymap("n", "<leader>fg", fzf_vertical("git_status"), opts)   -- go to implementation
 
         if client.name == "clangd" then
             keymap("n", "<leader>gw", "<cmd>LspClangdSwitchSourceHeader<cr>", { buffer = bufnr, desc = "Switch source/header" })
