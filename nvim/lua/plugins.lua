@@ -70,7 +70,8 @@ require("nvim-treesitter").install({
 })
 
 local actions = require("fzf-lua.actions")
-require("fzf-lua").setup({
+local fzflua = require("fzf-lua")
+fzflua.setup({
   file_ignore_patterns = {
     "node_modules/",
     "dist/",
@@ -82,8 +83,9 @@ require("fzf-lua").setup({
     "package-lock.json",
     "pnpm-lock.yaml",
     "yarn.lock",
+    "tsconfig.tsbuildinfo",
   },
-  winopts = { backdrop = 85 },
+  winopts = { backdrop = 85, fullscreen = true },
   keymap = {
     builtin = {
       ["<C-f>"] = "preview-page-down",
@@ -105,6 +107,10 @@ require("fzf-lua").setup({
       ["ctrl-h"] = actions.toggle_hidden,
       ["enter"] = actions.file_edit_or_qf,
     },
+  },
+  grep = {
+    action = "tab",
+    grep_opts = "--hidden --no-ignore --smart-case --binary-files=without-match",
   },
 })
 
@@ -269,14 +275,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     local opts = { silent = true, buffer = bufnr }
 
-    local function fzf_vertical(command)
-      return function()
-        require("fzf-lua")[command]({
-          winopts = { preview = { layout = "vertical" } },
-        })
-      end
-    end
-
     -- Native nvim keymaps
     keymap({ "n", "v" }, "<leader>F", function() -- Format
       require("conform").format({ bufnr = args.buf })
@@ -300,13 +298,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end, opts)
 
     -- FzfLua LSP keymaps
-    keymap("n", "<leader>ca", fzf_vertical("lsp_code_actions"), opts) -- lsp code actions
-    keymap("n", "<leader>fl", fzf_vertical("lsp_finder"), opts) -- lsp finder (definitions + references)
-    keymap("n", "<leader>fr", fzf_vertical("lsp_references"), opts) -- show all references to symbol under cursor
-    keymap("n", "<leader>ft", fzf_vertical("lsp_typedefs"), opts) -- jump to the typedefs of symbol under cursor
-    keymap("n", "<leader>ds", fzf_vertical("lsp_document_symbols"), opts) -- list all symbols in file
-    keymap("n", "<leader>ws", fzf_vertical("lsp_workspace_symbols"), opts) -- search for symbol across entire project
-    keymap("n", "<leader>fi", fzf_vertical("lsp_implementations"), opts) -- go to implementation
+    keymap("n", "<leader>ca", fzflua["lsp_code_actions"], opts) -- lsp code actions
+    keymap("n", "<leader>fl", fzflua["lsp_finder"], opts) -- lsp finder (definitions + references)
+    keymap("n", "<leader>fr", fzflua["lsp_references"], opts) -- show all references to symbol under cursor
+    keymap("n", "<leader>ft", fzflua["lsp_typedefs"], opts) -- jump to the typedefs of symbol under cursor
+    keymap("n", "<leader>ds", fzflua["lsp_document_symbols"], opts) -- list all symbols in file
+    keymap("n", "<leader>ws", fzflua["lsp_workspace_symbols"], opts) -- search for symbol across entire project
+    keymap("n", "<leader>fi", fzflua["lsp_implementations"], opts) -- go to implementation
 
     if client.name == "clangd" then
       keymap(
@@ -333,13 +331,4 @@ vim.lsp.enable({
   "jsonls",
   "yamlls",
   "stylua",
-})
-
--- typst-preview: only needed for typst files
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "typst",
-  once = true,
-  callback = function()
-    vim.pack.add({ { src = "https://github.com/chomosuke/typst-preview.nvim" } })
-  end,
 })

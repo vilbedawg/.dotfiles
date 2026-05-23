@@ -53,3 +53,12 @@ autocmd("FileType", {
     vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- Use treesitter for folds
   end,
 })
+
+-- typst-preview: only needed for typst files
+autocmd("FileType", {
+  pattern = "typst",
+  once = true,
+  callback = function()
+    vim.pack.add({ { src = "https://github.com/chomosuke/typst-preview.nvim" } })
+  end,
+})

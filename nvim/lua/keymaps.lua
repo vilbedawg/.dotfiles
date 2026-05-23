@@ -13,7 +13,7 @@ keymap("n", "<leader>wx", ":close<CR>", opts)
 keymap("n", "<leader>to", ":tabnew<CR>", opts)
 keymap("n", "<leader>tx", ":tabclose<CR>", opts)
 for i = 1, 8 do
-	keymap({ "n", "t" }, "<Leader>" .. i, "<Cmd>tabnext " .. i .. "<CR>")
+  keymap({ "n", "t" }, "<Leader>" .. i, "<Cmd>tabnext " .. i .. "<CR>")
 end
 
 -- delete single character without copying to register
@@ -67,65 +67,53 @@ keymap({ "n", "v" }, "<leader>CU", ":update<CR> :source<CR>")
 -- File explorer
 keymap("n", "<leader>e", "<cmd>Oil<CR>")
 
-local function fzf_vertical(command)
-    return function()
-        require("fzf-lua")[command]({
-            winopts = {
-                preview = {
-                    layout = "vertical",
-                },
-            },
-        })
-    end
-end
+local fzflua = require("fzf-lua")
 
 -- fzf
-keymap("n", "<leader>ff", "<cmd>FzfLua files<CR>")
-keymap("n", "<leader><leader>", "<cmd>FzfLua buffers<CR>")
-keymap("n", "<leader>fd", "<cmd>FzfLua diagnostics_document<CR>")
-keymap("n", "<leader>fD", "<cmd>FzfLua diagnostics_workspace<CR>")
-keymap("n", "<leader>fo", "<cmd>FzfLua resume<CR>")
-
-keymap("n", "<leader>fs", fzf_vertical("live_grep"))
-keymap("n", "<leader>fc", fzf_vertical("grep_curbuf"))
-keymap("n", "<leader>fw", fzf_vertical("grep_cword"))
-keymap("n", "<leader>fW", fzf_vertical("grep_cWORD"))
-keymap("n", "<leader>fk", fzf_vertical("keymaps"))
-keymap("n", "<leader>fg", fzf_vertical("git_status"), opts)
+keymap("n", "<leader>ff", fzflua["files"])
+keymap("n", "<leader><leader>", fzflua["buffers"])
+keymap("n", "<leader>fd", fzflua["diagnostics_document"])
+keymap("n", "<leader>fD", fzflua["diagnostics_workspace"])
+keymap("n", "<leader>fs", fzflua["live_grep"])
+keymap("n", "<leader>fc", fzflua["grep_curbuf"])
+keymap("n", "<leader>fw", fzflua["grep_cword"])
+keymap("n", "<leader>fW", fzflua["grep_cWORD"])
+keymap("n", "<leader>fk", fzflua["keymaps"])
+keymap("n", "<leader>fg", fzflua["git_status"], opts)
 
 -- vim.pack
 local function pack_clean()
-    local active_plugins = {}
-    local unused_plugins = {}
+  local active_plugins = {}
+  local unused_plugins = {}
 
-    for _, plugin in ipairs(vim.pack.get()) do
-        active_plugins[plugin.spec.name] = plugin.active
-    end
+  for _, plugin in ipairs(vim.pack.get()) do
+    active_plugins[plugin.spec.name] = plugin.active
+  end
 
-    for _, plugin in ipairs(vim.pack.get()) do
-        if not active_plugins[plugin.spec.name] then
-            table.insert(unused_plugins, plugin.spec.name)
-        end
+  for _, plugin in ipairs(vim.pack.get()) do
+    if not active_plugins[plugin.spec.name] then
+      table.insert(unused_plugins, plugin.spec.name)
     end
+  end
 
-    if #unused_plugins == 0 then
-        print("No unused plugins.")
-        return
-    end
+  if #unused_plugins == 0 then
+    print("No unused plugins.")
+    return
+  end
 
-    local choice = vim.fn.confirm("Remove unused plugins?", "&Yes\n&No", 2)
-    if choice == 1 then
-        vim.pack.del(unused_plugins)
-    end
+  local choice = vim.fn.confirm("Remove unused plugins?", "&Yes\n&No", 2)
+  if choice == 1 then
+    vim.pack.del(unused_plugins)
+  end
 end
 
 local function pack_update()
-    local plugins = {}
-    for _, plugin in ipairs(vim.pack.get()) do
-        table.insert(plugins, plugin.spec.name)
-    end
+  local plugins = {}
+  for _, plugin in ipairs(vim.pack.get()) do
+    table.insert(plugins, plugin.spec.name)
+  end
 
-    vim.pack.update(plugins)
+  vim.pack.update(plugins)
 end
 
 keymap("n", "<leader>pc", pack_clean)
@@ -135,39 +123,38 @@ keymap({ "n" }, "<leader>w", "<Cmd>update<CR>", { desc = "Write the current buff
 keymap({ "n" }, "<leader>q", "<Cmd>:quit<CR>", { desc = "Quit the current buffer." })
 keymap({ "n" }, "<leader>Q", "<Cmd>:wqa<CR>", { desc = "Quit all buffers and write." })
 keymap({ "n", "v", "x" }, "<leader>n", ":norm ", { desc = "ENTER NORM COMMAND." })
-keymap("n", "<ESC>", ":nohl<CR>", { noremap = true, silent = true})
-
+keymap("n", "<ESC>", ":nohl<CR>", { noremap = true, silent = true })
 
 -- Fugitive
-keymap("n", "<leader>gg", "<cmd>leftabove vertical Git<cr>", {silent = true})
-keymap("n", "<leader>ga", "<cmd>Git add %:p<cr><cr>", {silent = true})
-keymap("n", "<leader>gd", "<cmd>Gdiff<cr>", {silent = true})
-keymap("n", "<leader>ge", "<cmd>Gedit<cr>", {silent = true})
-keymap("n", "<leader>gw", "<cmd>Gwrite<cr>", {silent = true})
-keymap("n", "<leader>gf", "<cmd>FzfLua git_commits<cr>", {silent = true})
+keymap("n", "<leader>gg", "<cmd>leftabove vertical Git<cr>", { silent = true })
+keymap("n", "<leader>ga", "<cmd>Git add %:p<cr><cr>", { silent = true })
+keymap("n", "<leader>gd", "<cmd>Gdiff<cr>", { silent = true })
+keymap("n", "<leader>ge", "<cmd>Gedit<cr>", { silent = true })
+keymap("n", "<leader>gw", "<cmd>Gwrite<cr>", { silent = true })
+keymap("n", "<leader>gf", "<cmd>FzfLua git_commits<cr>", { silent = true })
 keymap("n", "<leader>gb", function()
-    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-        if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "fugitiveblame" then
-            vim.api.nvim_win_close(win, false)
-            return
-        end
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "fugitiveblame" then
+      vim.api.nvim_win_close(win, false)
+      return
     end
-    vim.cmd("G blame")
+  end
+  vim.cmd("G blame")
 end, { silent = true, desc = "Toggle git blame" })
 
 -- incremental selection treesitter/lsp
 keymap({ "n", "x", "o" }, "<A-o>", function()
-    if vim.treesitter.get_parser(nil, nil, { error = false }) then
-        require("vim.treesitter._select").select_parent(vim.v.count1)
-    else
-        vim.lsp.buf.selection_range(vim.v.count1)
-    end
+  if vim.treesitter.get_parser(nil, nil, { error = false }) then
+    require("vim.treesitter._select").select_parent(vim.v.count1)
+  else
+    vim.lsp.buf.selection_range(vim.v.count1)
+  end
 end, { desc = "Select parent treesitter node or outer incremental lsp selections" })
 
 keymap({ "n", "x", "o" }, "<A-i>", function()
-    if vim.treesitter.get_parser(nil, nil, { error = false }) then
-        require("vim.treesitter._select").select_child(vim.v.count1)
-    else
-        vim.lsp.buf.selection_range(-vim.v.count1)
-    end
+  if vim.treesitter.get_parser(nil, nil, { error = false }) then
+    require("vim.treesitter._select").select_child(vim.v.count1)
+  else
+    vim.lsp.buf.selection_range(-vim.v.count1)
+  end
 end, { desc = "Select child treesitter node or inner incremental lsp selections" })
