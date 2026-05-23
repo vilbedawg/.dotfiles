@@ -316,17 +316,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
         { buffer = bufnr, desc = "Switch source/header" }
       )
     end
-
-    if client.name == "tinymist" then
-      -- Necessary for typst to pickup the main file when dealing with multiple files
-      -- This is a temporary workaround for writing my thesis
-      local main = client.root_dir .. "/Thesis/main.typ"
-      client:exec_cmd({
-        title = "tinymist.pinMain",
-        command = "tinymist.pinMain",
-        arguments = { main },
-      }, { bufnr = bufnr })
-    end
   end,
 })
 
