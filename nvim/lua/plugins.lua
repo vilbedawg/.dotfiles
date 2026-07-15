@@ -110,6 +110,7 @@ fzflua.setup({
   },
   grep = {
     action = "tab",
+    rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden --no-ignore --max-columns=4096 -e",
     grep_opts = "--hidden --no-ignore --smart-case --binary-files=without-match",
   },
 })
@@ -187,8 +188,8 @@ require("blink.cmp").setup({
     ["<CR>"] = { "accept", "fallback" },
     ["<C-k>"] = { "select_prev", "fallback" },
     ["<C-j>"] = { "select_next", "fallback" },
-    ["<C-b>"] = { "scroll_documentation_down", "fallback" },
-    ["<C-f>"] = { "scroll_documentation_up", "fallback" },
+    ["<C-b>"] = { "scroll_documentation_up", "fallback" },
+    ["<C-f>"] = { "scroll_documentation_down", "fallback" },
     ["<C-l>"] = { "snippet_forward", "fallback" },
     ["<C-h>"] = { "snippet_backward", "fallback" },
   },
@@ -309,7 +310,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     if client.name == "clangd" then
       keymap(
         "n",
-        "<leader>gw",
+        "<leader>ch",
         "<cmd>LspClangdSwitchSourceHeader<cr>",
         { buffer = bufnr, desc = "Switch source/header" }
       )
@@ -325,10 +326,8 @@ vim.lsp.enable({
   "clangd",
   "ts_ls",
   "emmet_language_server",
-  "emmet_ls",
   "pyright",
   "roslyn",
   "jsonls",
   "yamlls",
-  "stylua",
 })

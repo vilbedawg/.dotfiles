@@ -23,11 +23,7 @@ keymap("n", "x", '"_x', opts)
 keymap("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 keymap("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
--- Move to window using the <ctrl> hjkl keys
-keymap("n", "<C-h>", "<C-w>h", opts)
-keymap("n", "<C-j>", "<C-w>j", opts)
-keymap("n", "<C-k>", "<C-w>k", opts)
-keymap("n", "<C-l>", "<C-w>l", opts)
+-- <C-h/j/k/l> window navigation is owned by vim-tmux-navigator
 
 -- Resize window using <ctrl> arrow keys
 keymap("n", "<C-Up>", ":resize -2<CR>", opts)
@@ -38,7 +34,7 @@ keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
 -- Navigate buffers
 keymap("n", "<leader>bd", ":bd<CR>", opts)
 keymap("n", "<leader>bD", ":bd!<CR>", opts)
-keymap("n", "<S-l>", ":bNext<CR>", opts)
+keymap("n", "<S-l>", ":bnext<CR>", opts)
 keymap("n", "<S-h>", ":bprevious<CR>", opts)
 
 -- Move Lines
