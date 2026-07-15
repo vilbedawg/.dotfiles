@@ -29,6 +29,7 @@ opt.undofile = true                                -- Enable persistent undo
 opt.hlsearch = true                                -- Enable highlighting of search results
 opt.backup = false                                 -- creates a backup file
 opt.clipboard = "unnamedplus"                      -- allows neovim to access the system clipboard
+opt.autoread = true                                -- auto reload files changed outside of nvim
 
 opt.shortmess:append("c")                          -- don't give |ins-completion-menu| messages
 opt.iskeyword:append("-")                          -- hyphenated words recognized by searches
