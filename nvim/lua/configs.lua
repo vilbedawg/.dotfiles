@@ -23,6 +23,7 @@ opt.wrap = false                                   -- Disable line wrapping
 opt.cursorline = false                             -- Highlight the current line
 opt.scrolloff = 8                                  -- Keep 8 lines above and below the cursor
 opt.inccommand = "nosplit"                         -- Shows the effects of a command incrementally in the buffer
+opt.jumpoptions = "stack"                          -- Make <C-o>/<C-i> behave like browser back/forward
 opt.undodir = os.getenv('HOME') .. '/.vim/undodir' -- Directory for undo files
 opt.undofile = true                                -- Enable persistent undo
 opt.hlsearch = true                                -- Enable highlighting of search results
