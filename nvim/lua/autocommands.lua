@@ -28,6 +28,16 @@ autocmd("VimResized", {
   desc = "Equalize splits on terminal resize",
 })
 
+autocmd({ "FocusGained", "BufEnter", "TermClose", "TermLeave" }, {
+  callback = function()
+    if vim.o.buftype ~= "nofile" then
+      vim.cmd("checktime")
+    end
+  end,
+  group = general,
+  desc = "Reload files changed outside of nvim",
+})
+
 autocmd("PackChanged", {
   desc = "Handle nvim-treesitter updates",
   pattern = "*/nvim-treesitter",
