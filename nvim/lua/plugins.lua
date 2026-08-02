@@ -15,6 +15,7 @@ vim.pack.add({
   { src = "https://github.com/L3MON4D3/LuaSnip" },
   { src = "https://github.com/rafamadriz/friendly-snippets" },
   { src = "https://github.com/stevearc/conform.nvim" },
+  { src = "https://github.com/blazkowolf/gruber-darker.nvim" },
 })
 
 require("mason").setup({
@@ -24,8 +25,7 @@ require("mason").setup({
   },
 })
 
-require("vague").setup({ transparent = false })
-vim.cmd.colorscheme("vague")
+vim.cmd.colorscheme("gruber-darker")
 
 require("oil").setup()
 
