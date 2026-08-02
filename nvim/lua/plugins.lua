@@ -16,6 +16,7 @@ vim.pack.add({
   { src = "https://github.com/rafamadriz/friendly-snippets" },
   { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/blazkowolf/gruber-darker.nvim" },
+  { src = "https://github.com/chentoast/marks.nvim" },
 })
 
 require("mason").setup({
@@ -28,6 +29,10 @@ require("mason").setup({
 vim.cmd.colorscheme("gruber-darker")
 
 require("oil").setup()
+
+require("marks").setup({
+  builtin_marks = { "<", ">", "^" },
+})
 
 require("conform").setup({
   default_format_opts = {

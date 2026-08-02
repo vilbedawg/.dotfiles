@@ -29,6 +29,10 @@
       "rev": "9b68f84bfd6c1278fef2143802ca40c60f2471c0",
       "src": "https://github.com/blazkowolf/gruber-darker.nvim"
     },
+    "marks.nvim": {
+      "rev": "f353e8c08c50f39e99a9ed474172df7eddd89b72",
+      "src": "https://github.com/chentoast/marks.nvim"
+    },
     "mason.nvim": {
       "rev": "44d1e90e1f66e077268191e3ee9d2ac97cc18e65",
       "src": "https://github.com/mason-org/mason.nvim"
