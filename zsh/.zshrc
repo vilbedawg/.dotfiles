@@ -1,7 +1,7 @@
 autoload -U colors && colors
 bindkey -e
 
-PS1="%{$fg[magenta]%}%~%{$fg[red]%} %{$reset_color%}$%b "
+PS1="%{%F{#ffdd33}%}%~%{$fg[red]%} %{$reset_color%}$%b "
 
 # Maximum lines kept in memory
 export HISTSIZE=100000
@@ -34,7 +34,8 @@ lazy_nvm()
 {
     unset -f nvm node npm npx
     export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+    [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 }
 
 nvm()
@@ -73,3 +74,4 @@ export HOMEBREW_PREFIX=/opt/homebrew
 source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOMEBREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+export PATH="$HOME/.local/bin:$PATH"

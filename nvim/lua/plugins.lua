@@ -1,5 +1,4 @@
 vim.pack.add({
-  { src = "https://github.com/vague-theme/vague.nvim" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/seblyng/roslyn.nvim" },
@@ -8,6 +7,7 @@ vim.pack.add({
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
   { src = "https://github.com/tpope/vim-surround" },
   { src = "https://github.com/tpope/vim-fugitive" },
+  { src = "https://github.com/tpope/vim-rhubarb" },
   { src = "https://github.com/christoomey/vim-tmux-navigator" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/mason-org/mason.nvim" },
@@ -43,10 +43,10 @@ require("conform").setup({
     lua = { "stylua" },
     python = { "isort", "black" },
     rust = { "rustfmt", lsp_format = "fallback" },
-    javascript = { "prettier", stop_after_first = true },
-    typescript = { "prettier", stop_after_first = true },
-    javascriptreact = { "prettier", stop_after_first = true },
-    typescriptreact = { "prettier", stop_after_first = true },
+    javascript = { "prettier", "biome", "biome", stop_after_first = true },
+    typescript = { "prettier", "biome", stop_after_first = true },
+    javascriptreact = { "prettier", "biome", stop_after_first = true },
+    typescriptreact = { "prettier", "biome", stop_after_first = true },
   },
 })
 
