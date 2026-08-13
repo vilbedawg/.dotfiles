@@ -66,7 +66,7 @@ alias src="source ~/.zshrc"
 alias vi="nvim"
 alias vim="nvim"
 
-export DOTNET_ROOT=$HOME/.dotnet
+export DOTNET_ROOT=/usr/local/share/dotnet
 export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
 
 # Load plugins; these should be last
