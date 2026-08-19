@@ -130,8 +130,7 @@ require("gitsigns").setup({
       vim.keymap.set(mode, l, r, opts)
     end
 
-    -- Navigation
-    map("n", "]c", function()
+    map("n", "]h", function()
       if vim.wo.diff then
         vim.cmd.normal({ "]c", bang = true })
       else
@@ -139,7 +138,7 @@ require("gitsigns").setup({
       end
     end, { desc = "next hunk" })
 
-    map("n", "[c", function()
+    map("n", "[h", function()
       if vim.wo.diff then
         vim.cmd.normal({ "[c", bang = true })
       else
@@ -147,35 +146,35 @@ require("gitsigns").setup({
       end
     end, { desc = "prev hunk" })
 
-    -- Actions
-    map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "stage hunk" })
-    map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "reset hunk" })
+    map("n", "<leader>gs", gitsigns.stage_hunk, { desc = "stage hunk" })
+    map("n", "<leader>gr", gitsigns.reset_hunk, { desc = "reset hunk" })
 
-    map("v", "<leader>hs", function()
+    map("v", "<leader>gs", function()
       gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
     end, { desc = "stage selection" })
 
-    map("v", "<leader>hr", function()
+    map("v", "<leader>gr", function()
       gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
     end, { desc = "reset selection" })
 
-    map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "stage buffer" })
-    map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "reset buffer" })
+    map("n", "<leader>gS", gitsigns.stage_buffer, { desc = "stage buffer" })
+    map("n", "<leader>gR", gitsigns.reset_buffer, { desc = "reset buffer" })
 
-    map("n", "<leader>hb", function()
+    map("n", "<leader>gb", function()
       gitsigns.blame_line({ full = true })
     end, { desc = "blame line" })
 
-    map("n", "<leader>hd", gitsigns.diffthis, { desc = "diff this" })
+    map("n", "<leader>gd", gitsigns.diffthis, { desc = "diff this" })
 
-    map("n", "<leader>hD", function()
+    map("n", "<leader>gD", function()
       gitsigns.diffthis("~")
     end, { desc = "diff file" })
 
-    map("n", "<leader>hQ", function()
+    map("n", "<leader>gQ", function()
       gitsigns.setqflist("all")
     end, { desc = "send all to qf list" })
-    map("n", "<leader>hq", gitsigns.setqflist, { desc = "send to qf list" })
+
+    map("n", "<leader>gq", gitsigns.setqflist, { desc = "send to qf list" })
   end,
 })
 
