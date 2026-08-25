@@ -334,4 +334,5 @@ vim.lsp.enable({
   "roslyn",
   "jsonls",
   "yamlls",
+  "marksman"
 })
