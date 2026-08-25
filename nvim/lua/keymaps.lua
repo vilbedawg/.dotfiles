@@ -63,6 +63,12 @@ keymap({ "n", "v" }, "<leader>CU", ":update<CR> :source<CR>")
 -- File explorer
 keymap("n", "<leader>e", "<cmd>Oil<CR>")
 
+-- Luasnip
+local ls = require("luasnip")
+keymap({ "i", "s" }, "<C-e>", function() ls.expand_or_jump(1) end, { silent = true })
+keymap({ "i", "s" }, "<C-J>", function() ls.jump(1) end, { silent = true })
+keymap({ "i", "s" }, "<C-K>", function() ls.jump(-1) end, { silent = true })
+
 local fzflua = require("fzf-lua")
 
 -- fzf

@@ -17,6 +17,7 @@ vim.pack.add({
   { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/blazkowolf/gruber-darker.nvim" },
   { src = "https://github.com/chentoast/marks.nvim" },
+  { src = "https://github.com/meanderingprogrammer/render-markdown.nvim" },
 })
 
 require("mason").setup({
@@ -178,7 +179,8 @@ require("gitsigns").setup({
   end,
 })
 
-require("luasnip.loaders.from_vscode").lazy_load()
+require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
+
 require("blink.cmp").setup({
   fuzzy = { implementation = "prefer_rust_with_warning" },
   signature = { enabled = true },
@@ -334,5 +336,5 @@ vim.lsp.enable({
   "roslyn",
   "jsonls",
   "yamlls",
-  "marksman"
+  "marksman",
 })

@@ -1,7 +1,8 @@
 autoload -U colors && colors
 bindkey -e
 
-PS1="%{%F{#ffdd33}%}%~%{$fg[red]%} %{$reset_color%}$%b "
+source "$HOME/.dotfiles/scripts/colors.sh"
+PS1="%{%F{$ACCENT_COLOR}%}%~%{$fg[red]%} %{$reset_color%}$%b "
 
 # Maximum lines kept in memory
 export HISTSIZE=100000
