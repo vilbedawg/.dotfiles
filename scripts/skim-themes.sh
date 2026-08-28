@@ -6,13 +6,15 @@ source "$SCRIPT_DIR/colors.sh"
 
 # Shared fzf layout for all pickers.
 SKIM_THEME_BASE=(
-    --color=fg:-1,bg:-1,fg+:-1,bg+:-1,hl:${ACCENT_COLOR},hl+:${ACCENT_COLOR}:bold,pointer:${ACCENT_COLOR},marker:${ACCENT_COLOR},info:-1,prompt:-1,spinner:-1
+    --color=fg:-1,bg:-1,fg+:-1,bg+:-1,hl:${ACCENT_COLOR},hl+:${ACCENT_COLOR}:bold,pointer:${ACCENT_COLOR},marker:${ACCENT_COLOR},info:-1,prompt:-1,spinner:-1,header:${ACCENT_COLOR}
     --height=100%
     --margin=0,0,0,0
     --layout=reverse
     --info=hidden
     --no-hscroll
     --bind=ctrl-j:down,ctrl-k:up
+    --prompt=" "
+    --header-first
 )
 
 SKIM_THEME_PDF=("${SKIM_THEME_BASE[@]}")

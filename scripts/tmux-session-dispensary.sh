@@ -14,7 +14,7 @@ if [[ $# -eq 1 ]]; then
 else
     selected=$(find "${DIRS[@]}" -mindepth 1 -maxdepth 1 -type d \
         | sed "s|^$HOME/||" \
-        | fzf "${SKIM_THEME_SESSION[@]}" )
+        | fzf "${SKIM_THEME_SESSION[@]}" --header="create session" )
 
     [[ $selected ]] && selected="$HOME/$selected"
 fi
