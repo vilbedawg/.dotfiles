@@ -136,7 +136,7 @@ toggle() {
     if ! read_state; then
         # No timer yet: pausing/resuming needs no UI, but picking durations
         # does, so only open a popup for this branch, not on every toggle.
-        tmux display-popup -E -w 40% -h 40% "$SCRIPT_PATH _pick"
+        tmux display-popup -B -E -w 40% -h 40% "$SCRIPT_PATH _pick"
         return
     fi
 
