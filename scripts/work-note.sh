@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-WORK_DIR="$HOME/Documents/Work"
+WORK_DIR="$HOME/Documents"
 CATEGORIES=(Notes People Meetings)
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
