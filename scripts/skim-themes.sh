@@ -13,8 +13,7 @@ SKIM_THEME_BASE=(
     --info=hidden
     --no-hscroll
     --bind=ctrl-j:down,ctrl-k:up
-    --prompt=" "
-    --border=rounded
+    --border=sharp
 )
 
 SKIM_THEME_PDF=("${SKIM_THEME_BASE[@]}")

@@ -11,11 +11,11 @@ list_sessions() {
 }
 
 selected=$(list_sessions | fzf "${SKIM_THEME_SESSION[@]}" \
-    --border-label ' jump-to-session ' \
+    --border-label 'jump-to-session' \
+    --border-label-pos=18 \
     --header ':: <ctrl-x to kill>' \
     --preview 'tmux capture-pane -pt {}' \
-    --preview-window right:60%,border-rounded \
-    --preview-label-pos=center \
+    --preview-window right:60%,border-left \
     --bind "ctrl-x:execute-silent(tmux kill-session -t {})+reload($(declare -f list_sessions); list_sessions)")
 
 [[ $selected ]] && tmux switch-client -t "$selected"
