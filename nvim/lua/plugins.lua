@@ -51,30 +51,6 @@ require("conform").setup({
   },
 })
 
-require("nvim-treesitter").install({
-  "lua",
-  "python",
-  "typescript",
-  "tsx",
-  "javascript",
-  "c",
-  "cpp",
-  "c_sharp",
-  "json",
-  "yaml",
-  "rust",
-  "html",
-  "css",
-  "bash",
-  "markdown",
-  "markdown_inline",
-  "vim",
-  "vimdoc",
-  "toml",
-  "dockerfile",
-  "cmake",
-})
-
 local actions = require("fzf-lua.actions")
 local fzflua = require("fzf-lua")
 fzflua.setup({
