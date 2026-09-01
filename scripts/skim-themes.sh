@@ -2,7 +2,6 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/colors.sh"
 
 # Shared fzf layout for all pickers.
 SKIM_THEME_BASE=(
