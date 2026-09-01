@@ -1,7 +1,7 @@
 autoload -U colors && colors
 bindkey -e
 
-source "$HOME/.dotfiles/scripts/colors.sh"
+export ACCENT_COLOR="#ffdd33"
 PS1="%{%F{$ACCENT_COLOR}%}%~%{$fg[red]%} %{$reset_color%}$%b "
 
 # Maximum lines kept in memory
@@ -13,11 +13,14 @@ setopt SHARE_HISTORY            # Share history between all sessions.
 setopt HIST_FIND_NO_DUPS        # Dont show dupes on search.
 export HISTIGNORE='exit:cd:ls:bg:fg:history:f:fd:vim'
 
+export EDITOR="nvim"
+export MANPAGER="nvim +Man!"
+
 source <(fzf --zsh)
 
 # Basic auto/tab complete:
-autoload -U compinit && compinit
-autoload -U colors && colors
+autoload -U compinit
+compinit -C
 zstyle ':completion:*' menu select
 zmodload zsh/complist
 bindkey '^[[Z' reverse-menu-complete
@@ -68,11 +71,18 @@ alias vi="nvim"
 alias vim="nvim"
 
 export DOTNET_ROOT=/usr/local/share/dotnet
-export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
+export HOMEBREW_PREFIX=/opt/homebrew
+
+# PATH
+path=(
+  "$HOME/.local/bin"
+  $path
+  "$DOTNET_ROOT"
+  "$DOTNET_ROOT/tools"
+)
+typeset -U path PATH
 
 # Load plugins; these should be last
-export HOMEBREW_PREFIX=/opt/homebrew
-source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $HOMEBREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-export PATH="$HOME/.local/bin:$PATH"
+source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "$HOMEBREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
