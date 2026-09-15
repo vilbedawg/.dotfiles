@@ -23,8 +23,6 @@ keymap("n", "x", '"_x', opts)
 keymap("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 keymap("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
--- <C-h/j/k/l> window navigation is owned by vim-tmux-navigator
-
 -- Resize window using <ctrl> arrow keys
 keymap("n", "<C-Up>", ":resize -2<CR>", opts)
 keymap("n", "<C-Down>", ":resize +2<CR>", opts)

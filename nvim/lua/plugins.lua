@@ -8,7 +8,6 @@ vim.pack.add({
   { src = "https://github.com/tpope/vim-surround" },
   { src = "https://github.com/tpope/vim-fugitive" },
   { src = "https://github.com/tpope/vim-rhubarb" },
-  { src = "https://github.com/christoomey/vim-tmux-navigator" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/mason-org/mason.nvim" },
   { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
