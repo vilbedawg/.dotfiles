@@ -122,35 +122,35 @@ require("gitsigns").setup({
       end
     end, { desc = "prev hunk" })
 
-    map("n", "<leader>gs", gitsigns.stage_hunk, { desc = "stage hunk" })
-    map("n", "<leader>gr", gitsigns.reset_hunk, { desc = "reset hunk" })
+    map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "stage hunk" })
+    map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "reset hunk" })
 
-    map("v", "<leader>gs", function()
+    map("v", "<leader>hs", function()
       gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
     end, { desc = "stage selection" })
 
-    map("v", "<leader>gr", function()
+    map("v", "<leader>hr", function()
       gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
     end, { desc = "reset selection" })
 
-    map("n", "<leader>gS", gitsigns.stage_buffer, { desc = "stage buffer" })
-    map("n", "<leader>gR", gitsigns.reset_buffer, { desc = "reset buffer" })
+    map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "stage buffer" })
+    map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "reset buffer" })
 
-    map("n", "<leader>gb", function()
+    map("n", "<leader>hb", function()
       gitsigns.blame_line({ full = true })
     end, { desc = "blame line" })
 
-    map("n", "<leader>gd", gitsigns.diffthis, { desc = "diff this" })
+    map("n", "<leader>hd", gitsigns.diffthis, { desc = "diff this" })
 
-    map("n", "<leader>gD", function()
+    map("n", "<leader>hD", function()
       gitsigns.diffthis("~")
     end, { desc = "diff file" })
 
-    map("n", "<leader>gQ", function()
+    map("n", "<leader>hQ", function()
       gitsigns.setqflist("all")
     end, { desc = "send all to qf list" })
 
-    map("n", "<leader>gq", gitsigns.setqflist, { desc = "send to qf list" })
+    map("n", "<leader>hq", gitsigns.setqflist, { desc = "send to qf list" })
   end,
 })
 
