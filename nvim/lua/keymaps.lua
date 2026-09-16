@@ -23,11 +23,10 @@ keymap("n", "x", '"_x', opts)
 keymap("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 keymap("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
--- Resize window using <ctrl> arrow keys
-keymap("n", "<C-Up>", ":resize -2<CR>", opts)
-keymap("n", "<C-Down>", ":resize +2<CR>", opts)
-keymap("n", "<C-Left>", ":vertical resize -2<CR>", opts)
-keymap("n", "<C-Right>", ":vertical resize +2<CR>", opts)
+-- Control+W followed by W to toggle between open windows and,
+-- Control+W followed by H/J/K/L to move to the left/bottom/top/right window accordingly,
+-- Control+W followed by Left/Down/Up/Right arrow to move to the left/bottom/top/right window accordingly.
+-- [n]Control+W followed by +/-/</> to resize window by n lines
 
 -- Navigate buffers
 keymap("n", "<leader>bd", ":bd<CR>", opts)
@@ -119,9 +118,6 @@ end
 keymap("n", "<leader>pc", pack_clean)
 keymap("n", "<leader>pu", pack_update)
 
-keymap({ "n" }, "<leader>w", "<Cmd>update<CR>", { desc = "Write the current buffer." })
-keymap({ "n" }, "<leader>q", "<Cmd>:quit<CR>", { desc = "Quit the current buffer." })
-keymap({ "n" }, "<leader>Q", "<Cmd>:wqa<CR>", { desc = "Quit all buffers and write." })
 keymap({ "n", "v", "x" }, "<leader>n", ":norm ", { desc = "ENTER NORM COMMAND." })
 keymap("n", "<ESC>", ":nohl<CR>", { noremap = true, silent = true })
 
