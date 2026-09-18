@@ -1,9 +1,8 @@
+vim.loader.enable()
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 vim.opt.smartindent = true
-vim.opt.conceallevel = 1 -- required for markdown formatters
-vim.opt.updatetime = 300
 vim.opt.signcolumn = "yes"
 vim.opt.ignorecase = true
 vim.opt.swapfile = false
@@ -79,7 +78,6 @@ require("conform").setup({
 
 local keymap = vim.keymap.set
 local fzflua = require("fzf-lua")
-local actions = require("fzf-lua.actions")
 local ls = require("luasnip")
 
 fzflua.setup({
@@ -96,47 +94,18 @@ fzflua.setup({
     "yarn.lock",
     "tsconfig.tsbuildinfo",
   },
-  winopts = { backdrop = 85, fullscreen = true },
-  keymap = {
-    builtin = {
-      ["<C-f>"] = "preview-page-down",
-      ["<C-b>"] = "preview-page-up",
-      ["<C-p>"] = "toggle-preview",
-    },
-    fzf = {
-      ["ctrl-a"] = "toggle-all",
-      ["ctrl-t"] = "first",
-      ["ctrl-g"] = "last",
-      ["ctrl-d"] = "half-page-down",
-      ["ctrl-u"] = "half-page-up",
-    },
-  },
-  actions = {
-    files = {
-      ["ctrl-q"] = actions.file_sel_to_qf,
-      ["ctrl-n"] = actions.toggle_ignore,
-      ["ctrl-h"] = actions.toggle_hidden,
-      ["enter"] = actions.file_edit_or_qf,
-    },
-  },
-  grep = {
-    action = "tab",
-    rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden --no-ignore --max-columns=4096 -e",
-    grep_opts = "--hidden --no-ignore --smart-case --binary-files=without-match",
-  },
 })
 
 local gitsigns = require("gitsigns")
 gitsigns.setup({
   on_attach = function(bufnr)
-    local opts = { buffer = bufnr }
     keymap("n", "]h", function()
       if vim.wo.diff then
         vim.cmd.normal({ "]c", bang = true })
       else
         gitsigns.nav_hunk("next")
       end
-    end, opts)
+    end, { buffer = bufnr })
 
     keymap("n", "[h", function()
       if vim.wo.diff then
@@ -144,33 +113,33 @@ gitsigns.setup({
       else
         gitsigns.nav_hunk("prev")
       end
-    end, opts)
+    end, { buffer = bufnr })
 
-    keymap("n", "<leader>hs", gitsigns.stage_hunk, opts)
-    keymap("n", "<leader>hr", gitsigns.reset_hunk, opts)
+    keymap("n", "<leader>hs", gitsigns.stage_hunk, { buffer = bufnr })
+    keymap("n", "<leader>hr", gitsigns.reset_hunk, { buffer = bufnr })
     keymap("v", "<leader>hs", function()
       gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-    end, opts)
+    end, { buffer = bufnr })
     keymap("v", "<leader>hr", function()
       gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-    end, opts)
-    keymap("n", "<leader>hS", gitsigns.stage_buffer, opts)
-    keymap("n", "<leader>hR", gitsigns.reset_buffer, opts)
+    end, { buffer = bufnr })
+    keymap("n", "<leader>hS", gitsigns.stage_buffer, { buffer = bufnr })
+    keymap("n", "<leader>hR", gitsigns.reset_buffer, { buffer = bufnr })
     keymap("n", "<leader>hb", function()
       gitsigns.blame_line({ full = true })
-    end, opts)
-    keymap("n", "<leader>hd", gitsigns.diffthis, opts)
+    end, { buffer = bufnr })
+    keymap("n", "<leader>hd", gitsigns.diffthis, { buffer = bufnr })
     keymap("n", "<leader>hD", function()
       gitsigns.diffthis("~")
-    end, opts)
+    end, { buffer = bufnr })
     keymap("n", "<leader>hQ", function()
       gitsigns.setqflist("all")
-    end, opts)
-    keymap("n", "<leader>hq", gitsigns.setqflist, opts)
+    end, { buffer = bufnr })
+    keymap("n", "<leader>hq", gitsigns.setqflist, { buffer = bufnr })
   end,
 })
 
-require("luasnip").setup({ enable_autosnippets = true })
+ls.setup({ enable_autosnippets = true })
 require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
 
 require("blink.cmp").setup({
@@ -432,5 +401,87 @@ vim.api.nvim_create_autocmd("FileType", {
   once = true,
   callback = function()
     vim.pack.add({ { src = "https://github.com/chomosuke/typst-preview.nvim" } })
+  end,
+})
+
+-- PR review: `:Gh <subcommand> [body]`, active only on branches created by pr-review-picker.sh.
+-- No network calls for metadata: the worktree's HEAD is the PR's head commit, the repo slug
+-- comes from the origin remote, and the description is the file pr-review-picker.sh already
+-- cached to disk. A visual range targets an inline comment on the current file; no range means
+-- a top-level PR comment.
+vim.api.nvim_create_autocmd("VimEnter", {
+  once = true,
+  callback = function()
+    local branch = vim.trim(vim.fn.system("git rev-parse --abbrev-ref HEAD 2>/dev/null"))
+    local pr_number = branch:match("^pr%-review%-(%d+)$")
+    if not pr_number then
+      return
+    end
+
+    local remote_url = vim.trim(vim.fn.system("git remote get-url origin"))
+    local repo = remote_url:match("github%.com[:/](.+)"):gsub("%.git$", "")
+    local head_sha = vim.trim(vim.fn.system("git rev-parse HEAD"))
+    local cache_file = vim.fn.expand("~/.cache/pr-review-picker/pr-" .. pr_number .. ".md")
+
+    local function run(cmd)
+      vim.system(cmd, { text = true }, function(res)
+        vim.schedule(function()
+          local msg = res.code == 0 and "ok" or res.stderr
+          vim.notify(msg, res.code == 0 and vim.log.levels.INFO or vim.log.levels.ERROR, { title = "gh " .. cmd[2] })
+        end)
+      end)
+    end
+
+    vim.api.nvim_create_user_command("Gh", function(opts)
+      local args = vim.split(opts.args, " ", { trimempty = true })
+      local subcmd = table.remove(args, 1)
+      local body = table.concat(args, " ")
+
+      if subcmd == "view" then
+        vim.cmd.tabedit(vim.fn.fnameescape(cache_file))
+      elseif subcmd == "comment" and opts.range > 0 then
+        local cmd = {
+          "gh",
+          "api",
+          string.format("repos/%s/pulls/%s/comments", repo, pr_number),
+          "-f",
+          "path=" .. vim.fn.expand("%:."),
+          "-f",
+          "commit_id=" .. head_sha,
+          "-f",
+          "body=" .. body,
+          "-f",
+          "side=RIGHT",
+          "-F",
+          "line=" .. opts.line2,
+        }
+        if opts.line1 ~= opts.line2 then
+          vim.list_extend(cmd, { "-F", "start_line=" .. opts.line1, "-f", "start_side=RIGHT" })
+        end
+        run(cmd)
+      elseif subcmd == "comment" then
+        run({ "gh", "pr", "comment", pr_number, "--body", body })
+      elseif subcmd == "approve" then
+        local cmd = { "gh", "pr", "review", pr_number, "--approve" }
+        if body ~= "" then
+          vim.list_extend(cmd, { "--body", body })
+        end
+        run(cmd)
+      elseif subcmd == "request-changes" then
+        run({ "gh", "pr", "review", pr_number, "--request-changes", "--body", body })
+      elseif subcmd == "review" then
+        run({ "gh", "pr", "review", pr_number, "--comment", "--body", body })
+      else
+        vim.notify("unknown :Gh subcommand: " .. tostring(subcmd), vim.log.levels.ERROR)
+      end
+    end, {
+      nargs = "*",
+      range = true,
+      complete = function(arglead)
+        return vim.tbl_filter(function(c)
+          return c:find(arglead, 1, true) == 1
+        end, { "view", "comment", "approve", "request-changes", "review" })
+      end,
+    })
   end,
 })
