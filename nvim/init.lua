@@ -2,8 +2,6 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 vim.opt.smartindent = true
-vim.opt.conceallevel = 1 -- required for markdown formatters
-vim.opt.updatetime = 300
 vim.opt.signcolumn = "yes"
 vim.opt.ignorecase = true
 vim.opt.swapfile = false
@@ -79,7 +77,6 @@ require("conform").setup({
 
 local keymap = vim.keymap.set
 local fzflua = require("fzf-lua")
-local actions = require("fzf-lua.actions")
 local ls = require("luasnip")
 
 fzflua.setup({
@@ -95,34 +92,6 @@ fzflua.setup({
     "pnpm-lock.yaml",
     "yarn.lock",
     "tsconfig.tsbuildinfo",
-  },
-  winopts = { backdrop = 85, fullscreen = true },
-  keymap = {
-    builtin = {
-      ["<C-f>"] = "preview-page-down",
-      ["<C-b>"] = "preview-page-up",
-      ["<C-p>"] = "toggle-preview",
-    },
-    fzf = {
-      ["ctrl-a"] = "toggle-all",
-      ["ctrl-t"] = "first",
-      ["ctrl-g"] = "last",
-      ["ctrl-d"] = "half-page-down",
-      ["ctrl-u"] = "half-page-up",
-    },
-  },
-  actions = {
-    files = {
-      ["ctrl-q"] = actions.file_sel_to_qf,
-      ["ctrl-n"] = actions.toggle_ignore,
-      ["ctrl-h"] = actions.toggle_hidden,
-      ["enter"] = actions.file_edit_or_qf,
-    },
-  },
-  grep = {
-    action = "tab",
-    rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden --no-ignore --max-columns=4096 -e",
-    grep_opts = "--hidden --no-ignore --smart-case --binary-files=without-match",
   },
 })
 
