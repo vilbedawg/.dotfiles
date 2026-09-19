@@ -1,32 +1,47 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Indentation
 vim.opt.smartindent = true
-vim.opt.signcolumn = "yes"
-vim.opt.ignorecase = true
-vim.opt.swapfile = false
 vim.opt.expandtab = true
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.shiftround = true -- Round indent to multiple of shiftwidth
+
+-- Search
+vim.opt.ignorecase = true
+
+-- Files
+vim.opt.swapfile = false
+vim.opt.undofile = true
+
+-- UI/display
+vim.opt.signcolumn = "yes"
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.numberwidth = 2
 vim.opt.wrap = false
 vim.opt.scrolloff = 8 -- Keep 8 lines above and below the cursor
+vim.o.statusline = "%<%f %h%w%m%r %{get(b:,'gitsigns_status','')}%=%-14.(%l,%c%V%) %P"
+
+-- Editing behavior
 vim.opt.jumpoptions = "stack" -- Make <C-o>/<C-i> behave like browser back/forward
-vim.opt.undofile = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.shortmess:append("c") -- don't give |ins-completion-menu| messages
 vim.opt.iskeyword:append("-") -- hyphenated words recognized by searches
 vim.opt.formatoptions:remove("c") -- don't auto-wrap comments using 'textwidth'
-vim.o.statusline = "%<%f %h%w%m%r %{get(b:,'gitsigns_status','')}%=%-14.(%l,%c%V%) %P"
+
+vim.diagnostic.config({
+  virtual_text = { prefix = "" },
+  float = { border = "single" },
+  underline = true,
+  severity_sort = true,
+})
 
 vim.pack.add({
   { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
   { src = "https://github.com/neovim/nvim-lspconfig" },
-  { src = "https://github.com/seblyng/roslyn.nvim" },
   { src = "https://github.com/stevearc/oil.nvim" },
   { src = "https://github.com/ibhagwan/fzf-lua" },
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
@@ -41,8 +56,13 @@ vim.pack.add({
   { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/blazkowolf/gruber-darker.nvim" },
   { src = "https://github.com/chentoast/marks.nvim" },
-  { src = "https://github.com/meanderingprogrammer/render-markdown.nvim" },
 })
+
+vim.pack.add({
+  { src = "https://github.com/meanderingprogrammer/render-markdown.nvim" },
+  { src = "https://github.com/chomosuke/typst-preview.nvim" },
+  { src = "https://github.com/seblyng/roslyn.nvim" },
+}, { load = false })
 
 require("mason").setup({
   registries = {
@@ -75,9 +95,8 @@ require("conform").setup({
   },
 })
 
-local keymap = vim.keymap.set
+local map = vim.keymap.set
 local fzflua = require("fzf-lua")
-local ls = require("luasnip")
 
 fzflua.setup({
   file_ignore_patterns = {
@@ -98,49 +117,45 @@ fzflua.setup({
 local gitsigns = require("gitsigns")
 gitsigns.setup({
   on_attach = function(bufnr)
-    local opts = { buffer = bufnr }
-    keymap("n", "]h", function()
+    map("n", "]h", function()
       if vim.wo.diff then
         vim.cmd.normal({ "]c", bang = true })
       else
         gitsigns.nav_hunk("next")
       end
-    end, opts)
+    end, { buffer = bufnr })
 
-    keymap("n", "[h", function()
+    map("n", "[h", function()
       if vim.wo.diff then
         vim.cmd.normal({ "[c", bang = true })
       else
         gitsigns.nav_hunk("prev")
       end
-    end, opts)
+    end, { buffer = bufnr })
 
-    keymap("n", "<leader>hs", gitsigns.stage_hunk, opts)
-    keymap("n", "<leader>hr", gitsigns.reset_hunk, opts)
-    keymap("v", "<leader>hs", function()
+    map("n", "<leader>hs", gitsigns.stage_hunk, { buffer = bufnr })
+    map("n", "<leader>hr", gitsigns.reset_hunk, { buffer = bufnr })
+    map("v", "<leader>hs", function()
       gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-    end, opts)
-    keymap("v", "<leader>hr", function()
+    end, { buffer = bufnr })
+    map("v", "<leader>hr", function()
       gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-    end, opts)
-    keymap("n", "<leader>hS", gitsigns.stage_buffer, opts)
-    keymap("n", "<leader>hR", gitsigns.reset_buffer, opts)
-    keymap("n", "<leader>hb", function()
+    end, { buffer = bufnr })
+    map("n", "<leader>hS", gitsigns.stage_buffer, { buffer = bufnr })
+    map("n", "<leader>hR", gitsigns.reset_buffer, { buffer = bufnr })
+    map("n", "<leader>hb", function()
       gitsigns.blame_line({ full = true })
-    end, opts)
-    keymap("n", "<leader>hd", gitsigns.diffthis, opts)
-    keymap("n", "<leader>hD", function()
+    end, { buffer = bufnr })
+    map("n", "<leader>hd", gitsigns.diffthis, { buffer = bufnr })
+    map("n", "<leader>hD", function()
       gitsigns.diffthis("~")
-    end, opts)
-    keymap("n", "<leader>hQ", function()
+    end, { buffer = bufnr })
+    map("n", "<leader>hQ", function()
       gitsigns.setqflist("all")
-    end, opts)
-    keymap("n", "<leader>hq", gitsigns.setqflist, opts)
+    end, { buffer = bufnr })
+    map("n", "<leader>hq", gitsigns.setqflist, { buffer = bufnr })
   end,
 })
-
-require("luasnip").setup({ enable_autosnippets = true })
-require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
 
 require("blink.cmp").setup({
   signature = { enabled = true },
@@ -165,27 +180,12 @@ require("blink.cmp").setup({
   },
 })
 
-vim.diagnostic.config({
-  virtual_text = true,
-  underline = true,
-  update_in_insert = false,
-  severity_sort = true,
-  float = {
-    border = "rounded",
-    source = true,
-  },
-  signs = {
-    text = {
-      [vim.diagnostic.severity.ERROR] = "󰅚 ",
-      [vim.diagnostic.severity.WARN] = "󰀪 ",
-      [vim.diagnostic.severity.INFO] = "󰋽 ",
-      [vim.diagnostic.severity.HINT] = "󰌶 ",
-    },
-    numhl = {
-      [vim.diagnostic.severity.ERROR] = "ErrorMsg",
-      [vim.diagnostic.severity.WARN] = "WarningMsg",
-    },
-  },
+vim.api.nvim_create_autocmd("InsertEnter", {
+  once = true,
+  callback = function()
+    require("luasnip").setup({ enable_autosnippets = true })
+    require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
+  end,
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -196,43 +196,37 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     local opts = { silent = true, buffer = bufnr }
 
-    keymap({ "n", "v" }, "<leader>F", function() -- Format
+    map({ "n", "v" }, "<leader>F", function() -- Format
       require("conform").format({ bufnr = args.buf })
     end, opts)
 
-    keymap("n", "gd", vim.lsp.buf.definition, opts) -- Go to definition
-    keymap("n", "gt", vim.lsp.buf.type_definition, opts) -- Go to type def
-    keymap("n", "gr", vim.lsp.buf.references, opts) -- Go to type def
-    keymap("n", "gi", vim.lsp.buf.implementation, opts) -- Go to implementation
-    keymap("n", "gD", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts) -- Go to definition in split
-    keymap("n", "<leader>r", vim.lsp.buf.rename, opts) -- Rename
-    keymap("n", "K", vim.lsp.buf.hover, opts) -- Hover doc
-    keymap("n", "<leader>vd", vim.diagnostic.open_float, opts) -- cursor diagnostics
-    keymap("n", "<leader>vD", "<cmd>lua vim.diagnostic.open_float({ scope = 'line' })<CR>", opts) -- line diagnostics
+    map("n", "gd", vim.lsp.buf.definition, opts)
+    map("n", "gt", vim.lsp.buf.type_definition, opts)
+    map("n", "gr", vim.lsp.buf.references, opts)
+    map("n", "gi", vim.lsp.buf.implementation, opts)
+    map("n", "gD", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts)
+    map("n", "<leader>r", vim.lsp.buf.rename, opts)
+    map("n", "K", vim.lsp.buf.hover, opts)
+    map("n", "<leader>vd", vim.diagnostic.open_float, opts)
+    map("n", "<leader>vD", "<cmd>lua vim.diagnostic.open_float({ scope = 'line' })<CR>", opts)
 
-    keymap("n", "]d", function()
+    map("n", "]d", function()
       vim.diagnostic.jump({ count = 1, float = true })
     end, opts)
-    keymap("n", "[d", function()
+    map("n", "[d", function()
       vim.diagnostic.jump({ count = -1, float = true })
     end, opts)
 
-    -- FzfLua LSP keymaps
-    keymap("n", "<leader>ca", fzflua["lsp_code_actions"], opts) -- lsp code actions
-    keymap("n", "<leader>fl", fzflua["lsp_finder"], opts) -- lsp finder (definitions + references)
-    keymap("n", "<leader>fr", fzflua["lsp_references"], opts) -- show all references to symbol under cursor
-    keymap("n", "<leader>ft", fzflua["lsp_typedefs"], opts) -- jump to the typedefs of symbol under cursor
-    keymap("n", "<leader>ds", fzflua["lsp_document_symbols"], opts) -- list all symbols in file
-    keymap("n", "<leader>ws", fzflua["lsp_workspace_symbols"], opts) -- search for symbol across entire project
-    keymap("n", "<leader>fi", fzflua["lsp_implementations"], opts) -- go to implementation
+    map("n", "<leader>ca", fzflua["lsp_code_actions"], opts)
+    map("n", "<leader>fl", fzflua["lsp_finder"], opts)
+    map("n", "<leader>fr", fzflua["lsp_references"], opts)
+    map("n", "<leader>ft", fzflua["lsp_typedefs"], opts)
+    map("n", "<leader>ds", fzflua["lsp_document_symbols"], opts)
+    map("n", "<leader>ws", fzflua["lsp_workspace_symbols"], opts)
+    map("n", "<leader>fi", fzflua["lsp_implementations"], opts)
 
     if client.name == "clangd" then
-      keymap(
-        "n",
-        "<leader>ch",
-        "<cmd>LspClangdSwitchSourceHeader<cr>",
-        { buffer = bufnr, desc = "Switch source/header" }
-      )
+      map("n", "<leader>ch", "<cmd>LspClangdSwitchSourceHeader<cr>", opts)
     end
   end,
 })
@@ -246,74 +240,79 @@ vim.lsp.enable({
   "ts_ls",
   "emmet_language_server",
   "pyright",
-  "roslyn",
   "jsonls",
   "yamlls",
   "marksman",
 })
 
-local opts = { silent = true }
-
-keymap("n", "<leader>to", ":tabnew<CR>", opts)
-keymap("n", "<leader>tx", ":tabclose<CR>", opts)
+-- Tabs
+map("n", "<leader>to", ":tabnew<CR>", { silent = true })
+map("n", "<leader>tx", ":tabclose<CR>", { silent = true })
 for i = 1, 8 do
-  keymap({ "n", "t" }, "<Leader>" .. i, "<Cmd>tabnext " .. i .. "<CR>")
+  map({ "n", "t" }, "<Leader>" .. i, "<Cmd>tabnext " .. i .. "<CR>")
 end
 
-keymap("n", "x", '"_x', opts)
+-- Buffers
+map("n", "<leader>bd", ":bd<CR>", { silent = true })
+map("n", "<leader>bD", ":bd!<CR>", { silent = true })
+map("n", "<S-l>", ":bnext<CR>", { silent = true })
+map("n", "<S-h>", ":bprevious<CR>", { silent = true })
 
-keymap("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-keymap("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+-- Editing
+map("n", "x", '"_x', { silent = true })
 
-keymap("n", "<leader>bd", ":bd<CR>", opts)
-keymap("n", "<leader>bD", ":bd!<CR>", opts)
-keymap("n", "<S-l>", ":bnext<CR>", opts)
-keymap("n", "<S-h>", ":bprevious<CR>", opts)
+map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
-keymap("n", "<M-j>", "<cmd>m .+1<cr>==", opts)
-keymap("n", "<M-k>", "<cmd>m .-2<cr>==", opts)
-keymap("v", "<M-j>", ":m '>+1<cr>gv=gv", opts)
-keymap("v", "<M-k>", ":m '<-2<cr>gv=gv", opts)
+map("n", "<M-j>", "<cmd>m .+1<cr>==", { silent = true })
+map("n", "<M-k>", "<cmd>m .-2<cr>==", { silent = true })
+map("v", "<M-j>", ":m '>+1<cr>gv=gv", { silent = true })
+map("v", "<M-k>", ":m '<-2<cr>gv=gv", { silent = true })
 
-keymap("v", "<", "<gv", opts)
-keymap("v", ">", ">gv", opts)
+map("v", "<", "<gv", { silent = true })
+map("v", ">", ">gv", { silent = true })
 
-keymap("v", "p", '"_dP', opts)
+map("v", "p", '"_dP', { silent = true })
 
-keymap({ "n", "v", "x" }, "<leader>sw", [[:s/\V]], { desc = "Enter substitue mode in selection" })
-keymap({ "n", "v", "x" }, "<leader>n", ":norm ", { desc = "ENTER NORM COMMAND." })
-keymap("n", "<ESC>", ":nohl<CR>", { noremap = true, silent = true })
+map({ "n", "v", "x" }, "<leader>sw", [[:s/\V]])
+map({ "n", "v", "x" }, "<leader>n", ":norm ")
+map("n", "<ESC>", ":nohl<CR>", { noremap = true, silent = true })
 
-keymap("n", "<leader>e", "<cmd>Oil<CR>")
+-- Files
+map("n", "<leader>e", "<cmd>Oil<CR>")
 
-keymap({ "i", "s" }, "<C-e>", function()
-  ls.expand_or_jump(1)
+-- Snippets
+map({ "i", "s" }, "<C-e>", function()
+  require("luasnip").expand_or_jump(1)
 end, { silent = true })
-keymap({ "i", "s" }, "<C-J>", function()
-  ls.jump(1)
+map({ "i", "s" }, "<C-J>", function()
+  require("luasnip").jump(1)
 end, { silent = true })
-keymap({ "i", "s" }, "<C-K>", function()
-  ls.jump(-1)
+map({ "i", "s" }, "<C-K>", function()
+  require("luasnip").jump(-1)
 end, { silent = true })
 
-keymap("n", "<leader>ff", fzflua["files"])
-keymap("n", "<leader><leader>", fzflua["buffers"])
-keymap("n", "<leader>fd", fzflua["diagnostics_document"])
-keymap("n", "<leader>fD", fzflua["diagnostics_workspace"])
-keymap("n", "<leader>fs", fzflua["live_grep"])
-keymap("n", "<leader>fc", fzflua["grep_curbuf"])
-keymap("n", "<leader>fw", fzflua["grep_cword"])
-keymap("n", "<leader>fW", fzflua["grep_cWORD"])
-keymap("n", "<leader>fk", fzflua["keymaps"])
-keymap("n", "<leader>fg", fzflua["git_status"], opts)
+-- FzfLua
+map("n", "<leader>ff", fzflua["files"])
+map("n", "<leader><leader>", fzflua["buffers"])
+map("n", "<leader>fd", fzflua["diagnostics_document"])
+map("n", "<leader>fD", fzflua["diagnostics_workspace"])
+map("n", "<leader>fs", fzflua["live_grep"])
+map("n", "<leader>fc", fzflua["grep_curbuf"])
+map("n", "<leader>fw", fzflua["grep_cword"])
+map("n", "<leader>fW", fzflua["grep_cWORD"])
+map("n", "<leader>fk", fzflua["keymaps"])
+map("n", "<leader>fg", fzflua["git_status"], { silent = true })
 
-keymap("n", "<leader>gg", "<cmd>leftabove vertical Git<cr>", { silent = true })
-keymap("n", "<leader>ga", "<cmd>Git add %:p<cr><cr>", { silent = true })
-keymap("n", "<leader>gd", "<cmd>Gdiff<cr>", { silent = true })
-keymap("n", "<leader>ge", "<cmd>Gedit<cr>", { silent = true })
-keymap("n", "<leader>gw", "<cmd>Gwrite<cr>", { silent = true })
-keymap("n", "<leader>gf", "<cmd>FzfLua git_commits<cr>", { silent = true })
-keymap("n", "<leader>gb", function()
+-- Git (fugitive)
+map("n", "<leader>gg", "<cmd>leftabove vertical Git<cr>", { silent = true })
+map("n", "<leader>ga", "<cmd>Git add %:p<cr><cr>", { silent = true })
+map("n", "<leader>gd", "<cmd>Gdiff<cr>", { silent = true })
+map("n", "<leader>ge", "<cmd>Gedit<cr>", { silent = true })
+map("n", "<leader>gw", "<cmd>Gwrite<cr>", { silent = true })
+map("n", "<leader>gf", "<cmd>FzfLua git_commits<cr>", { silent = true })
+
+map("n", "<leader>gb", function()
   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
     if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "fugitiveblame" then
       vim.api.nvim_win_close(win, false)
@@ -321,24 +320,24 @@ keymap("n", "<leader>gb", function()
     end
   end
   vim.cmd("G blame")
-end, { silent = true, desc = "Toggle git blame" })
+end, { silent = true })
 
--- incremental selection treesitter/lsp
-keymap({ "n", "x", "o" }, "<A-o>", function()
+-- Incremental selection (treesitter, falls back to LSP)
+map({ "n", "x", "o" }, "<A-o>", function()
   if vim.treesitter.get_parser(nil, nil, { error = false }) then
     require("vim.treesitter._select").select_parent(vim.v.count1)
   else
     vim.lsp.buf.selection_range(vim.v.count1)
   end
-end, { desc = "Select parent treesitter node or outer incremental lsp selections" })
+end)
 
-keymap({ "n", "x", "o" }, "<A-i>", function()
+map({ "n", "x", "o" }, "<A-i>", function()
   if vim.treesitter.get_parser(nil, nil, { error = false }) then
     require("vim.treesitter._select").select_child(vim.v.count1)
   else
     vim.lsp.buf.selection_range(-vim.v.count1)
   end
-end, { desc = "Select child treesitter node or inner incremental lsp selections" })
+end)
 
 vim.api.nvim_create_autocmd("BufReadPost", {
   callback = function()
@@ -397,9 +396,25 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  once = true,
+  callback = function()
+    vim.cmd.packadd("render-markdown.nvim")
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
   pattern = "typst",
   once = true,
   callback = function()
-    vim.pack.add({ { src = "https://github.com/chomosuke/typst-preview.nvim" } })
+    vim.cmd.packadd("typst-preview.nvim")
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "cs", "razor" },
+  once = true,
+  callback = function()
+    vim.cmd.packadd("roslyn.nvim")
   end,
 })
