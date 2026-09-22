@@ -99,16 +99,10 @@ local fzflua = require("fzf-lua")
 
 fzflua.setup({
   file_ignore_patterns = {
-    "node_modules/",
-    "dist/",
-    ".next/",
-    ".git/",
-    ".gitlab/",
-    "build/",
-    "target/",
-    "package-lock.json",
-    "pnpm-lock.yaml",
-    "yarn.lock",
+    "node_modules/", "dist/", ".next/",
+    ".git/", ".gitlab/", "build/",
+    "target/", "package-lock.json",
+    "pnpm-lock.yaml", "yarn.lock",
     "tsconfig.tsbuildinfo",
   },
 })
@@ -138,8 +132,8 @@ gitsigns.setup({
     map("n", "<leader>hr", gitsigns.reset_hunk, { buffer = bufnr })
     map("n", "<leader>hS", gitsigns.stage_buffer, { buffer = bufnr })
     map("n", "<leader>hR", gitsigns.reset_buffer, { buffer = bufnr })
-    map("n", "<leader>hB", "<cmd>Gitsigns blame<cr>", { buffer = bufnr })
-    map("n", "<leader>hc", "<cmd>Gitsigns show_commit<cr>", { buffer = bufnr })
+    map("n", "<leader>hB", "<cmd>Gitsigns blame<cr>", { buffer = bufnr, silent = true })
+    map("n", "<leader>hc", "<cmd>Gitsigns show_commit<cr>", { buffer = bufnr, silent = true })
     map("n", "<leader>hD", function() gitsigns.diffthis("~") end, { buffer = bufnr })
     map("n", "<leader>hQ", function() gitsigns.setqflist("all") end, { buffer = bufnr })
     map("n", "<leader>hb", function() gitsigns.blame_line({ full = true }) end, { buffer = bufnr })
@@ -227,7 +221,7 @@ vim.lsp.enable({
 map("n", "<leader>to", ":tabnew<CR>", { silent = true })
 map("n", "<leader>tx", ":tabclose<CR>", { silent = true })
 for i = 1, 8 do
-  map({ "n", "t" }, "<Leader>" .. i, "<Cmd>tabnext " .. i .. "<CR>")
+  map({ "n", "t" }, "<Leader>" .. i, "<Cmd>tabnext " .. i .. "<CR>", { silent = true })
 end
 
 -- Buffers
@@ -254,10 +248,10 @@ map("v", "p", '"_dP', { silent = true })
 
 map({ "n", "v", "x" }, "<leader>sw", [[:s/\V]])
 map({ "n", "v", "x" }, "<leader>n", ":norm ")
-map("n", "<ESC>", ":nohl<CR>", { noremap = true, silent = true })
+map("n", "<ESC>", ":nohl<CR>", { silent = true })
 
 -- Files
-map("n", "<leader>e", "<cmd>Oil<CR>")
+map("n", "<leader>e", "<cmd>Oil<CR>", { silent = true })
 
 -- Snippets
 map({ "i", "s" }, "<C-e>", function() require("luasnip").expand_or_jump(1) end, { silent = true })
@@ -270,11 +264,11 @@ map("n", "<leader><leader>", fzflua["buffers"])
 map("n", "<leader>fd", fzflua["diagnostics_document"])
 map("n", "<leader>fD", fzflua["diagnostics_workspace"])
 map("n", "<leader>fs", fzflua["live_grep"])
-map("n", "<leader>fc", fzflua["grep_curbuf"])
+map("n", "<leader>fc", fzflua["lsp_document_symbols"])
 map("n", "<leader>fw", fzflua["grep_cword"])
 map("n", "<leader>fW", fzflua["grep_cWORD"])
 map("n", "<leader>fk", fzflua["keymaps"])
-map("n", "<leader>fg", fzflua["git_status"], { silent = true })
+map("n", "<leader>fg", fzflua["git_status"])
 map("n", "<leader>fG", "<cmd>FzfLua git_commits<cr>", { silent = true })
 
 -- Incremental selection (treesitter, falls back to LSP)
