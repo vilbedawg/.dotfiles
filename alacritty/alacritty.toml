@@ -10,7 +10,7 @@ history = 10000
 multiplier = 3
 
 [font]
-size = 24
+size = 28
 
 [font.normal]
 family = "Iosevka Nerd Font"
