@@ -46,15 +46,13 @@ vim.pack.add({
   { src = "https://github.com/ibhagwan/fzf-lua" },
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
   { src = "https://github.com/tpope/vim-surround" },
-  { src = "https://github.com/tpope/vim-fugitive" },
-  { src = "https://github.com/tpope/vim-rhubarb" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/mason-org/mason.nvim" },
   { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
   { src = "https://github.com/L3MON4D3/LuaSnip" },
   { src = "https://github.com/rafamadriz/friendly-snippets" },
   { src = "https://github.com/stevearc/conform.nvim" },
-  { src = "https://github.com/blazkowolf/gruber-darker.nvim" },
+  { src = "https://github.com/vague-theme/vague.nvim" },
   { src = "https://github.com/chentoast/marks.nvim" },
 })
 
@@ -71,7 +69,7 @@ require("mason").setup({
   },
 })
 
-vim.cmd.colorscheme("gruber-darker")
+vim.cmd.colorscheme("vague")
 
 require("oil").setup()
 
@@ -133,31 +131,24 @@ gitsigns.setup({
       end
     end, { buffer = bufnr })
 
+    map("n", "<leader>hd", gitsigns.diffthis, { buffer = bufnr })
+    map("n", "<leader>hq", gitsigns.setqflist, { buffer = bufnr })
     map("n", "<leader>hs", gitsigns.stage_hunk, { buffer = bufnr })
     map("n", "<leader>hr", gitsigns.reset_hunk, { buffer = bufnr })
-    map("v", "<leader>hs", function()
-      gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-    end, { buffer = bufnr })
-    map("v", "<leader>hr", function()
-      gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-    end, { buffer = bufnr })
     map("n", "<leader>hS", gitsigns.stage_buffer, { buffer = bufnr })
     map("n", "<leader>hR", gitsigns.reset_buffer, { buffer = bufnr })
-    map("n", "<leader>hb", function()
-      gitsigns.blame_line({ full = true })
-    end, { buffer = bufnr })
-    map("n", "<leader>hd", gitsigns.diffthis, { buffer = bufnr })
-    map("n", "<leader>hD", function()
-      gitsigns.diffthis("~")
-    end, { buffer = bufnr })
-    map("n", "<leader>hQ", function()
-      gitsigns.setqflist("all")
-    end, { buffer = bufnr })
-    map("n", "<leader>hq", gitsigns.setqflist, { buffer = bufnr })
+    map("n", "<leader>hB", "<cmd>Gitsigns blame<cr>", { buffer = bufnr })
+    map("n", "<leader>hc", "<cmd>Gitsigns show_commit<cr>", { buffer = bufnr })
+    map("n", "<leader>hD", function() gitsigns.diffthis("~") end, { buffer = bufnr })
+    map("n", "<leader>hQ", function() gitsigns.setqflist("all") end, { buffer = bufnr })
+    map("n", "<leader>hb", function() gitsigns.blame_line({ full = true }) end, { buffer = bufnr })
+    map("v", "<leader>hs", function() gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") }) end, { buffer = bufnr })
+    map("v", "<leader>hr", function() gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") }) end, { buffer = bufnr })
   end,
 })
 
 require("blink.cmp").setup({
+  keymap = { preset = "super-tab" },
   signature = { enabled = true },
   appearance = {
     use_nvim_cmp_as_default = true,
@@ -196,10 +187,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     local opts = { silent = true, buffer = bufnr }
 
-    map({ "n", "v" }, "<leader>F", function() -- Format
-      require("conform").format({ bufnr = args.buf })
-    end, opts)
-
+    map({ "n", "v" }, "<leader>F", function() require("conform").format({ bufnr = args.buf }) end, opts)
     map("n", "gd", vim.lsp.buf.definition, opts)
     map("n", "gt", vim.lsp.buf.type_definition, opts)
     map("n", "gr", vim.lsp.buf.references, opts)
@@ -210,12 +198,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "<leader>vd", vim.diagnostic.open_float, opts)
     map("n", "<leader>vD", "<cmd>lua vim.diagnostic.open_float({ scope = 'line' })<CR>", opts)
 
-    map("n", "]d", function()
-      vim.diagnostic.jump({ count = 1, float = true })
-    end, opts)
-    map("n", "[d", function()
-      vim.diagnostic.jump({ count = -1, float = true })
-    end, opts)
+    map("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, opts)
+    map("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, opts)
 
     map("n", "<leader>ca", fzflua["lsp_code_actions"], opts)
     map("n", "<leader>fl", fzflua["lsp_finder"], opts)
@@ -232,17 +216,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 vim.lsp.enable({
-  "lua_ls",
-  "cssls",
-  "tinymist",
-  "rust_analyzer",
-  "clangd",
-  "ts_ls",
-  "emmet_language_server",
-  "pyright",
-  "jsonls",
-  "yamlls",
-  "marksman",
+  "lua_ls", "cssls", "tinymist",
+  "rust_analyzer", "clangd", "ts_ls",
+  "emmet_language_server", "pyright", "jsonls",
+  "yamlls", "marksman",
 })
 
 -- Tabs
@@ -282,15 +259,9 @@ map("n", "<ESC>", ":nohl<CR>", { noremap = true, silent = true })
 map("n", "<leader>e", "<cmd>Oil<CR>")
 
 -- Snippets
-map({ "i", "s" }, "<C-e>", function()
-  require("luasnip").expand_or_jump(1)
-end, { silent = true })
-map({ "i", "s" }, "<C-J>", function()
-  require("luasnip").jump(1)
-end, { silent = true })
-map({ "i", "s" }, "<C-K>", function()
-  require("luasnip").jump(-1)
-end, { silent = true })
+map({ "i", "s" }, "<C-e>", function() require("luasnip").expand_or_jump(1) end, { silent = true })
+map({ "i", "s" }, "<C-J>", function() require("luasnip").jump(1) end, { silent = true })
+map({ "i", "s" }, "<C-K>", function() require("luasnip").jump(-1) end, { silent = true })
 
 -- FzfLua
 map("n", "<leader>ff", fzflua["files"])
@@ -303,24 +274,7 @@ map("n", "<leader>fw", fzflua["grep_cword"])
 map("n", "<leader>fW", fzflua["grep_cWORD"])
 map("n", "<leader>fk", fzflua["keymaps"])
 map("n", "<leader>fg", fzflua["git_status"], { silent = true })
-
--- Git (fugitive)
-map("n", "<leader>gg", "<cmd>leftabove vertical Git<cr>", { silent = true })
-map("n", "<leader>ga", "<cmd>Git add %:p<cr><cr>", { silent = true })
-map("n", "<leader>gd", "<cmd>Gdiff<cr>", { silent = true })
-map("n", "<leader>ge", "<cmd>Gedit<cr>", { silent = true })
-map("n", "<leader>gw", "<cmd>Gwrite<cr>", { silent = true })
-map("n", "<leader>gf", "<cmd>FzfLua git_commits<cr>", { silent = true })
-
-map("n", "<leader>gb", function()
-  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-    if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "fugitiveblame" then
-      vim.api.nvim_win_close(win, false)
-      return
-    end
-  end
-  vim.cmd("G blame")
-end, { silent = true })
+map("n", "<leader>fG", "<cmd>FzfLua git_commits<cr>", { silent = true })
 
 -- Incremental selection (treesitter, falls back to LSP)
 map({ "n", "x", "o" }, "<A-o>", function()

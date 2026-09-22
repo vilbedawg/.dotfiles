@@ -1,7 +1,7 @@
 autoload -U colors && colors
 bindkey -e
 
-export ACCENT_COLOR="#ffdd33"
+export ACCENT_COLOR="magenta"
 PS1="%{%F{$ACCENT_COLOR}%}%~%{$fg[red]%} %{$reset_color%}$%b "
 
 # Maximum lines kept in memory
@@ -78,8 +78,7 @@ path=(
   "$HOME/.local/bin"
   $path
   "$DOTNET_ROOT"
-  "$DOTNET_ROOT/tools"
-)
+  "$DOTNET_ROOT/tools")
 typeset -U path PATH
 
 # Load plugins; these should be last
