@@ -15,6 +15,7 @@ vim.opt.ignorecase = true
 -- Files
 vim.opt.swapfile = false
 vim.opt.undofile = true
+vim.opt.autoread = true
 
 -- UI/display
 vim.opt.signcolumn = "yes"
@@ -312,15 +313,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 vim.api.nvim_create_autocmd("VimResized", {
   command = "wincmd =",
   desc = "Equalize splits on terminal resize",
-})
-
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "TermClose", "TermLeave" }, {
-  callback = function()
-    if vim.o.buftype ~= "nofile" then
-      vim.cmd("checktime")
-    end
-  end,
-  desc = "Reload files changed outside of nvim",
 })
 
 vim.api.nvim_create_autocmd("PackChanged", {
