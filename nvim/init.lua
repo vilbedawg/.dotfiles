@@ -143,7 +143,7 @@ gitsigns.setup({
 })
 
 require("blink.cmp").setup({
-  keymap = { preset = "super-tab" },
+  keymap = { preset = "default" },
   signature = { enabled = true },
   appearance = {
     use_nvim_cmp_as_default = true,
