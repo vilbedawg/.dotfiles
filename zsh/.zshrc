@@ -72,6 +72,7 @@ alias vim="nvim"
 
 export DOTNET_ROOT=/usr/local/share/dotnet
 export HOMEBREW_PREFIX=/opt/homebrew
+export PATH="$HOMEBREW_PREFIX/opt/libpq/bin:$PATH"
 
 # PATH
 path=(
