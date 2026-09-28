@@ -1,37 +1,21 @@
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.mapleader, vim.g.maplocalleader = " ", " "
 
--- Indentation
-vim.opt.smartindent = true
-vim.opt.expandtab = true
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.shiftround = true -- Round indent to multiple of shiftwidth
+local scalar_opts = {
+  smartindent = true, expandtab = true, tabstop = 4, softtabstop = 4,
+  shiftwidth = 4, shiftround = true, ignorecase = true, swapfile = false,
+  undofile = true, autoread = true, signcolumn = "yes", number = true,
+  relativenumber = true, numberwidth = 2, wrap = false, scrolloff = 8,
+  clipboard = "unnamedplus", jumpoptions = "stack",
+}
 
--- Search
-vim.opt.ignorecase = true
+for name, value in pairs(scalar_opts) do
+  vim.opt[name] = value
+end
 
--- Files
-vim.opt.swapfile = false
-vim.opt.undofile = true
-vim.opt.autoread = true
-
--- UI/display
-vim.opt.signcolumn = "yes"
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.numberwidth = 2
-vim.opt.wrap = false
-vim.opt.scrolloff = 8 -- Keep 8 lines above and below the cursor
+vim.opt.shortmess:append("c")
+vim.opt.iskeyword:append("-")
+vim.opt.formatoptions:remove("c")
 vim.o.statusline = "%<%f %h%w%m%r %{get(b:,'gitsigns_status','')}%=%-14.(%l,%c%V%) %P"
-
--- Editing behavior
-vim.opt.jumpoptions = "stack" -- Make <C-o>/<C-i> behave like browser back/forward
-vim.opt.clipboard = "unnamedplus"
-vim.opt.shortmess:append("c") -- don't give |ins-completion-menu| messages
-vim.opt.iskeyword:append("-") -- hyphenated words recognized by searches
-vim.opt.formatoptions:remove("c") -- don't auto-wrap comments using 'textwidth'
 
 vim.diagnostic.config({
   virtual_text = { prefix = "" },
@@ -74,15 +58,10 @@ vim.cmd.colorscheme("vague")
 
 require("oil").setup()
 
-require("marks").setup({
-  builtin_marks = { "<", ">", "^" },
-})
+require("marks").setup({ builtin_marks = { "<", ">", "^" } })
 
 require("conform").setup({
-  default_format_opts = {
-    -- Allow formatting from LSP server if no dedicated formatter is available
-    lsp_format = "fallback",
-  },
+  default_format_opts = { lsp_format = "fallback" },
   formatters_by_ft = {
     lua = { "stylua" },
     python = { "isort", "black" },
@@ -99,10 +78,8 @@ local fzflua = require("fzf-lua")
 
 fzflua.setup({
   file_ignore_patterns = {
-    "node_modules/", "dist/", ".next/",
-    ".git/", ".gitlab/", "build/",
-    "target/", "package-lock.json",
-    "pnpm-lock.yaml", "yarn.lock",
+    "node_modules/", "dist/", ".next/", ".git/", ".gitlab/", "build/",
+    "target/", "package-lock.json", "pnpm-lock.yaml", "yarn.lock",
     "tsconfig.tsbuildinfo",
   },
 })
@@ -110,22 +87,17 @@ fzflua.setup({
 local gitsigns = require("gitsigns")
 gitsigns.setup({
   on_attach = function(bufnr)
-    map("n", "]h", function()
-      if vim.wo.diff then
-        vim.cmd.normal({ "]c", bang = true })
-      else
-        gitsigns.nav_hunk("next")
+    local function hunk_nav(dir)
+      return function()
+        if vim.wo.diff then
+          vim.cmd.normal({ dir == 1 and "]c" or "[c", bang = true })
+        else
+          gitsigns.nav_hunk(dir == 1 and "next" or "prev")
+        end
       end
-    end, { buffer = bufnr })
-
-    map("n", "[h", function()
-      if vim.wo.diff then
-        vim.cmd.normal({ "[c", bang = true })
-      else
-        gitsigns.nav_hunk("prev")
-      end
-    end, { buffer = bufnr })
-
+    end
+    map("n", "]h", hunk_nav(1), { buffer = bufnr })
+    map("n", "[h", hunk_nav(-1), { buffer = bufnr })
     map("n", "<leader>hd", gitsigns.diffthis, { buffer = bufnr })
     map("n", "<leader>hq", gitsigns.setqflist, { buffer = bufnr })
     map("n", "<leader>hs", gitsigns.stage_hunk, { buffer = bufnr })
@@ -272,21 +244,21 @@ map("n", "<leader>fg", fzflua["git_status"])
 map("n", "<leader>fG", "<cmd>FzfLua git_commits<cr>", { silent = true })
 
 -- Incremental selection (treesitter, falls back to LSP)
-map({ "n", "x", "o" }, "<A-o>", function()
-  if vim.treesitter.get_parser(nil, nil, { error = false }) then
-    require("vim.treesitter._select").select_parent(vim.v.count1)
-  else
-    vim.lsp.buf.selection_range(vim.v.count1)
+local function ts_or_lsp_select(direction)
+  return function()
+    if vim.treesitter.get_parser(nil, nil, { error = false }) then
+      local select = direction > 0
+        and require("vim.treesitter._select").select_parent
+        or require("vim.treesitter._select").select_child
+      select(vim.v.count1)
+    else
+      vim.lsp.buf.selection_range(direction * vim.v.count1)
+    end
   end
-end)
+end
 
-map({ "n", "x", "o" }, "<A-i>", function()
-  if vim.treesitter.get_parser(nil, nil, { error = false }) then
-    require("vim.treesitter._select").select_child(vim.v.count1)
-  else
-    vim.lsp.buf.selection_range(-vim.v.count1)
-  end
-end)
+vim.keymap.set({ "n", "x", "o" }, "<A-o>", ts_or_lsp_select(1))
+vim.keymap.set({ "n", "x", "o" }, "<A-i>", ts_or_lsp_select(-1))
 
 vim.api.nvim_create_autocmd("BufReadPost", {
   callback = function()
@@ -335,26 +307,16 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "markdown",
-  once = true,
-  callback = function()
-    vim.cmd.packadd("render-markdown.nvim")
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "typst",
-  once = true,
-  callback = function()
-    vim.cmd.packadd("typst-preview.nvim")
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "cs", "razor" },
-  once = true,
-  callback = function()
-    vim.cmd.packadd("roslyn.nvim")
-  end,
-})
+for ft, plugin in pairs({
+  markdown = "render-markdown.nvim",
+  typst = "typst-preview.nvim",
+  cs = "roslyn.nvim",
+}) do
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = ft,
+    once = true,
+    callback = function()
+      vim.cmd.packadd(plugin)
+    end,
+  })
+end
