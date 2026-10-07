@@ -23,6 +23,18 @@ brew "zsh-autosuggestions"
 brew "zsh-history-substring-search"
 brew "zsh-syntax-highlighting"
 
+# editor tooling (LSPs, formatters, linters)
+brew "lua-language-server"
+brew "marksman"
+brew "postgres-language-server"
+brew "pyright"
+brew "terraform-ls"
+brew "tinymist"
+brew "typescript"
+brew "typescript-language-server"
+brew "vscode-langservers-extracted"
+brew "yaml-language-server"
+
 cask "aerospace"
 cask "alacritty"
 cask "dotnet-sdk"

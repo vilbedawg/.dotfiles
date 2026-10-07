@@ -70,6 +70,8 @@ alias src="source ~/.zshrc"
 alias vi="nvim"
 alias vim="nvim"
 
+alias bs="$HOME/.dotfiles/scripts/brew-search.sh"
+
 export DOTNET_ROOT=/usr/local/share/dotnet
 export HOMEBREW_PREFIX=/opt/homebrew
 export PATH="$HOMEBREW_PREFIX/opt/libpq/bin:$PATH"

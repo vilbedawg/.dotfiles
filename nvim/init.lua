@@ -32,7 +32,6 @@ vim.pack.add({
   { src = "https://github.com/nvim-tree/nvim-web-devicons" },
   { src = "https://github.com/tpope/vim-surround" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
-  { src = "https://github.com/mason-org/mason.nvim" },
   { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
   { src = "https://github.com/L3MON4D3/LuaSnip" },
   { src = "https://github.com/rafamadriz/friendly-snippets" },
@@ -46,13 +45,6 @@ vim.pack.add({
   { src = "https://github.com/chomosuke/typst-preview.nvim" },
   { src = "https://github.com/seblyng/roslyn.nvim" },
 }, { load = false })
-
-require("mason").setup({
-  registries = {
-    "github:Crashdummyy/mason-registry", -- for Roslyn
-    "github:mason-org/mason-registry",
-  },
-})
 
 vim.cmd.colorscheme("vague")
 
@@ -183,10 +175,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 vim.lsp.enable({
-  "lua_ls", "cssls", "tinymist",
-  "rust_analyzer", "clangd", "ts_ls",
-  "emmet_language_server", "pyright", "jsonls",
-  "yamlls", "marksman",
+  "lua_ls", "tinymist", "clangd", "ts_ls",
+  "pyright", "yamlls", "marksman", "postgres_lsp",
+  "rust_analyzer", "cssls", "jsonls", "terraformls",
 })
 
 -- Tabs
