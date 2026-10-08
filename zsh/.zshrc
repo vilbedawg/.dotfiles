@@ -43,12 +43,14 @@ fpath=("$HOME/.docker/completions" $fpath)
 # Full compinit at most once a day, otherwise trust the cached dump
 autoload -Uz compinit
 _zcompdump="${ZDOTDIR:-$HOME}/.zcompdump"
-if [[ -n $_zcompdump(#qN.mh+24) ]]; then
+# Globs don't expand inside [[ ]], so expand the staleness check into an array
+_zcompdump_stale=( $_zcompdump(N.mh+24) )
+if (( $#_zcompdump_stale )); then
   compinit -d "$_zcompdump"
 else
   compinit -C -d "$_zcompdump"
 fi
-unset _zcompdump
+unset _zcompdump _zcompdump_stale
 
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
