@@ -15,7 +15,7 @@ end
 vim.opt.shortmess:append("c")
 vim.opt.iskeyword:append("-")
 vim.opt.formatoptions:remove("c")
-vim.o.statusline = "%<%f %h%w%m%r %{get(b:,'gitsigns_status','')}%=%-14.(%l,%c%V%) %P"
+vim.o.statusline = "%t %h%w%m%r %{get(b:,'gitsigns_status','')}%=%-14.(%l,%c%V%) %P"
 
 vim.diagnostic.config({
   virtual_text = { prefix = "" },
