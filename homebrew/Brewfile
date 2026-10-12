@@ -31,7 +31,7 @@ brew "pyright"
 brew "terraform-ls"
 brew "tinymist"
 brew "typescript"
-brew "typescript-language-server"
+brew "vtsls"
 brew "vscode-langservers-extracted"
 brew "yaml-language-server"
 

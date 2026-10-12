@@ -175,7 +175,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 vim.lsp.enable({
-  "lua_ls", "tinymist", "clangd", "ts_ls",
+  "lua_ls", "tinymist", "clangd", "vtsls",
   "pyright", "yamlls", "marksman", "postgres_lsp",
   "rust_analyzer", "cssls", "jsonls", "terraformls",
 })
