@@ -1,14 +1,15 @@
 vim.g.mapleader, vim.g.maplocalleader = " ", " "
 
-local scalar_opts = {
+local opts = {
   smartindent = true, expandtab = true, tabstop = 4, softtabstop = 4,
   shiftwidth = 4, shiftround = true, ignorecase = true, swapfile = false,
   undofile = true, autoread = true, signcolumn = "yes", number = true,
   relativenumber = true, numberwidth = 2, wrap = false, scrolloff = 8,
   clipboard = "unnamedplus", jumpoptions = "stack",
+  shada = "!,'100,<50,s10,h,:1000,/1000",
 }
 
-for name, value in pairs(scalar_opts) do
+for name, value in pairs(opts) do
   vim.opt[name] = value
 end
 
@@ -33,18 +34,19 @@ vim.pack.add({
   { src = "https://github.com/tpope/vim-surround" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
-  { src = "https://github.com/L3MON4D3/LuaSnip" },
   { src = "https://github.com/rafamadriz/friendly-snippets" },
   { src = "https://github.com/stevearc/conform.nvim" },
   { src = "https://github.com/vague-theme/vague.nvim" },
   { src = "https://github.com/chentoast/marks.nvim" },
 })
 
+local function noop() end
 vim.pack.add({
   { src = "https://github.com/meanderingprogrammer/render-markdown.nvim" },
   { src = "https://github.com/chomosuke/typst-preview.nvim" },
   { src = "https://github.com/seblyng/roslyn.nvim" },
-}, { load = false })
+  { src = "https://github.com/L3MON4D3/LuaSnip" },
+}, { load = noop })
 
 vim.cmd.colorscheme("vague")
 
@@ -66,15 +68,24 @@ require("conform").setup({
 })
 
 local map = vim.keymap.set
-local fzflua = require("fzf-lua")
 
-fzflua.setup({
-  file_ignore_patterns = {
-    "node_modules/", "dist/", ".next/", ".git/", ".gitlab/", "build/",
-    "target/", "package-lock.json", "pnpm-lock.yaml", "yarn.lock",
-    "tsconfig.tsbuildinfo",
-  },
-})
+local fzf_setup_done = false
+local function fzf(picker)
+  return function(...)
+    local fzflua = require("fzf-lua")
+    if not fzf_setup_done then
+      fzf_setup_done = true
+      fzflua.setup({
+        file_ignore_patterns = {
+          "node_modules/", "dist/", ".next/", ".git/", ".gitlab/", "build/",
+          "target/", "package-lock.json", "pnpm-lock.yaml", "yarn.lock",
+          "tsconfig.tsbuildinfo",
+        },
+      })
+    end
+    return fzflua[picker](...)
+  end
+end
 
 local gitsigns = require("gitsigns")
 gitsigns.setup({
@@ -133,6 +144,7 @@ require("blink.cmp").setup({
 vim.api.nvim_create_autocmd("InsertEnter", {
   once = true,
   callback = function()
+    vim.cmd.packadd("LuaSnip")
     require("luasnip").setup({ enable_autosnippets = true })
     require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
   end,
@@ -144,32 +156,32 @@ vim.api.nvim_create_autocmd("LspAttach", {
     local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
     local bufnr = args.buf
 
-    local opts = { silent = true, buffer = bufnr }
+    local lsp_opts = { silent = true, buffer = bufnr }
 
-    map({ "n", "v" }, "<leader>F", function() require("conform").format({ bufnr = args.buf }) end, opts)
-    map("n", "gd", vim.lsp.buf.definition, opts)
-    map("n", "gt", vim.lsp.buf.type_definition, opts)
-    map("n", "gr", vim.lsp.buf.references, opts)
-    map("n", "gi", vim.lsp.buf.implementation, opts)
-    map("n", "gD", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts)
-    map("n", "<leader>r", vim.lsp.buf.rename, opts)
-    map("n", "K", vim.lsp.buf.hover, opts)
-    map("n", "<leader>vd", vim.diagnostic.open_float, opts)
-    map("n", "<leader>vD", "<cmd>lua vim.diagnostic.open_float({ scope = 'line' })<CR>", opts)
+    map({ "n", "v" }, "<leader>F", function() require("conform").format({ bufnr = args.buf }) end, lsp_opts)
+    map("n", "gd", vim.lsp.buf.definition, lsp_opts)
+    map("n", "gt", vim.lsp.buf.type_definition, lsp_opts)
+    map("n", "gr", vim.lsp.buf.references, lsp_opts)
+    map("n", "gi", vim.lsp.buf.implementation, lsp_opts)
+    map("n", "gD", "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", lsp_opts)
+    map("n", "<leader>r", vim.lsp.buf.rename, lsp_opts)
+    map("n", "K", vim.lsp.buf.hover, lsp_opts)
+    map("n", "<leader>vd", vim.diagnostic.open_float, lsp_opts)
+    map("n", "<leader>vD", "<cmd>lua vim.diagnostic.open_float({ scope = 'line' })<CR>", lsp_opts)
 
-    map("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, opts)
-    map("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, opts)
+    map("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, lsp_opts)
+    map("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, lsp_opts)
 
-    map("n", "<leader>ca", fzflua["lsp_code_actions"], opts)
-    map("n", "<leader>fl", fzflua["lsp_finder"], opts)
-    map("n", "<leader>fr", fzflua["lsp_references"], opts)
-    map("n", "<leader>ft", fzflua["lsp_typedefs"], opts)
-    map("n", "<leader>ds", fzflua["lsp_document_symbols"], opts)
-    map("n", "<leader>ws", fzflua["lsp_workspace_symbols"], opts)
-    map("n", "<leader>fi", fzflua["lsp_implementations"], opts)
+    map("n", "<leader>ca", fzf("lsp_code_actions"), lsp_opts)
+    map("n", "<leader>fl", fzf("lsp_finder"), lsp_opts)
+    map("n", "<leader>fr", fzf("lsp_references"), lsp_opts)
+    map("n", "<leader>ft", fzf("lsp_typedefs"), lsp_opts)
+    map("n", "<leader>ds", fzf("lsp_document_symbols"), lsp_opts)
+    map("n", "<leader>ws", fzf("lsp_workspace_symbols"), lsp_opts)
+    map("n", "<leader>fi", fzf("lsp_implementations"), lsp_opts)
 
     if client.name == "clangd" then
-      map("n", "<leader>ch", "<cmd>LspClangdSwitchSourceHeader<cr>", opts)
+      map("n", "<leader>ch", "<cmd>LspClangdSwitchSourceHeader<cr>", lsp_opts)
     end
   end,
 })
@@ -222,17 +234,17 @@ map({ "i", "s" }, "<C-J>", function() require("luasnip").jump(1) end, { silent =
 map({ "i", "s" }, "<C-K>", function() require("luasnip").jump(-1) end, { silent = true })
 
 -- FzfLua
-map("n", "<leader>ff", fzflua["files"])
-map("n", "<leader><leader>", fzflua["buffers"])
-map("n", "<leader>fd", fzflua["diagnostics_document"])
-map("n", "<leader>fD", fzflua["diagnostics_workspace"])
-map("n", "<leader>fs", fzflua["live_grep"])
-map("n", "<leader>fc", fzflua["lsp_document_symbols"])
-map("n", "<leader>fw", fzflua["grep_cword"])
-map("n", "<leader>fW", fzflua["grep_cWORD"])
-map("n", "<leader>fk", fzflua["keymaps"])
-map("n", "<leader>fg", fzflua["git_status"])
-map("n", "<leader>fG", "<cmd>FzfLua git_commits<cr>", { silent = true })
+map("n", "<leader>ff", fzf("files"))
+map("n", "<leader><leader>", fzf("buffers"))
+map("n", "<leader>fd", fzf("diagnostics_document"))
+map("n", "<leader>fD", fzf("diagnostics_workspace"))
+map("n", "<leader>fs", fzf("live_grep"))
+map("n", "<leader>fc", fzf("lsp_document_symbols"))
+map("n", "<leader>fw", fzf("grep_cword"))
+map("n", "<leader>fW", fzf("grep_cWORD"))
+map("n", "<leader>fk", fzf("keymaps"))
+map("n", "<leader>fg", fzf("git_status"))
+map("n", "<leader>fG", fzf("git_commits"))
 
 -- Incremental selection (treesitter, falls back to LSP)
 local function ts_or_lsp_select(direction)
