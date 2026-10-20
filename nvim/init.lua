@@ -76,6 +76,7 @@ local function fzf(picker)
     if not fzf_setup_done then
       fzf_setup_done = true
       fzflua.setup({
+        defaults = { formatter = "path.filename_first" },
         file_ignore_patterns = {
           "node_modules/", "dist/", ".next/", ".git/", ".gitlab/", "build/",
           "target/", "package-lock.json", "pnpm-lock.yaml", "yarn.lock",
